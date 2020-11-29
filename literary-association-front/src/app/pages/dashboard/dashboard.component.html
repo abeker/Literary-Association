@@ -1,0 +1,30 @@
+<div>
+  <nz-layout>
+    <nz-header>
+      <div class="logo"><img class="logo-img" src="assets\img\logo.png"></div>
+      <ul nz-menu nzTheme="dark" nzMode="horizontal" class="header-menu">
+        <li *ngIf="isAdmin" nz-menu-item (click)="agentRegister()">Register Agent</li>
+        <li nz-menu-item style="float: right;" (click)="logout()">
+          <i nz-icon nzType="user" nzTheme="outline"></i>
+          Logout
+        </li>
+      </ul>
+    </nz-header>
+    <nz-layout>
+      <nz-layout class="inner-layout">
+          <nz-content style="background-color: rgba(255, 255, 255, 0.2);">
+            <router-outlet></router-outlet>
+          </nz-content>
+      </nz-layout>
+
+      <nz-sider nzWidth="250px" nzTheme="dark">
+        <ul nz-menu nzMode="inline" class="sider-menu" nzTheme="dark">
+          <li *ngIf="isSimpleUser" nzSelected nz-menu-item>
+            <i nz-icon nzType="car" nzTheme="outline"></i>
+            Ads
+          </li>
+        </ul>
+      </nz-sider>
+    </nz-layout>
+  </nz-layout>
+</div>

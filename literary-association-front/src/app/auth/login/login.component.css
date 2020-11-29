@@ -1,0 +1,26 @@
+.login-form {
+  max-width: 300px;
+}
+
+.login-form-margin {
+  margin-bottom: 16px;
+}
+
+.login-form-forgot {
+  float: right;
+}
+
+.login-form-button {
+  width: 100%;
+}
+
+.wallpaper{
+  background-image: url('https://images.pexels.com/photos/1831745/pexels-photo-1831745.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding-left: 15%;
+  padding-top: 10%;
+}
