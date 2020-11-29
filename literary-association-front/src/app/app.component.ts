@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'literary-association-front';
+  title = 'Owasp-Top-10';
+  isCollapsed = false;
 }
