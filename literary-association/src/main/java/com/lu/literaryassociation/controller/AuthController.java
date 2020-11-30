@@ -18,9 +18,8 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public LoginResponse login(@RequestBody LoginRequest request) throws Exception{
-        System.out.println("POGODILA SAM");
         return authService.login(request);
     }
 
