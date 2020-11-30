@@ -3,13 +3,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { WelcomeComponent } from './pages/welcome/welcome.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
   { path: 'auth/login', component: LoginComponent },
   {
     path: 'dashboard', component: DashboardComponent, children: [
-
+      { path: 'welcome', component: WelcomeComponent }
     ]
   }
 ];
@@ -17,7 +18,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
+  CommonModule,
     RouterModule.forRoot(routes)
   ],
   exports: [RouterModule]
