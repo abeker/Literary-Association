@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -12,7 +13,8 @@ export class LoginComponent implements OnInit {
   validateForm!: FormGroup;
 
   constructor(private fb: FormBuilder,
-    private authService: AuthService) {}
+    private authService: AuthService,
+    private router: Router) {}
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
@@ -30,7 +32,7 @@ export class LoginComponent implements OnInit {
         username: this.validateForm.value.username,
         password: this.validateForm.value.password
       }).subscribe(response => {
-        alert('ulogovan');
+        this.router.navigateByUrl('dashboard/welcome');
       }, error => {
         console.log(error);
       });

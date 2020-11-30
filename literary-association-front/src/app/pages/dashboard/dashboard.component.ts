@@ -21,7 +21,6 @@ export class DashboardComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
-
   }
 
   private setupUser(): void {
@@ -46,6 +45,7 @@ export class DashboardComponent implements OnInit {
 
   logout(): void {
     // this.store.dispatch(new AuthActions.Logout());
+    this.router.navigateByUrl('/auth/login');
     console.log('logout');
   }
 }
