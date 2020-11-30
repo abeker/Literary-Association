@@ -1,0 +1,78 @@
+version: '3.1'
+services:
+  db-literar-association:
+    image: postgres 
+    environment: 
+      POSTGRES_USER: postgres 
+      POSTGRES_PASSWORD: postgres
+    ports: 
+      - "1389:5432"
+    restart: unless-stopped
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    # networks:
+    #         - static-network
+
+  literary-association:
+    image: literary-association
+    container_name: literary-association
+    build:
+      context: ./Literary-Association
+      dockerfile: Dockerfile 
+    environment: 
+      POSTGRES_HOST: db-literar-association
+    ports: 
+      - "8084:8084"
+    depends_on: 
+      - db-literar-association
+    links:
+      - "db-literar-association:db-literar-association"
+    # networks: 
+    #   - static-network
+
+  angular-ui:
+    build:
+      context: ./literary-association-front
+      dockerfile: Dockerfile
+    ports:
+      - "4200-4205:4200"
+      - "49153-49160:49153"
+    # volumes:
+    #    - "/app/node_modules"
+    #    - ".:/app"
+volumes: 
+  postgresdata:
+# networks:
+#     static-network:
+#         ipam:
+#             config:
+#                 - subnet: 172.20.0.0/16
+    # networks:
+    #   static-network:
+
+  # app:
+  #   container_name: payment-service
+  #   image: payment-service
+  #   build:
+  #     context: ./payment-service
+  #   depends_on:
+  #     - dbpostgresql
+  #   environment:
+  #     DB_PATH: jdbc:postgresql://dbpostgresql:5432/
+  #   networks: 
+  #     - static-network
+
+
+  # dbpostgresql:
+  #   image: postgres
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     - POSTGRES_PASSWORD=password
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_DB=mydb
+  #   networks: 
+  #     - static-network
+# networks: 
+#     static-network:
