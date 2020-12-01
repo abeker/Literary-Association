@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: postgres 
       POSTGRES_PASSWORD: postgres
     ports: 
-      - "1389:5432"
+      - "1388:5432"
     restart: unless-stopped
     volumes:
       - postgresdata:/var/lib/postgresql/data
@@ -51,28 +51,5 @@ volumes:
     # networks:
     #   static-network:
 
-  # app:
-  #   container_name: payment-service
-  #   image: payment-service
-  #   build:
-  #     context: ./payment-service
-  #   depends_on:
-  #     - dbpostgresql
-  #   environment:
-  #     DB_PATH: jdbc:postgresql://dbpostgresql:5432/
-  #   networks: 
-  #     - static-network
-
-
-  # dbpostgresql:
-  #   image: postgres
-  #   ports:
-  #     - "5432:5432"
-  #   environment:
-  #     - POSTGRES_PASSWORD=password
-  #     - POSTGRES_USER=postgres
-  #     - POSTGRES_DB=mydb
-  #   networks: 
-  #     - static-network
 # networks: 
 #     static-network:
