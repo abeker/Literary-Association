@@ -6,17 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class LiteraryUser extends BaseEntity {
+@AllArgsConstructor
+public class Keyword extends BaseEntity {
 
-    @Column(unique = true, nullable = false)
-    private String username;
+    private String keywordText;
 
-    @Column(nullable = false)
-    private String password;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Book> books;
+
 }

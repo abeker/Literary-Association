@@ -24,8 +24,6 @@ public class AuthService implements IAuthService {
 
     @Override
     public LoginResponse login(LoginRequest request) throws GeneralException {
-
-        //System.out.println("USLA U SERVIS, REQUEST: " + request.getUsername());
         LiteraryUser literaryUser = userRepository.findOneByUsername(request.getUsername());
         //System.out.println(literaryUser.getPassword()+" "+request.getPassword());
 
