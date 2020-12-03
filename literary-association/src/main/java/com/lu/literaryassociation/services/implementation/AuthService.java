@@ -111,4 +111,5 @@ public class AuthService implements IAuthService {
         userResponse.setUserRole(user.getUserType().toString());
         return userResponse;
     }
+    
 }
