@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -38,6 +39,8 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private UserType userType;
+
+    private Timestamp lastPasswordResetDate = new Timestamp(System.currentTimeMillis());
 
     private boolean deleted = false;
 

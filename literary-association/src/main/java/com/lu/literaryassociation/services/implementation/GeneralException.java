@@ -1,4 +1,4 @@
-package com.lu.literaryassociation.service.implementation;
+package com.lu.literaryassociation.services.implementation;
 
 import org.springframework.http.HttpStatus;
 
