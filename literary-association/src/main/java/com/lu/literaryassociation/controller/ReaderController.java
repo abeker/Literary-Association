@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/reader")
+@RequestMapping("/readers")
 public class ReaderController {
 
     private final IReaderService _readerService;
@@ -19,7 +19,7 @@ public class ReaderController {
     }
 
     @PostMapping("")
-    public CreatedReader login(@RequestBody ReaderRegistration request) {
+    public CreatedReader registration(@RequestBody ReaderRegistration request) {
         return _readerService.registration(request);
     }
 

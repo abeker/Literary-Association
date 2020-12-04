@@ -31,12 +31,16 @@ export class LoginComponent implements OnInit {
       this.authService.login({
         username: this.validateForm.value.username,
         password: this.validateForm.value.password
-      }).subscribe(response => {
+      }).subscribe(() => {
         this.router.navigateByUrl('dashboard/welcome');
       }, error => {
         console.log(error);
       });
     }
+  }
+
+  register(): void {
+    this.router.navigateByUrl('auth/registration');
   }
 
 }

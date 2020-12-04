@@ -1,18 +1,17 @@
-package com.lu.literaryassociation.dto.request;
+package com.lu.literaryassociation.dto.response;
 
 import lombok.Builder;
 import lombok.Data;
 
+@Builder
 @Data
-public class ReaderRegistration {
+public class UserStored {
 
     private String username;
-    private String password;
     private String email;
     private String firstName;
     private String lastName;
     private String city;
     private String country;
-    private boolean betaReader;
 
 }

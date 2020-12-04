@@ -18,6 +18,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { RegistrationComponent } from './auth/registration/registration.component';
 
 registerLocaleData(en);
 
@@ -32,6 +33,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     LoginComponent,
     DashboardComponent,
     WelcomeComponent,
+    RegistrationComponent,
   ],
   imports: [
     BrowserModule,
