@@ -13,6 +13,6 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   public login(body): Observable<any> {
-    return this.http.post(`${this.baseUrl}auth/`, body);
+    return this.http.put(`${this.baseUrl}auth/login`, body);
   }
 }

@@ -1,12 +1,11 @@
 package com.lu.literaryassociation.controller;
 
 import com.lu.literaryassociation.dto.request.LoginRequest;
-import com.lu.literaryassociation.dto.response.LoginResponse;
-import com.lu.literaryassociation.service.IAuthService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.lu.literaryassociation.dto.response.UserResponse;
+import com.lu.literaryassociation.services.definition.IAuthService;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,10 +17,9 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/")
-    public LoginResponse login(@RequestBody LoginRequest request) throws Exception{
-        System.out.println("POGODILA SAM");
-        return authService.login(request);
+    @PutMapping("/login")
+    public UserResponse login(@RequestBody LoginRequest request, HttpServletRequest httpServletRequest) throws Exception{
+        return authService.login(request, httpServletRequest);
     }
 
 }
