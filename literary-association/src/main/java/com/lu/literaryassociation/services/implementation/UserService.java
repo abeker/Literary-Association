@@ -22,6 +22,15 @@ public class UserService implements IUserService {
         return mapUserToUserStored(user);
     }
 
+    public User findUser(String username){
+        User user = _userRepository.findOneByUsername(username);
+        return user;
+    }
+
+    public User saveUser(User user){
+        return _userRepository.save(user);
+    }
+
     private UserStored mapUserToUserStored(User user) {
         if(user != null) {
             return UserStored.builder()
