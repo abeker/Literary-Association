@@ -15,4 +15,13 @@ export class AuthService {
   public login(body): Observable<any> {
     return this.http.put(`${this.baseUrl}auth/login`, body);
   }
+
+  public startRegistrationProcess(): Observable<any> {
+    return this.http.get(`${this.baseUrl}welcome/get`);
+  }
+
+  public registerUser(user, taskId): Observable<any> {
+    return this.http.post(`${this.baseUrl}welcome/post/${taskId}`, user);
+  }
+
 }

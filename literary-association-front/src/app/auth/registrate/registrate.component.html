@@ -1,0 +1,57 @@
+<div class="main-div">
+  <h1>Registration form</h1>
+  <!--NA OSNOVU MDELA FORME IZ CAMUNDE SE GENERESE FORMA-->
+  <form  nz-form [formGroup]="validateForm" (ngSubmit)="submitForm(validateForm.value)">
+  
+    <div *ngFor="let field of formFields" >
+       
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired for={{field.id}}>{{field.label}}</nz-form-label>  
+            <nz-form-control nzHasFeedback [nzSm]="12" [nzXs]="24" [nzErrorTip]="err">
+                <input nz-input (ngModelChange)="onPasswordChange($event)"
+                type="password"
+                placeholder="Password"
+                id={{field.id}}
+                formControlName={{field.id}}
+                *ngIf="isPassword(field)">
+                <input nz-input type="text" formControlName={{field.id}} id={{field.id}} ngModel  *ngIf="isString(field)">
+                <input type="checkbox" formControlName={{field.id}} id={{field.id}} ngModel  *ngIf="field.type.name=='boolean'">
+                <input type="number" formControlName={{field.id}} id={{field.id}} ngModel  *ngIf="field.type.name=='long'">
+                <select id="field.id" formControlName={{field.id}} *ngIf="field.type.name=='enum'">
+                <option *ngFor="let val of enumValues" formControlName={{field.id}} value={{val}}>
+                    {{field.type.values[val]}}
+                </option>
+                </select>     
+                <ng-template #err let-control>
+                  <ng-container *ngIf="control.hasError('required')">
+                     Please fill this field!
+                  </ng-container>
+                  <ng-container *ngIf="control.hasError('minlength')">
+                     Not enough characters!
+                  </ng-container>
+                  <ng-container *ngIf="control.hasError('maxlength')">
+                    Too much characters!
+                 </ng-container>
+                </ng-template>     
+           </nz-form-control>
+         </nz-form-item>
+
+    </div>
+    
+    <nz-form-item>
+      <nz-form-control [nzOffset]="7" [nzSpan]="12">
+        <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
+        <button nz-button (click)="resetForm($event)">Reset</button>
+        <br/>
+        <br/>
+        <label style="margin-left: 4%; color: white;">
+          or back to
+        </label>
+          <b style="color: blue;"><a (click)="onLogin()"> login!</a></b>
+      </nz-form-control>
+    </nz-form-item>
+  
+
+  </form>
+  
+</div>
