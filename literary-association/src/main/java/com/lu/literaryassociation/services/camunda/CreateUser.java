@@ -1,10 +1,13 @@
 package com.lu.literaryassociation.services.camunda;
 
+import camundajar.impl.scala.Array;
 import com.lu.literaryassociation.entity.BetaReader;
 import com.lu.literaryassociation.entity.ConfirmationToken;
 import com.lu.literaryassociation.entity.FormSubmissionDto;
+import com.lu.literaryassociation.entity.Genre;
 import com.lu.literaryassociation.repository.IConformationTokenRepository;
 import com.lu.literaryassociation.repository.IUserRepository;
+import com.lu.literaryassociation.services.definition.IGenreService;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
 import com.lu.literaryassociation.util.enums.UserType;
 import org.camunda.bpm.engine.IdentityService;
@@ -15,17 +18,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class CreateUser implements JavaDelegate {
 
     @Autowired
     IdentityService identityService;
+
     @Autowired
     IUserRepository iUserRepository;
+
+    @Autowired
+    IGenreService iGenreService;
 
     @Autowired
     PasswordEncoder _passwordEncoder;
@@ -48,8 +53,10 @@ public class CreateUser implements JavaDelegate {
         String city = (String)execution.getVariable("city");
         String country = (String)execution.getVariable("country");
         boolean betaReader = (Boolean) execution.getVariable("betaReader");
+        String genres = (String) execution.getVariable("genre");
 
         System.out.println("USERNAME: "+ username+ "    Password: "+ password  + " " + email+ "Beta reader: " + betaReader) ;
+        System.out.println("GENRES"+ genres);
 
         //Kreiramo camundinog ugradnjenog usera
         User user = identityService.newUser("");
@@ -64,6 +71,7 @@ public class CreateUser implements JavaDelegate {
         identityService.saveUser(user);
 
         //kreiramo naseg usera u bazi
+        System.out.println("KREIRAMO USERA U BAZI");
         com.lu.literaryassociation.entity.Reader customUser = new com.lu.literaryassociation.entity.Reader();
         customUser.setUsername(username);
         customUser.setPassword(password);
@@ -73,9 +81,17 @@ public class CreateUser implements JavaDelegate {
         if(betaReader){
             BetaReader beta = new BetaReader();
             //OVDE TREBA SETOVATI ZANR ZA BETA READERA
-            // .....
-            beta.setReader(customUser);
-            customUser.setBetaReader(beta);
+           // System.out.println("Setujem zanr");
+            Set<Genre> genreSet = new HashSet<Genre>();
+            String[] parts = genres.split(";");
+            for(int i=0;i<parts.length;i++){
+                Genre g = iGenreService.getGenreByName(parts[i]);
+               // System.out.println(g.getCode()+" "+g.getGenreName());
+                genreSet.add(g);
+            }
+             beta.setGenres(genreSet);
+             beta.setReader(customUser);
+             customUser.setBetaReader(beta);
         }
         customUser.setCity(city);
         customUser.setCountry(country);

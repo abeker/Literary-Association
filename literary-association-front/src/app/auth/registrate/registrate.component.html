@@ -8,31 +8,53 @@
         <nz-form-item>
             <nz-form-label [nzSpan]="7" nzRequired for={{field.id}}>{{field.label}}</nz-form-label>  
             <nz-form-control nzHasFeedback [nzSm]="12" [nzXs]="24" [nzErrorTip]="err">
-                <input nz-input (ngModelChange)="onPasswordChange($event)"
+                
+              <input nz-input (ngModelChange)="onPasswordChange($event)"
                 type="password"
                 placeholder="Password"
                 id={{field.id}}
                 formControlName={{field.id}}
-                *ngIf="isPassword(field)">
-                <input nz-input type="text" formControlName={{field.id}} id={{field.id}} ngModel  *ngIf="isString(field)">
-                <input type="checkbox" formControlName={{field.id}} id={{field.id}} ngModel  *ngIf="field.type.name=='boolean'">
+                *ngIf="field.type.name=='password'">
+
+                <input nz-input (ngModelChange)="onPasswordConfirmChange($event)"
+                type="password"
+                placeholder="Password"
+                id={{field.id}}
+                formControlName={{field.id}}
+                *ngIf="field.type.name=='confirm_password'">
+
+                <input nz-input type="text" formControlName={{field.id}} id={{field.id}} ngModel *ngIf="isString(field)">
+                <label nz-checkbox [(ngModel)]="isBetareader" [ngModelOptions]="{standalone: true}"  style="margin-left: 20px;" *ngIf="field.type.name=='boolean'"></label> 
                 <input type="number" formControlName={{field.id}} id={{field.id}} ngModel  *ngIf="field.type.name=='long'">
-                <select id="field.id" formControlName={{field.id}} *ngIf="field.type.name=='enum'">
-                <option *ngFor="let val of enumValues" formControlName={{field.id}} value={{val}}>
-                    {{field.type.values[val]}}
-                </option>
-                </select>     
+ 
+
+                 <nz-select [(ngModel)]="multipleValue" id={{field.id}} [disabled]="!isBetareader"  [nzSize]="size" nzMode="multiple" [ngModelOptions]="{standalone: true}" nzPlaceHolder="Please select" *ngIf="field.type.name=='enum'">
+                    <nz-option *ngFor="let option of field.type.values" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
+                 </nz-select> 
+
+
                 <ng-template #err let-control>
                   <ng-container *ngIf="control.hasError('required')">
-                     Please fill this field!
+                      Please fill this field!
                   </ng-container>
                   <ng-container *ngIf="control.hasError('minlength')">
-                     Not enough characters!
+                      Not enough characters!
                   </ng-container>
                   <ng-container *ngIf="control.hasError('maxlength')">
-                    Too much characters!
+                     Too much characters!
                  </ng-container>
+                  <ng-container *ngIf="!control.hasError('pattern')">
+                      Password is inconsistent!
+                  </ng-container>
+                  <ng-container *ngIf="control.hasError('email')">
+                    The input is not valid E-mail!
+                  </ng-container>
+                  <ng-container *ngIf="isUsernameExist">
+                    This E-Mail already exist!
+                  </ng-container>
                 </ng-template>     
+
+
            </nz-form-control>
          </nz-form-item>
 
