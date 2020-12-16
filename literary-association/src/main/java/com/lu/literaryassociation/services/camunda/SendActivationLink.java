@@ -59,6 +59,6 @@ public class SendActivationLink implements JavaDelegate {
         helper.setSubject("email address verification");
         helper.setText("To confirm your account, please click here : "
                 +"http://localhost:8084/welcome/confirm-account/"+processInstanceId+"?token="+confirmationToken.getConfirmationToken());
-        javaMailSender.send(message);
+       // javaMailSender.send(message);
     }
 }

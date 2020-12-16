@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { NzSelectSizeType } from 'ng-zorro-antd/select';
 import { AuthService } from '../../services/auth.service';
 import { Observable, Observer } from 'rxjs';
 import { NzMessageService, valueFunctionProp } from 'ng-zorro-antd';
@@ -17,10 +18,19 @@ export class RegistrateComponent implements OnInit {
 
   validateForm: FormGroup;
   isUsernameExist: boolean = false;
+  initFieldsDto = null;
   formFieldsDto = null;
   formFields = [];
   processInstance = "";
-  enumValues = [];
+
+  isBetareader: boolean = false;
+  listOfOption: Array<{ label: string; value: string }> = []; //genres
+  size: NzSelectSizeType = 'default';
+  multipleValue = []; //selected values of genre
+
+  isPasswordCorrect: boolean = false;
+  passwordPercentage: number = 0;
+  passwordConfirmPercentage: number = 0;
  
 
   constructor(private router: Router, private authService: AuthService, private fb: FormBuilder,
@@ -31,16 +41,24 @@ export class RegistrateComponent implements OnInit {
       this.authService.startRegistrationProcess().
        subscribe((res) => {
           console.log(res);
+          this.initFieldsDto = res;
           this.formFieldsDto = res;
-          this.formFields = res.formFields;
+          this.changeFormFieldsDTO();
+          console.log(this.formFields);
           this.processInstance = res.processInstanceId;
           this.formFields.forEach( (field) =>{
-            if( field.type.name=='enum'){
-              this.enumValues = Object.keys(field.type.values);
-            }
+            console.log(field);
             let field_validations = field.validationConstraints;
             let validators = this.newValidationRule(field_validations);
+            if(field.type.name == "confirm_password"){
+               //this.validateForm.addControl(field.id, this.fb.control('', validators,[this.confirmValidator]));
+               validators.push(this.confirmValidator);
+            }else if(field.properties.hasOwnProperty('email')){
+               validators.push(Validators.email);
+               validators.push(this.userNameAsyncValidator);
+            }
             this.validateForm.addControl(field.id, this.fb.control('', validators)); 
+            console.log(field.id, validators);
           });
        }, error => {
         console.log(error);
@@ -58,10 +76,31 @@ export class RegistrateComponent implements OnInit {
       this.validateForm.controls[key].updateValueAndValidity();
     }
 
+    console.log("SUBMIT");
     let o = new Array();
     for (var property in value) {
-      o.push({fieldId : property, fieldValue : value[property]});
+      //console.log(value);
+     // console.log(property);
+      if(property === "betaReader"){
+        o.push({fieldId : property, fieldValue : this.isBetareader});
+      }else if (property === "genre"){
+        console.log("ZANROVIIIII");
+        let genreString = "";
+        
+        for(let i=0;i<this.multipleValue.length;i++){
+              //console.log(this.multipleValue[i]);
+              genreString += (this.multipleValue[i]);
+              genreString += (";");
+        }
+       // console.log(genreString);
+        o.push({fieldId : property, fieldValue : genreString});
+      }else{
+        o.push({fieldId : property, fieldValue : value[property]});
+      }
     }
+    
+    console.log(o);
+    //console.log(this.multipleValue); 
 
     this.authService.registerUser(o,this.formFieldsDto.taskId)
       .subscribe(response => {
@@ -70,7 +109,7 @@ export class RegistrateComponent implements OnInit {
         alert("You registered successfully!")
       }, error => {
         console.log("Error occured!");
-      })
+    })
 
     this.resetForm(new MouseEvent('click'));
   }
@@ -84,7 +123,40 @@ export class RegistrateComponent implements OnInit {
       this.validateForm.controls[key].updateValueAndValidity();
     }
     this.isUsernameExist = false;
+    this.multipleValue = [];
   }
+
+  
+  changeFormFieldsDTO(){
+    let formFields = this.formFieldsDto.formFields;
+    let copyFormFields = [];
+    formFields.forEach(field => {
+         let prop = field.properties;
+         let temp = field;
+         if(prop.hasOwnProperty('enum')){
+            this.createListForOption(field.defaultValue);
+            temp.type.name = "enum";
+            temp.type.values = this.listOfOption;
+         }else if(prop.hasOwnProperty('password')){
+            temp.type.name = "password";
+         }else if(prop.hasOwnProperty('confirm_password')){
+            temp.type.name = "confirm_password";
+         }
+         copyFormFields.push(temp);
+    });
+    this.formFields = copyFormFields;
+  }
+
+
+   createListForOption(genresString){
+      const children: Array<{ label: string; value: string }> = [];
+      let genres = genresString.split(";");
+      for (let i = 0; i < genres.length-1; i++) {
+        children.push({ label: genres[i] , value: genres[i]});
+      }
+      this.listOfOption = children;
+   }
+
 
   
   newValidationRule(field_validations): any {
@@ -106,7 +178,8 @@ export class RegistrateComponent implements OnInit {
   }
 
 
-  confirmValidator = (control: FormControl): { [s: string]: boolean } => {
+   confirmValidator = (control: FormControl): { [s: string]: boolean } => {
+     console.log("USLAA OVDE");
     if (!control.value) {
       return { error: true, required: true };
     } else if (control.value !== this.validateForm.controls.password.value) {
@@ -155,7 +228,42 @@ export class RegistrateComponent implements OnInit {
     this.router.navigateByUrl('auth/login');
   }
 
+
   onPasswordChange(passwordInput): void {
-    
+    this.checkPassword(passwordInput, false);
   }
+
+  onPasswordConfirmChange(passwordInput): void {
+    this.checkPassword(passwordInput, true);
+  }
+
+  checkPassword(password, isConfirm: boolean): void {
+    let coefficientAccuracy = 0;
+    /*if(hasLowerCase(password)) {
+      coefficientAccuracy += 1;
+    } if(hasUpperCase(password)) {
+      coefficientAccuracy += 1;
+    } if(hasNumber(password)) {
+      coefficientAccuracy += 1;
+    } if(hasSpecialCharacter(password)) {
+      coefficientAccuracy += 1;
+    } if(hasMinLength(password)) {
+      coefficientAccuracy += 1;
+    }*/ 
+    if(password === this.validateForm.value.password && isConfirm) {
+      coefficientAccuracy += 1;
+    }
+
+    if(!isConfirm) {
+      this.passwordPercentage = coefficientAccuracy * 100;
+    } else {
+      this.passwordConfirmPercentage = coefficientAccuracy * 100;
+    }
+
+  }
+
+
+
+
+
 }

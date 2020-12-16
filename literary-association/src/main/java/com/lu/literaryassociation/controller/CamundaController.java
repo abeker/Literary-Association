@@ -5,6 +5,7 @@ import camundajar.impl.scala.util.parsing.json.JSONObject;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.lu.literaryassociation.entity.*;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
+import com.lu.literaryassociation.services.implementation.GenreService;
 import com.lu.literaryassociation.services.implementation.ReaderService;
 import com.lu.literaryassociation.services.implementation.UserService;
 import org.camunda.bpm.engine.FormService;
@@ -48,6 +49,10 @@ public class CamundaController {
 
     @Autowired
     ConfirmationTokenService confirmationTokenService;
+
+    @Autowired
+    GenreService genreService;
+
 
     @GetMapping(path = "/get", produces = "application/json")
     public @ResponseBody
