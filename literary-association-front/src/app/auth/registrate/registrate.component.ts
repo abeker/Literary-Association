@@ -55,7 +55,6 @@ export class RegistrateComponent implements OnInit {
                validators.push(this.confirmValidator);
             }else if(field.properties.hasOwnProperty('email')){
                validators.push(Validators.email);
-               validators.push(this.userNameAsyncValidator);
             }
             this.validateForm.addControl(field.id, this.fb.control('', validators)); 
             console.log(field.id, validators);
