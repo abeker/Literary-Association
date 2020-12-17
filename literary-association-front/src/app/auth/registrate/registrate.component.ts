@@ -112,7 +112,7 @@ export class RegistrateComponent implements OnInit {
         .subscribe(response => {
           console.log(response);
           console.log('REGISTER SUCCES');
-          alert("You registered successfully!")
+          alert("You registered successfully! Please check email to confirm registration!")
         }, error => {
           console.log("Error occured!");
       })
