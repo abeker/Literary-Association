@@ -53,12 +53,6 @@ public class SendActivationLink implements JavaDelegate {
         }
         String processInstanceId = execution.getProcessInstanceId();
 
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message,true);
-        helper.setTo(email);
-        helper.setSubject("email address verification");
-        helper.setText("To confirm your account, please click here : "
-                +"http://localhost:8084/welcome/confirm-account/"+processInstanceId+"?token="+confirmationToken.getConfirmationToken());
-       // javaMailSender.send(message);
+        emailService.sendEmail(email,processInstanceId,confirmationToken.getConfirmationToken());
     }
 }
