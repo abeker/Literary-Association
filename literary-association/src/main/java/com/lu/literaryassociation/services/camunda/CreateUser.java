@@ -81,12 +81,13 @@ public class CreateUser implements JavaDelegate {
         if(betaReader){
             BetaReader beta = new BetaReader();
             //OVDE TREBA SETOVATI ZANR ZA BETA READERA
-           // System.out.println("Setujem zanr");
+            System.out.println("Setujem zanr");
             Set<Genre> genreSet = new HashSet<Genre>();
             String[] parts = genres.split(";");
             for(int i=0;i<parts.length;i++){
+                System.out.println(parts[i]);
                 Genre g = iGenreService.getGenreByName(parts[i]);
-               // System.out.println(g.getCode()+" "+g.getGenreName());
+                System.out.println(g.getCode()+" "+g.getGenreName());
                 genreSet.add(g);
             }
              beta.setGenres(genreSet);

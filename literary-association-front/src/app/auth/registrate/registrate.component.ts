@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NzSelectSizeType } from 'ng-zorro-antd/select';
 import { AuthService } from '../../services/auth.service';
 import { Observable, Observer } from 'rxjs';
@@ -55,6 +55,10 @@ export class RegistrateComponent implements OnInit {
                validators.push(this.confirmValidator);
             }else if(field.properties.hasOwnProperty('email')){
                validators.push(Validators.email);
+              // validators.push(this.userNameAsyncValidator);
+            }else if(field.type.name == "password" && field.properties.hasOwnProperty('pattern') ){
+               let obj = field.properties;
+               validators.push(Validators.pattern(new RegExp(obj['pattern'])));
             }
             this.validateForm.addControl(field.id, this.fb.control('', validators)); 
             console.log(field.id, validators);
@@ -101,16 +105,21 @@ export class RegistrateComponent implements OnInit {
     console.log(o);
     //console.log(this.multipleValue); 
 
-    this.authService.registerUser(o,this.formFieldsDto.taskId)
-      .subscribe(response => {
-        console.log(response);
-        console.log('REGISTER SUCCES');
-        alert("You registered successfully! Check you email to confirm account")
-      }, error => {
-        console.log("Error occured!");
-    })
+    if(this.isBetareader && this.multipleValue.length === 0){
+          alert("Please select some genre");
+    }else{
+        this.authService.registerUser(o,this.formFieldsDto.taskId)
+        .subscribe(response => {
+          console.log(response);
+          console.log('REGISTER SUCCES');
+          alert("You registered successfully!")
+        }, error => {
+          console.log("Error occured!");
+      })
 
-    this.resetForm(new MouseEvent('click'));
+      this.resetForm(new MouseEvent('click'));
+      }
+
   }
 
 
@@ -122,6 +131,7 @@ export class RegistrateComponent implements OnInit {
       this.validateForm.controls[key].updateValueAndValidity();
     }
     this.isUsernameExist = false;
+    this.isBetareader = false;
     this.multipleValue = [];
   }
 
@@ -146,6 +156,7 @@ export class RegistrateComponent implements OnInit {
     this.formFields = copyFormFields;
   }
 
+  
 
    createListForOption(genresString){
       const children: Array<{ label: string; value: string }> = [];
@@ -183,9 +194,10 @@ export class RegistrateComponent implements OnInit {
       return { error: true, required: true };
     } else if (control.value !== this.validateForm.controls.password.value) {
       return { confirm: true, error: true };
-    }
+    } 
     return {};
   };
+
 
 
   validateConfirmPassword(): void {
@@ -195,6 +207,7 @@ export class RegistrateComponent implements OnInit {
 
   userNameAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {
+      console.log("VOLIM TE");
       this.userService.getUser(control.value).subscribe(() => {
         this.isUsernameExist = true;
       }, () => {
@@ -211,6 +224,13 @@ export class RegistrateComponent implements OnInit {
       }, 1000);
     });
 
+    
+   
+  
+
+
+    
+   
 
 
    //Its a bad practice to use expressions in angular bindings, so move the class expression into controller.
@@ -220,6 +240,10 @@ export class RegistrateComponent implements OnInit {
   
   isString(item) : boolean {
     return (item.type.name === 'string' && !this.isPassword(item));
+  }
+
+  afterClose(): void {
+    console.log('close');
   }
 
 
@@ -261,8 +285,38 @@ export class RegistrateComponent implements OnInit {
 
   }
 
+  
+
+}
 
 
 
+function hasLowerCase(str) {
+  if(str != null) {
+    return (/[a-z]/.test(str));
+  }
+}
 
+function hasUpperCase(str) {
+  if(str != null) {
+    return (/[A-Z]/.test(str));
+  }
+}
+
+function hasNumber(str) {
+  if(str != null) {
+    return (/[0-9]/.test(str));
+  }
+}
+
+function hasSpecialCharacter(str) {
+  if(str != null) {
+    return (/[!@#$%^&.]/.test(str));
+  }
+}
+
+function hasMinLength(str: string) {
+  if(str != null) {
+    return (str.length >= 9);
+  }
 }
