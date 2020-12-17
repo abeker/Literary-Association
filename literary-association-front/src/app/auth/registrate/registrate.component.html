@@ -11,13 +11,28 @@
                 
 
                 <input nz-input type="text" formControlName={{field.id}} id={{field.id}} ngModel *ngIf="isString(field)">
-                <label nz-checkbox [(ngModel)]="isBetareader" [ngModelOptions]="{standalone: true}"  style="margin-left: 20px;" *ngIf="field.type.name=='boolean'"></label> 
+                <label nz-checkbox  [(ngModel)]="isBetareader" [ngModelOptions]="{standalone: true}" style="margin-left: 20px;" *ngIf="field.type.name=='boolean'"></label> 
                 <input type="number" formControlName={{field.id}} id={{field.id}} ngModel  *ngIf="field.type.name=='long'">
  
 
-                 <nz-select [(ngModel)]="multipleValue" id={{field.id}} [disabled]="!isBetareader"  [nzSize]="size" nzMode="multiple" [ngModelOptions]="{standalone: true}" nzPlaceHolder="Please select" *ngIf="field.type.name=='enum'">
+                 <nz-select [(ngModel)]="multipleValue" id={{field.id}} [disabled]="!isBetareader"  [nzSize]="size" nzMode="multiple"  [ngModelOptions]="{standalone: true}" nzPlaceHolder="Please select" *ngIf="field.type.name=='enum'">
                     <nz-option *ngFor="let option of field.type.values" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
                  </nz-select> 
+
+
+                 <input nz-input (ngModelChange)="onPasswordChange($event)"
+                type="password"
+                placeholder="Password"
+                id={{field.id}}
+                formControlName={{field.id}}
+                *ngIf="field.type.name=='password'">
+
+                <input nz-input (ngModelChange)="onPasswordConfirmChange($event)"
+                type="password"
+                placeholder="Password"
+                id={{field.id}}
+                formControlName={{field.id}}
+                *ngIf="field.type.name=='confirm_password'">
 
 
                 <ng-template #err let-control>
@@ -30,11 +45,14 @@
                   <ng-container *ngIf="control.hasError('maxlength')">
                      Too much characters!
                  </ng-container>
-                  <ng-container *ngIf="control.hasError('email')">
+                  <ng-container *ngIf="control.hasError('email') && field.properties.hasOwnProperty('email')">
                     The input is not valid E-mail!
                   </ng-container>
                   <ng-container *ngIf="isUsernameExist">
                     This E-Mail already exist!
+                  </ng-container>
+                  <ng-container *ngIf="!control.hasError('required') && !control.hasError('pattern') &&field.type.name=='confirm_password'" >              
+                    Password is inconsistent!
                   </ng-container>
                 </ng-template>  
                 
@@ -42,8 +60,7 @@
 
            </nz-form-control>
 
-           <nz-form-control nzHasFeedback [nzSm]="0" [nzXs]="12" [nzErrorTip]="passwordErrorTpl">
-
+       <!--  <nz-form-control nzHasFeedback  [nzSm]="12" [nzXs]="24" [nzErrorTip]="passwordErrorTpl">
 
                 <input nz-input (ngModelChange)="onPasswordChange($event)"
                 type="password"
@@ -59,14 +76,20 @@
                 formControlName={{field.id}}
                 *ngIf="field.type.name=='confirm_password'">
               
+                
                 <ng-template #passwordErrorTpl let-control>
-                  <ng-container *ngIf="!control.hasError('required') && !control.hasError('pattern')">
+                  <div id="passwordError">
+                  <ng-container *ngIf="!control.hasError('required') && !control.hasError('pattern')" >              
                     Password is inconsistent!
                   </ng-container>
-                </ng-template>  
-
-
-          </nz-form-control>
+                  <ng-container *ngIf="control.hasError('minlength')">
+                    Not enough characters!
+                 </ng-container>
+                </div>
+              </ng-template>  
+              
+          </nz-form-control>-->
+           
 
          </nz-form-item>
 
@@ -87,5 +110,6 @@
   
 
   </form>
+
   
 </div>
