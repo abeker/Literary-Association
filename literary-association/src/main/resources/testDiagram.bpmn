@@ -32,7 +32,7 @@
           <camunda:formField id="password" label="Password" type="string">
             <camunda:properties>
               <camunda:property id="password" value="true" />
-              <camunda:property id="hasDigit" />
+              <camunda:property id="pattern" value="[0-9]" />
             </camunda:properties>
             <camunda:validation>
               <camunda:constraint name="required" />

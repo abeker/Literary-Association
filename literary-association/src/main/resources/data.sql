@@ -29,6 +29,6 @@ values ('0896abd9-932d-4998-8a83-2a00d9bf77e5', true);
 insert into genre(id, code, genre_name)
 values ('b10c65ec-3a63-47c5-a87c-500aa71d9427', '5656545', 'thriller');
 insert into genre(id, code, genre_name)
-values ('10b2d90b-0cbc-4ec2-b165-6c5c959737c6', '546484978', 'historical romance');
+values ('10b2d90b-0cbc-4ec2-b165-6c5c959737c6', '546484978', 'fiction');
 insert into genre(id, code, genre_name)
-values ('fb5443bd-3b1a-40cf-a979-d7ad9c45e315', '15689546', 'romance novel');
+values ('fb5443bd-3b1a-40cf-a979-d7ad9c45e315', '15689546', 'poetry');

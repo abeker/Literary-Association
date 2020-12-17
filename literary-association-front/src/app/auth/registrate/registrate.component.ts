@@ -56,6 +56,9 @@ export class RegistrateComponent implements OnInit {
             }else if(field.properties.hasOwnProperty('email')){
                validators.push(Validators.email);
               // validators.push(this.userNameAsyncValidator);
+            }else if(field.type.name == "password" && field.properties.hasOwnProperty('pattern') ){
+               let obj = field.properties;
+               validators.push(Validators.pattern(new RegExp(obj['pattern'])));
             }
             this.validateForm.addControl(field.id, this.fb.control('', validators)); 
             console.log(field.id, validators);
@@ -153,6 +156,7 @@ export class RegistrateComponent implements OnInit {
     this.formFields = copyFormFields;
   }
 
+  
 
    createListForOption(genresString){
       const children: Array<{ label: string; value: string }> = [];
@@ -281,8 +285,38 @@ export class RegistrateComponent implements OnInit {
 
   }
 
+  
+
+}
 
 
 
+function hasLowerCase(str) {
+  if(str != null) {
+    return (/[a-z]/.test(str));
+  }
+}
 
+function hasUpperCase(str) {
+  if(str != null) {
+    return (/[A-Z]/.test(str));
+  }
+}
+
+function hasNumber(str) {
+  if(str != null) {
+    return (/[0-9]/.test(str));
+  }
+}
+
+function hasSpecialCharacter(str) {
+  if(str != null) {
+    return (/[!@#$%^&.]/.test(str));
+  }
+}
+
+function hasMinLength(str: string) {
+  if(str != null) {
+    return (str.length >= 9);
+  }
 }
