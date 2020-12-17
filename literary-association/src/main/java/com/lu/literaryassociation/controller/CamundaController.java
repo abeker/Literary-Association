@@ -25,6 +25,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @RestController
@@ -123,7 +125,7 @@ public class CamundaController {
     }
 
     @GetMapping("/confirm-account/{instanceId}")
-    public ResponseEntity<String> activateAccount(@PathVariable String instanceId, @RequestParam("token")String token){
+    public ResponseEntity<String> activateAccount(@PathVariable String instanceId, @RequestParam("token")String token) throws URISyntaxException {
         System.out.println("TOKEN: " + token);
         ConfirmationToken confirmationToken = confirmationTokenService.findByToken(token);
         if(confirmationToken == null) {
@@ -142,8 +144,10 @@ public class CamundaController {
         confirmationTokenService.delete(confirmationToken);
 
 
-
-        return ResponseEntity.ok("Successfully activated account: " + user.getUsername());
+        URI yahoo = new URI("http://localhost:4200/auth/login");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(yahoo);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
     private HashMap<String, Object> mapListToDto(List<FormSubmissionDto> list)
