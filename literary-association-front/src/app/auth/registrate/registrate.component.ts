@@ -7,6 +7,7 @@ import { Observable, Observer } from 'rxjs';
 import { NzMessageService, valueFunctionProp } from 'ng-zorro-antd';
 import { UserService } from './../../services/user.service';
 import { ReaderService } from './../../services/reader.service';
+import { HttpClient } from '@angular/common/http';
 
 
 @Component({
@@ -31,45 +32,54 @@ export class RegistrateComponent implements OnInit {
   isPasswordCorrect: boolean = false;
   passwordPercentage: number = 0;
   passwordConfirmPercentage: number = 0;
- 
+  processInstace: any
 
   constructor(private router: Router, private authService: AuthService, private fb: FormBuilder,
-              private userService: UserService,  private message: NzMessageService, private readerService: ReaderService) { 
+              private userService: UserService,  private message: NzMessageService, private readerService: ReaderService, private http: HttpClient) { 
        
       this.validateForm = this.fb.group({});
-
-      this.authService.startRegistrationProcess().
-       subscribe((res) => {
-          console.log(res);
-          this.initFieldsDto = res;
-          this.formFieldsDto = res;
-          this.changeFormFieldsDTO();
-          console.log(this.formFields);
-          this.processInstance = res.processInstanceId;
-          this.formFields.forEach( (field) =>{
-            console.log(field);
-            let field_validations = field.validationConstraints;
-            let validators = this.newValidationRule(field_validations);
-            if(field.type.name == "confirm_password"){
-               //this.validateForm.addControl(field.id, this.fb.control('', validators,[this.confirmValidator]));
-               validators.push(this.confirmValidator);
-            }else if(field.properties.hasOwnProperty('email')){
-               validators.push(Validators.email);
-              // validators.push(this.userNameAsyncValidator);
-            }else if(field.type.name == "password" && field.properties.hasOwnProperty('pattern') ){
-               let obj = field.properties;
-               validators.push(Validators.pattern(new RegExp(obj['pattern'])));
-            }
-            this.validateForm.addControl(field.id, this.fb.control('', validators)); 
-            console.log(field.id, validators);
-          });
-       }, error => {
-        console.log(error);
-      });
+      // this.http.get("http://localhost:8084/welcome/startProcess").subscribe(resp => {
+      // console.log("PROCESS INSTANCE: " + resp)
+      // localStorage.setItem("processInstance",  resp.toString())
+      // this.http.get("http://localhost:8084/welcome/startProcess").toPromise().then(resp=>{
+      //   console.log(resp)
+      // })
+        
   }
 
 
   ngOnInit(): void {
+    let proecesInstanceId = localStorage.getItem("processInstance")
+    console.log("ISCITAVAM: " + proecesInstanceId)
+    this.authService.startRegistrationProcess(proecesInstanceId).
+    subscribe((res) => {
+        console.log(res);
+        this.initFieldsDto = res;
+        this.formFieldsDto = res;
+        this.changeFormFieldsDTO();
+        console.log(this.formFields);
+        this.processInstance = res.processInstanceId;
+        this.formFields.forEach( (field) =>{
+          console.log(field);
+          let field_validations = field.validationConstraints;
+          let validators = this.newValidationRule(field_validations);
+          if(field.type.name == "confirm_password"){
+            //this.validateForm.addControl(field.id, this.fb.control('', validators,[this.confirmValidator]));
+            validators.push(this.confirmValidator);
+          }else if(field.properties.hasOwnProperty('email')){
+            validators.push(Validators.email);
+            // validators.push(this.userNameAsyncValidator);
+          }else if(field.type.name == "password" && field.properties.hasOwnProperty('pattern') ){
+            let obj = field.properties;
+            validators.push(Validators.pattern(new RegExp(obj['pattern'])));
+          }
+          this.validateForm.addControl(field.id, this.fb.control('', validators)); 
+          console.log(field.id, validators);
+        });
+    }, error => {
+      console.log(error);
+    });
+   
   }
 
 

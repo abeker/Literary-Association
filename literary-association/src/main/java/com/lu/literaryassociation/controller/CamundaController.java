@@ -12,9 +12,13 @@ import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.TaskFormData;
+import org.camunda.bpm.engine.rest.ExecutionRestService;
+import org.camunda.bpm.engine.runtime.ActivityInstance;
 import org.camunda.bpm.engine.runtime.EventSubscription;
+import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,13 +59,18 @@ public class CamundaController {
     @Autowired
     GenreService genreService;
 
-
-    @GetMapping(path = "/get", produces = "application/json")
-    public @ResponseBody
-    FormFieldsDto get() {
+    @GetMapping(path = "/startProcess", produces = "application/json")
+    public  ResponseEntity<String> startProcess(){
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("Popuni_formu");
+        return ResponseEntity.ok(pi.getId());
+    }
 
-        Task task = taskService.createTaskQuery().processInstanceId(pi.getId()).list().get(0);
+
+    @GetMapping(path = "/get/{processInstanceId}", produces = "application/json")
+    public @ResponseBody
+    FormFieldsDto getFormFields(@PathVariable("processInstanceId") String processInstanceId) {
+        System.out.println("PROCES: " + processInstanceId);
+        Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
 
         TaskFormData tfd = formService.getTaskFormData(task.getId());
         List<FormField> properties = tfd.getFormFields();
@@ -69,7 +78,7 @@ public class CamundaController {
             System.out.println(fp.getId() + fp.getType());
         }
 
-        return new FormFieldsDto(task.getId(), pi.getId(), properties);
+        return new FormFieldsDto(task.getId(),processInstanceId, properties);
     }
 
     @GetMapping(path = "/get/tasks/{processInstanceId}", produces = "application/json")
@@ -127,22 +136,12 @@ public class CamundaController {
     @GetMapping("/confirm-account/{instanceId}")
     public ResponseEntity<String> activateAccount(@PathVariable String instanceId, @RequestParam("token")String token) throws URISyntaxException {
         System.out.println("TOKEN: " + token);
-        ConfirmationToken confirmationToken = confirmationTokenService.findByToken(token);
-        if(confirmationToken == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your token is invalid");
-        }
-        //is it expired?
-        if(confirmationToken.getExpiryDate().before(new Date())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Your token has expired");
-        }
-        Reader user = readerService.findReaderByUsername(confirmationToken.getUserEntity().getUsername());
 
+        ActivityInstance activityInstance = runtimeService.getActivityInstance(instanceId);
+        String[] exids = activityInstance.getExecutionIds();
+        System.out.println("DUZINA: " + exids.length + "  PRVI: " + exids[0]);
+        runtimeService.setVariable(exids[0],"confirmationToken",token);
         runtimeService.createMessageCorrelation("Message_142ir1i").processInstanceId(instanceId).correlateAll();
-        user.setApproved(true);
-        userService.saveUser(user);
-        //remove confirmationTOken
-        confirmationTokenService.delete(confirmationToken);
-
 
         URI yahoo = new URI("http://localhost:4200/auth/login");
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -169,5 +168,6 @@ public class CamundaController {
 //		            .list().get(0);
 
 //			Task task = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list().get(0);
+
 
 

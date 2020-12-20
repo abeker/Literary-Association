@@ -40,6 +40,10 @@ export class LoginComponent implements OnInit {
   }
 
   register(): void {
+    this.authService.startProcess().subscribe((data: string)=>{
+      console.log("PROCES_INSTANCE" + data);
+      localStorage.setItem("processInstance", data);
+    })
     this.router.navigateByUrl('auth/registrate');
   }
 

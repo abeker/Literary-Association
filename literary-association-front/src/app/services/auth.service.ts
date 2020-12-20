@@ -16,12 +16,16 @@ export class AuthService {
     return this.http.put(`${this.baseUrl}auth/login`, body);
   }
 
-  public startRegistrationProcess(): Observable<any> {
-    return this.http.get(`${this.baseUrl}welcome/get`);
+  public startRegistrationProcess(processId): Observable<any> {
+    return this.http.get(`${this.baseUrl}welcome/get/${processId}`);
   }
 
   public registerUser(user, taskId): Observable<any> {
     return this.http.post(`${this.baseUrl}welcome/post/${taskId}`, user);
+  }
+
+  public startProcess(): Observable<any>{
+    return this.http.get("http://localhost:8084/welcome/startProcess",{responseType: 'text'})
   }
 
 }
