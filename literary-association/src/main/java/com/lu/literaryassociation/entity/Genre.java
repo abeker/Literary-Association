@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity
@@ -13,7 +14,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Genre extends BaseEntity {
+public class Genre extends BaseEntity implements Serializable {
 
     private String code;
 
