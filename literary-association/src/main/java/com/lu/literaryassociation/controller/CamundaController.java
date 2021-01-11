@@ -1,9 +1,8 @@
 package com.lu.literaryassociation.controller;
 
-import camundajar.impl.com.google.gson.JsonObject;
-import camundajar.impl.scala.util.parsing.json.JSONObject;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.lu.literaryassociation.entity.*;
+import com.lu.literaryassociation.entity.FormFieldsDto;
+import com.lu.literaryassociation.entity.FormSubmissionDto;
+import com.lu.literaryassociation.entity.TaskDto;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
 import com.lu.literaryassociation.services.implementation.GenreService;
 import com.lu.literaryassociation.services.implementation.ReaderService;
@@ -12,26 +11,22 @@ import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.TaskFormData;
-import org.camunda.bpm.engine.rest.ExecutionRestService;
 import org.camunda.bpm.engine.runtime.ActivityInstance;
-import org.camunda.bpm.engine.runtime.EventSubscription;
-import org.camunda.bpm.engine.runtime.Execution;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/welcome")

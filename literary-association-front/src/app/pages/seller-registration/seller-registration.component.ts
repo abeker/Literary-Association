@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd';
 import { BankService } from './../../services/bank.service';
@@ -10,7 +10,7 @@ import { PaymentConcentratorService } from './../../services/payment-concentrato
   templateUrl: './seller-registration.component.html',
   styleUrls: ['./seller-registration.component.css']
 })
-export class SellerRegistrationComponent implements OnInit {
+export class SellerRegistrationComponent implements OnInit, OnDestroy {
 
     bitcoinChecked = false;
     paypalChecked = false;
@@ -27,7 +27,11 @@ export class SellerRegistrationComponent implements OnInit {
                 private bankService: BankService,
                 private literaryAssociationService: LiteraryAssociationService,
                 private paymentConcentratorService: PaymentConcentratorService,
-                private message: NzMessageService,) {}
+                private message: NzMessageService) {}
+
+    ngOnDestroy(): void {
+      alert('ondestroy');
+    }
 
     ngOnInit(): void {
       this.paymentConcentratorService.getPaymentTypes().subscribe(response => {
