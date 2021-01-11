@@ -9,7 +9,6 @@ import { UserService } from './../../services/user.service';
 import { ReaderService } from './../../services/reader.service';
 import { HttpClient } from '@angular/common/http';
 
-
 @Component({
   selector: 'app-registrate',
   templateUrl: './registrate.component.html',
@@ -35,8 +34,8 @@ export class RegistrateComponent implements OnInit {
   processInstace: any
 
   constructor(private router: Router, private authService: AuthService, private fb: FormBuilder,
-              private userService: UserService,  private message: NzMessageService, private readerService: ReaderService, private http: HttpClient) { 
-       
+              private userService: UserService,  private message: NzMessageService, private readerService: ReaderService, private http: HttpClient) {
+
       this.validateForm = this.fb.group({});
       // this.http.get("http://localhost:8084/welcome/startProcess").subscribe(resp => {
       // console.log("PROCESS INSTANCE: " + resp)
@@ -44,7 +43,7 @@ export class RegistrateComponent implements OnInit {
       // this.http.get("http://localhost:8084/welcome/startProcess").toPromise().then(resp=>{
       //   console.log(resp)
       // })
-        
+
   }
 
 
@@ -73,13 +72,13 @@ export class RegistrateComponent implements OnInit {
             let obj = field.properties;
             validators.push(Validators.pattern(new RegExp(obj['pattern'])));
           }
-          this.validateForm.addControl(field.id, this.fb.control('', validators)); 
+          this.validateForm.addControl(field.id, this.fb.control('', validators));
           console.log(field.id, validators);
         });
     }, error => {
       console.log(error);
     });
-   
+
   }
 
 
@@ -99,7 +98,7 @@ export class RegistrateComponent implements OnInit {
       }else if (property === "genre"){
         console.log("ZANROVIIIII");
         let genreString = "";
-        
+
         for(let i=0;i<this.multipleValue.length;i++){
               //console.log(this.multipleValue[i]);
               genreString += (this.multipleValue[i]);
@@ -111,9 +110,9 @@ export class RegistrateComponent implements OnInit {
         o.push({fieldId : property, fieldValue : value[property]});
       }
     }
-    
+
     console.log(o);
-    //console.log(this.multipleValue); 
+    //console.log(this.multipleValue);
 
     if(this.isBetareader && this.multipleValue.length === 0){
           alert("Please select some genre");
@@ -145,7 +144,7 @@ export class RegistrateComponent implements OnInit {
     this.multipleValue = [];
   }
 
-  
+
   changeFormFieldsDTO(){
     let formFields = this.formFieldsDto.formFields;
     let copyFormFields = [];
@@ -166,7 +165,7 @@ export class RegistrateComponent implements OnInit {
     this.formFields = copyFormFields;
   }
 
-  
+
 
    createListForOption(genresString){
       const children: Array<{ label: string; value: string }> = [];
@@ -178,7 +177,7 @@ export class RegistrateComponent implements OnInit {
    }
 
 
-  
+
   newValidationRule(field_validations): any {
     let validators = [];
     field_validations.forEach(tep => {
@@ -204,7 +203,7 @@ export class RegistrateComponent implements OnInit {
       return { error: true, required: true };
     } else if (control.value !== this.validateForm.controls.password.value) {
       return { confirm: true, error: true };
-    } 
+    }
     return {};
   };
 
@@ -234,20 +233,20 @@ export class RegistrateComponent implements OnInit {
       }, 1000);
     });
 
-    
-   
-  
 
 
-    
-   
+
+
+
+
+
 
 
    //Its a bad practice to use expressions in angular bindings, so move the class expression into controller.
   isPassword(item): boolean {
     return (item.id === 'password' || item.id === "c_password");
   }
-  
+
   isString(item) : boolean {
     return (item.type.name === 'string' && !this.isPassword(item));
   }
@@ -282,7 +281,7 @@ export class RegistrateComponent implements OnInit {
       coefficientAccuracy += 1;
     } if(hasMinLength(password)) {
       coefficientAccuracy += 1;
-    }*/ 
+    }*/
     if(password === this.validateForm.value.password && isConfirm) {
       coefficientAccuracy += 1;
     }
@@ -295,7 +294,7 @@ export class RegistrateComponent implements OnInit {
 
   }
 
-  
+
 
 }
 
