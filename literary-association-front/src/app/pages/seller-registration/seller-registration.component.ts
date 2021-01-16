@@ -10,7 +10,7 @@ import { PaymentConcentratorService } from './../../services/payment-concentrato
   templateUrl: './seller-registration.component.html',
   styleUrls: ['./seller-registration.component.css']
 })
-export class SellerRegistrationComponent implements OnInit, OnDestroy {
+export class SellerRegistrationComponent implements OnInit {
 
     bitcoinChecked = false;
     paypalChecked = false;
@@ -29,9 +29,9 @@ export class SellerRegistrationComponent implements OnInit, OnDestroy {
                 private paymentConcentratorService: PaymentConcentratorService,
                 private message: NzMessageService) {}
 
-    ngOnDestroy(): void {
-      alert('ondestroy');
-    }
+    // ngOnDestroy(): void {
+    //   alert('ondestroy');
+    // }
 
     ngOnInit(): void {
       this.paymentConcentratorService.getPaymentTypes().subscribe(response => {
