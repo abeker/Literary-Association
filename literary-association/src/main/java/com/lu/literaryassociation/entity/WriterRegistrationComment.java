@@ -17,18 +17,17 @@ import java.util.Set;
 @AllArgsConstructor
 public class WriterRegistrationComment extends BaseEntity {
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<CommitteeMember> committeeMember;
-
     private String comment;
 
     private WriterStatus membershipApproved;
-
-    private LocalDate dateToDeliverMaterial;
 
     private boolean deleted;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private WriterMembershipStatus writerMembershipStatus;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="committee_member_id", referencedColumnName="id")
+    private CommitteeMember committeeMember;
 
 }

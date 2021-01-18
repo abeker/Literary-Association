@@ -17,9 +17,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class Book extends BaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private BookRequest bookRequest;
-
     private String ISBN;
 
     private LocalDate publishYear;
@@ -32,4 +29,8 @@ public class Book extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Keyword> keywords;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="book_request_id", referencedColumnName="id")
+    private BookRequest bookRequest;
 }

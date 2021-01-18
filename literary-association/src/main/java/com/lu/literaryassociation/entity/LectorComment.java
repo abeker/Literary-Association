@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @SuppressWarnings("SpellCheckingInspection")
 @Entity
@@ -18,11 +19,12 @@ public class LectorComment extends BaseEntity {
 
     private String commentText;
 
-    private LocalDate dateOfLastChange;
+    private LocalDateTime commentTime;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Handwriting handwriting;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="lector_id", referencedColumnName="id")
     private Lector lector;
 }

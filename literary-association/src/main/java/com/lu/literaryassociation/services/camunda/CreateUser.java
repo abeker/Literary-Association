@@ -1,11 +1,7 @@
 package com.lu.literaryassociation.services.camunda;
 
-import camundajar.impl.scala.Array;
 import com.lu.literaryassociation.entity.BetaReader;
-import com.lu.literaryassociation.entity.ConfirmationToken;
-import com.lu.literaryassociation.entity.FormSubmissionDto;
 import com.lu.literaryassociation.entity.Genre;
-import com.lu.literaryassociation.repository.IConformationTokenRepository;
 import com.lu.literaryassociation.repository.IUserRepository;
 import com.lu.literaryassociation.services.definition.IGenreService;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;

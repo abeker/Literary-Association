@@ -10,15 +10,7 @@ import java.util.Set;
 
 @SuppressWarnings("SpellCheckingInspection")
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Lector extends User {
-
-    private boolean approved;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "lector")
-    private Set<LectorComment> lectorComments;
 
 }

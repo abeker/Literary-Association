@@ -17,8 +17,6 @@ import javax.persistence.OneToOne;
 @AllArgsConstructor
 public class Reader extends User {
 
-    private boolean approved;
-
     @OneToOne(mappedBy = "reader", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private BetaReader betaReader;
 

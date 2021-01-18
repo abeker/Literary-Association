@@ -1,4 +1,4 @@
-package com.lu.literaryassociation.entity;
+package com.lu.literaryassociation.dto.request;
 
 import java.io.Serializable;
 

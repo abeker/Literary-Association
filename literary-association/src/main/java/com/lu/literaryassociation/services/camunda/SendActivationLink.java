@@ -26,20 +26,28 @@ import java.util.UUID;
 
 @Service
 public class SendActivationLink implements JavaDelegate {
-    @Autowired
+    final
     IConformationTokenRepository iConformationTokenRepository;
 
-    @Autowired
+    final
     IUserRepository iUserRepository;
 
-    @Autowired
+    final
     EmailService emailService;
 
-    @Autowired
+    final
     ConfirmationTokenService confirmationTokenService;
 
-    @Autowired
+    final
     JavaMailSender javaMailSender;
+
+    public SendActivationLink(IConformationTokenRepository iConformationTokenRepository, IUserRepository iUserRepository, EmailService emailService, ConfirmationTokenService confirmationTokenService, JavaMailSender javaMailSender) {
+        this.iConformationTokenRepository = iConformationTokenRepository;
+        this.iUserRepository = iUserRepository;
+        this.emailService = emailService;
+        this.confirmationTokenService = confirmationTokenService;
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {

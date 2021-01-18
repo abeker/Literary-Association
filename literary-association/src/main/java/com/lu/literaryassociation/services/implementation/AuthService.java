@@ -63,27 +63,8 @@ public class AuthService implements IAuthService {
     }
 
     private void checkUserStatus(User userToCheck) {
-        switch (userToCheck.getUserType()){
-            case EDITOR:
-                if(!((Editor)userToCheck).isApproved()) {
-                    throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-                }
-            break;
-            case LECTOR:
-                if(!((Lector)userToCheck).isApproved()) {
-                    throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-                }
-            break;
-            case READER:
-                if(!((Reader)userToCheck).isApproved()) {
-                    throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-                }
-            break;
-            case WRITER:
-                if(!((Writer)userToCheck).isRegistrationApproved()) {
-                    throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-                }
-            break;
+        if(!userToCheck.isApproved()) {
+            throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
         }
     }
 

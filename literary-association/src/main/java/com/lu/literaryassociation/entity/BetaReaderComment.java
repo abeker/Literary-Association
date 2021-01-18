@@ -23,7 +23,7 @@ public class BetaReaderComment extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Handwriting handwriting;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="beta_reader_id", referencedColumnName="id")
     private BetaReader betaReader;
-
 }
