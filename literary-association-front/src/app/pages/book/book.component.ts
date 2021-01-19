@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { WriterService } from './../../services/writer.service';
 
 @Component({
   selector: 'app-book',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BookComponent implements OnInit {
 
-  constructor() { }
+    constructor(private writerService: WriterService) { }
 
-  ngOnInit(): void {
-  }
+    ngOnInit(): void {
+    }
+
+    publishBook(): void {
+        this.writerService.publishStart().subscribe(response => {
+            console.log(response);
+        });
+    }
 
 }

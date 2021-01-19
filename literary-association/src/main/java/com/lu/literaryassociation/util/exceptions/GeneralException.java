@@ -1,4 +1,4 @@
-package com.lu.literaryassociation.services.implementation;
+package com.lu.literaryassociation.util.exceptions;
 
 import org.springframework.http.HttpStatus;
 

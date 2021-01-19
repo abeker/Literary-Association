@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_08ryqg6" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
-  <bpmn:process id="Process_0ahiabw" isExecutable="true">
+  <bpmn:process id="Publish_book_process" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_164wa53</bpmn:outgoing>
     </bpmn:startEvent>
@@ -468,7 +468,7 @@
     <bpmn:sequenceFlow id="Flow_0sdk0ff" name="not sending to beta readers" sourceRef="Gateway_1afvzo4" targetRef="Gateway_1pz8pdb" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0ahiabw">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Publish_book_process">
       <bpmndi:BPMNEdge id="Flow_0sdk0ff_di" bpmnElement="Flow_0sdk0ff">
         <di:waypoint x="2035" y="730" />
         <di:waypoint x="2850" y="730" />

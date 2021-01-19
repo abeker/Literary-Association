@@ -60,7 +60,6 @@ public class CamundaController {
         return ResponseEntity.ok(pi.getId());
     }
 
-
     @GetMapping(path = "/get/{processInstanceId}", produces = "application/json")
     public @ResponseBody
     FormFieldsDto getFormFields(@PathVariable("processInstanceId") String processInstanceId) {

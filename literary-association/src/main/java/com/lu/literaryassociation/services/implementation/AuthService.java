@@ -6,6 +6,7 @@ import com.lu.literaryassociation.entity.*;
 import com.lu.literaryassociation.repository.IUserRepository;
 import com.lu.literaryassociation.security.TokenUtils;
 import com.lu.literaryassociation.services.definition.IAuthService;
+import com.lu.literaryassociation.util.exceptions.GeneralException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;

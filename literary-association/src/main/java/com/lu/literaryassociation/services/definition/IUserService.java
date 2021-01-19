@@ -1,7 +1,7 @@
 package com.lu.literaryassociation.services.definition;
 
 import com.lu.literaryassociation.dto.response.UserStored;
-import com.lu.literaryassociation.services.implementation.GeneralException;
+import com.lu.literaryassociation.util.exceptions.GeneralException;
 
 public interface IUserService {
 

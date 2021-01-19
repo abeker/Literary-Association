@@ -3,6 +3,7 @@ package com.lu.literaryassociation.services.implementation;
 import com.lu.literaryassociation.entity.Genre;
 import com.lu.literaryassociation.repository.IGenreRepository;
 import com.lu.literaryassociation.services.definition.IGenreService;
+import com.lu.literaryassociation.util.exceptions.GeneralException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
