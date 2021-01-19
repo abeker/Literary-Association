@@ -1,6 +1,7 @@
 package com.lu.literaryassociation.services.implementation;
 
 import com.lu.literaryassociation.services.definition.IFileService;
+import com.lu.literaryassociation.util.exceptions.GeneralException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

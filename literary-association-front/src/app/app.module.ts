@@ -1,5 +1,5 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import en from '@angular/common/locales/en';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -22,6 +22,7 @@ import { BookComponent } from './pages/book/book.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { FileUploadComponent } from './pages/file-upload/file-upload.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 registerLocaleData(en);
 
@@ -56,7 +57,12 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     ReactiveFormsModule,
     StoreDevtoolsModule.instrument({ logOnly: environment.production }),
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US }],
+  providers: [{ provide: NZ_I18N, useValue: en_US },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

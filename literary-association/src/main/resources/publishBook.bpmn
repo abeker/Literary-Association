@@ -4,7 +4,7 @@
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_164wa53</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="Activity_14ghzw0" name="Fill the form" camunda:assignee="${username}">
+    <bpmn:userTask id="Activity_14ghzw0" name="Fill the form" camunda:assignee="${writerUsername}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="title" label="Title" type="string">
@@ -85,7 +85,7 @@
       <bpmn:outgoing>Flow_1ndynnf</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_13cb2em" name="reviewing" sourceRef="Gateway_1eufar8" targetRef="Activity_1g2ysv8">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved} == true</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:serviceTask id="Activity_1g2ysv8" name="Notify writer to send whole handwirte." camunda:class="com.lu.literaryassociation.controller.CamundaController.notifyWriterToSendHandwrite.java">
       <bpmn:incoming>Flow_13cb2em</bpmn:incoming>
@@ -430,20 +430,17 @@
     <bpmn:sequenceFlow id="Flow_0ulayb0" name="sending to beta readers" sourceRef="Gateway_1afvzo4" targetRef="Activity_0zbbg6p">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${sendToBetaReaders}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_0iz91f2" sourceRef="Activity_1jfxijf" targetRef="Gateway_1tu2gq4">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" />
-    </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="Activity_1jfxijf" name="Check if user is registered and has role WRITER" camunda:class="com.lu.literaryassociation.services.camunda.UserService">
+    <bpmn:serviceTask id="Activity_1jfxijf" name="Check if user is registered and has role WRITER" camunda:class="com.lu.literaryassociation.services.camunda.publishBook.WriterCheckService">
       <bpmn:incoming>Flow_164wa53</bpmn:incoming>
-      <bpmn:outgoing>Flow_0iz91f2</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0ktf0cs</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:exclusiveGateway id="Gateway_1tu2gq4">
-      <bpmn:incoming>Flow_0iz91f2</bpmn:incoming>
+      <bpmn:incoming>Flow_0ktf0cs</bpmn:incoming>
       <bpmn:outgoing>Flow_0ikr3m4</bpmn:outgoing>
       <bpmn:outgoing>Flow_0u7zbzt</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0ikr3m4" sourceRef="Gateway_1tu2gq4" targetRef="Activity_11y5v3f">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isRegisteredWriter} == true</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isRegisteredWriter == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_164wa53" sourceRef="StartEvent_1" targetRef="Activity_1jfxijf" />
     <bpmn:endEvent id="Event_1pk335y">
@@ -451,11 +448,13 @@
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_0u2a7vg" />
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0u7zbzt" sourceRef="Gateway_1tu2gq4" targetRef="Event_1pk335y">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isRegisteredWriter} == false</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isRegisteredWriter == false}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1iwyx11" sourceRef="Gateway_065pwcf" targetRef="Activity_0ijwlp5" />
     <bpmn:sequenceFlow id="Flow_17x0mvt" sourceRef="Activity_0ijwlp5" targetRef="Gateway_1ml6cip" />
-    <bpmn:sequenceFlow id="Flow_1qvc1u1" sourceRef="Gateway_1eufar8" targetRef="Gateway_0skezbv" />
+    <bpmn:sequenceFlow id="Flow_1qvc1u1" sourceRef="Gateway_1eufar8" targetRef="Gateway_0skezbv">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved == false}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="Gateway_1ml6cip">
       <bpmn:incoming>Flow_17x0mvt</bpmn:incoming>
       <bpmn:incoming>Flow_17y2dwe</bpmn:incoming>
@@ -466,9 +465,14 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approved} == true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_0sdk0ff" name="not sending to beta readers" sourceRef="Gateway_1afvzo4" targetRef="Gateway_1pz8pdb" />
+    <bpmn:sequenceFlow id="Flow_0ktf0cs" sourceRef="Activity_1jfxijf" targetRef="Gateway_1tu2gq4" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Publish_book_process">
+      <bpmndi:BPMNEdge id="Flow_0ktf0cs_di" bpmnElement="Flow_0ktf0cs">
+        <di:waypoint x="350" y="337" />
+        <di:waypoint x="415" y="337" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0sdk0ff_di" bpmnElement="Flow_0sdk0ff">
         <di:waypoint x="2035" y="730" />
         <di:waypoint x="2850" y="730" />
@@ -511,10 +515,6 @@
       <bpmndi:BPMNEdge id="Flow_0ikr3m4_di" bpmnElement="Flow_0ikr3m4">
         <di:waypoint x="465" y="337" />
         <di:waypoint x="560" y="337" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0iz91f2_di" bpmnElement="Flow_0iz91f2">
-        <di:waypoint x="350" y="337" />
-        <di:waypoint x="415" y="337" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0ulayb0_di" bpmnElement="Flow_0ulayb0">
         <di:waypoint x="2010" y="755" />
