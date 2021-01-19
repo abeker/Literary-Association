@@ -7,6 +7,7 @@ import { RegistrateComponent } from './auth/registrate/registrate.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { SellerRegistrationComponent } from './pages/seller-registration/seller-registration.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { FileUploadComponent} from './pages/file-upload/file-upload.component'
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'auth/registration', component: RegistrationComponent },
   { path: 'auth/seller-registration', component: SellerRegistrationComponent },
   { path: 'auth/registrate', component: RegistrateComponent },
+  { path: 'register/fileUpload', component: FileUploadComponent},
   {
     path: 'dashboard', component: DashboardComponent, children: [
       { path: 'welcome', component: WelcomeComponent }

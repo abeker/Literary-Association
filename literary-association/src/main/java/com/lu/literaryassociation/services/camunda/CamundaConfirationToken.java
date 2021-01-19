@@ -2,9 +2,11 @@ package com.lu.literaryassociation.services.camunda;
 
 import com.lu.literaryassociation.entity.ConfirmationToken;
 import com.lu.literaryassociation.entity.Reader;
+import com.lu.literaryassociation.entity.Writer;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
 import com.lu.literaryassociation.services.implementation.ReaderService;
 import com.lu.literaryassociation.services.implementation.UserService;
+import com.lu.literaryassociation.services.implementation.WriterService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class CamundaConfirationToken implements JavaDelegate {
     ReaderService  readerService;
 
     @Autowired
+    WriterService writerService;
+
+    @Autowired
     UserService userService;
 
     @Override
@@ -35,9 +40,16 @@ public class CamundaConfirationToken implements JavaDelegate {
         if(confirmationToken.getExpiryDate().before(new Date())){
             return;
         }
-        Reader user = readerService.findReaderByUsername(confirmationToken.getUserEntity().getUsername());
-        user.setApproved(true);
-        userService.saveUser(user);
+        String userType = (String) execution.getVariable("userType");
+        if(userType.equals("reader")){
+            Reader user = readerService.findReaderByUsername(confirmationToken.getUserEntity().getUsername());
+            user.setApproved(true);
+            userService.saveUser(user);
+        }else{
+            Writer user = writerService.findWriterByUsername(confirmationToken.getUserEntity().getUsername());
+            userService.saveUser(user);
+        }
+
         //remove confirmationTOken
         confirmationTokenService.delete(confirmationToken);
     }

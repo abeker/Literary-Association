@@ -43,12 +43,24 @@ export class LoginComponent implements OnInit {
     this.authService.startProcess().subscribe((data: string)=>{
       console.log("PROCES_INSTANCE" + data);
       localStorage.setItem("processInstance", data);
+      localStorage.setItem("registrationType","reader");
+      this.router.navigateByUrl('auth/registrate');
     })
-    this.router.navigateByUrl('auth/registrate');
+  }
+
+  registerAsWriter(): void {
+    this.authService.startWriterRegistrationProcess().subscribe((data: string)=>{
+      console.log("PROCES_INSTANCE" + data);
+      localStorage.setItem("processInstance", data);
+      localStorage.setItem("registrationType","writer");
+      this.router.navigateByUrl('auth/registrate');
+    })
   }
 
   registerAsSeller(): void {
     this.router.navigateByUrl('auth/seller-registration');
   }
 
+
+  
 }

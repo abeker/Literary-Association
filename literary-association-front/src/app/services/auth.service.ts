@@ -25,7 +25,13 @@ export class AuthService {
   }
 
   public startProcess(): Observable<any>{
-    return this.http.get("http://localhost:8084/welcome/startProcess",{responseType: 'text'})
+    return this.http.get(`${this.baseUrl}welcome/startProcess`,{responseType: 'text'})
   }
+
+  public startWriterRegistrationProcess(): Observable<any>{
+    return this.http.get(`${this.baseUrl}welcome/startReaderProcess`,{responseType: 'text'})
+  }
+
+
 
 }

@@ -19,11 +19,16 @@
 
       </div>
       <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'">Log in</button>
-      Or <a (click)="register()"> register now! </a>
+      Or <a (click)="register()">  Register as: <strong>reader</strong>! </a>
       <span style="float: right;">
+        <a (click)="registerAsWriter()">
+          Register as: <strong>writer</strong>!
+        </a>
+      </span>
+     <!-- <span style="float: right;">
         <a (click)="registerAsSeller()">
           Register as <strong>seller</strong>!
         </a>
-      </span>
+      </span>-->
     </form>
 </div>
