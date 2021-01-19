@@ -1,21 +1,17 @@
 package com.lu.literaryassociation.controller;
 
 import com.lu.literaryassociation.services.definition.IFileService;
-import com.lu.literaryassociation.services.implementation.GeneralException;
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.ws.rs.QueryParam;
 import java.net.MalformedURLException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 

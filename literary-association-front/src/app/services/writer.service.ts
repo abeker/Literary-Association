@@ -12,7 +12,7 @@ export class WriterService {
   constructor(private http: HttpClient) { }
 
   public publishStart(): Observable<any> {
-    return this.http.get(this.baseUrl+"/publish-start");
+    return this.http.get(this.baseUrl+"/publish-start", {responseType: 'text'});
   }
 }
 

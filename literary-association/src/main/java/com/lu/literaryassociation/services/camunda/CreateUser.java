@@ -2,13 +2,9 @@ package com.lu.literaryassociation.services.camunda;
 
 import com.lu.literaryassociation.entity.BetaReader;
 import com.lu.literaryassociation.entity.Genre;
-import camundajar.impl.scala.Array;
-import com.lu.literaryassociation.entity.*;
-import com.lu.literaryassociation.repository.IConformationTokenRepository;
 import com.lu.literaryassociation.repository.IUserRepository;
 import com.lu.literaryassociation.services.definition.IGenreService;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
-import com.lu.literaryassociation.services.implementation.GeneralException;
 import com.lu.literaryassociation.util.enums.UserType;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -18,8 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Entity;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class CreateUser implements JavaDelegate {
@@ -111,7 +108,7 @@ public class CreateUser implements JavaDelegate {
             customUser.setEmail(email);
             customUser.setCity(city);
             customUser.setCountry(country);
-            customUser.setRegistrationApproved(false);
+            customUser.setApproved(false);
             customUser.setUserType(UserType.WRITER);
             Set<Genre> genreSet = new HashSet<Genre>();
             String[] parts = genres.split(";");

@@ -1,6 +1,5 @@
 package com.lu.literaryassociation.services.camunda;
 
-import com.lu.literaryassociation.services.implementation.GeneralException;
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.TaskService;
@@ -11,10 +10,8 @@ import org.camunda.bpm.engine.form.FormField;
 import org.camunda.bpm.engine.form.FormFieldValidationConstraint;
 import org.camunda.bpm.engine.form.TaskFormData;
 import org.camunda.bpm.engine.identity.User;
-import org.camunda.bpm.engine.impl.form.validator.FormFieldValidatorContext;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
