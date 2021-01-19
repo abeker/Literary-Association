@@ -2,9 +2,13 @@ package com.lu.literaryassociation.services.camunda;
 
 import com.lu.literaryassociation.entity.BetaReader;
 import com.lu.literaryassociation.entity.Genre;
+import camundajar.impl.scala.Array;
+import com.lu.literaryassociation.entity.*;
+import com.lu.literaryassociation.repository.IConformationTokenRepository;
 import com.lu.literaryassociation.repository.IUserRepository;
 import com.lu.literaryassociation.services.definition.IGenreService;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
+import com.lu.literaryassociation.services.implementation.GeneralException;
 import com.lu.literaryassociation.util.enums.UserType;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
@@ -14,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Entity;
 import java.util.*;
 
 @Service
@@ -42,16 +47,12 @@ public class CreateUser implements JavaDelegate {
         String lastname = (String)execution.getVariable("lastname");
         String email = (String)execution.getVariable("email");
         String password = (String) execution.getVariable("password");
-        String confirm_pass = (String)execution.getVariable("c_password");
-        if (!password.equals(confirm_pass)){
-            return;
-        }
         String city = (String)execution.getVariable("city");
         String country = (String)execution.getVariable("country");
-        boolean betaReader = (Boolean) execution.getVariable("betaReader");
+        //boolean betaReader = (Boolean) execution.getVariable("betaReader");
         String genres = (String) execution.getVariable("genre");
 
-        System.out.println("USERNAME: "+ username+ "    Password: "+ password  + " " + email+ "Beta reader: " + betaReader) ;
+        System.out.println("USERNAME: "+ username+ "    Password: "+ password  + " " + email) ;
         System.out.println("GENRES"+ genres);
 
         //Kreiramo camundinog ugradnjenog usera
@@ -65,19 +66,53 @@ public class CreateUser implements JavaDelegate {
 
         //OVAJ DEO NE ZNAM DAL JE NEOPHODAN
         identityService.saveUser(user);
+        execution.setVariable("username", username);
 
         //kreiramo naseg usera u bazi
         System.out.println("KREIRAMO USERA U BAZI");
-        com.lu.literaryassociation.entity.Reader customUser = new com.lu.literaryassociation.entity.Reader();
-        customUser.setUsername(username);
-        customUser.setPassword(password);
-        customUser.setFirstName(firstname);
-        customUser.setEmail(email);
-        customUser.setApproved(false);
-        if(betaReader){
-            BetaReader beta = new BetaReader();
-            //OVDE TREBA SETOVATI ZANR ZA BETA READERA
-            System.out.println("Setujem zanr");
+        if(execution.hasVariable("betaReader")){
+            com.lu.literaryassociation.entity.Reader customUser = new com.lu.literaryassociation.entity.Reader();
+            execution.setVariable("userType", "reader");
+            customUser.setUsername(username);
+            customUser.setPassword(password);
+            customUser.setFirstName(firstname);
+            customUser.setEmail(email);
+            customUser.setApproved(false);
+            if((Boolean) execution.getVariable("betaReader")){
+                BetaReader beta = new BetaReader();
+                //OVDE TREBA SETOVATI ZANR ZA BETA READERA
+                System.out.println("Setujem zanr");
+                Set<Genre> genreSet = new HashSet<Genre>();
+                String[] parts = genres.split(";");
+                for(int i=0;i<parts.length;i++){
+                    System.out.println(parts[i]);
+                    Genre g = iGenreService.getGenreByName(parts[i]);
+                    System.out.println(g.getCode()+" "+g.getGenreName());
+                    genreSet.add(g);
+                }
+                beta.setGenres(genreSet);
+                beta.setReader(customUser);
+                customUser.setBetaReader(beta);
+                customUser.setUserType(UserType.READER);
+            }
+            customUser.setCity(city);
+            customUser.setCountry(country);
+            iUserRepository.save(customUser);
+
+            //Create conformationToken which will be send to email
+            String tokenUUID = UUID.randomUUID().toString();
+            confirmationTokenService.save(customUser, tokenUUID);
+        }else{
+            com.lu.literaryassociation.entity.Writer customUser = new com.lu.literaryassociation.entity.Writer();
+            execution.setVariable("userType", "writer");
+            customUser.setUsername(username);
+            customUser.setPassword(password);
+            customUser.setFirstName(firstname);
+            customUser.setEmail(email);
+            customUser.setCity(city);
+            customUser.setCountry(country);
+            customUser.setRegistrationApproved(false);
+            customUser.setUserType(UserType.WRITER);
             Set<Genre> genreSet = new HashSet<Genre>();
             String[] parts = genres.split(";");
             for(int i=0;i<parts.length;i++){
@@ -86,20 +121,17 @@ public class CreateUser implements JavaDelegate {
                 System.out.println(g.getCode()+" "+g.getGenreName());
                 genreSet.add(g);
             }
-             beta.setGenres(genreSet);
-             beta.setReader(customUser);
-             customUser.setBetaReader(beta);
+            customUser.setGenres(genreSet);
+            iUserRepository.save(customUser);
+
+            //Create conformationToken which will be send to email
+            String tokenUUID = UUID.randomUUID().toString();
+            confirmationTokenService.save(customUser, tokenUUID);
         }
-        customUser.setCity(city);
-        customUser.setCountry(country);
-        customUser.setUserType(UserType.READER);
 
-        iUserRepository.save(customUser);
-
-        //Create conformationToken which will be send to email
-        String tokenUUID = UUID.randomUUID().toString();
-        confirmationTokenService.save(customUser, tokenUUID);
     }
+
+
 }
 
 

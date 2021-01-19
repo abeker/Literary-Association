@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,6 +58,12 @@ public class CamundaController {
     @GetMapping(path = "/startProcess", produces = "application/json")
     public  ResponseEntity<String> startProcess(){
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("Popuni_formu");
+        return ResponseEntity.ok(pi.getId());
+    }
+
+    @GetMapping(path = "/startReaderProcess", produces = "application/json")
+    public  ResponseEntity<String> startReaderRegistrationProcess(){
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("Process_writerRegistration");
         return ResponseEntity.ok(pi.getId());
     }
 
@@ -135,9 +142,16 @@ public class CamundaController {
         String[] exids = activityInstance.getExecutionIds();
         System.out.println("DUZINA: " + exids.length + "  PRVI: " + exids[0]);
         runtimeService.setVariable(exids[0],"confirmationToken",token);
-        runtimeService.createMessageCorrelation("Message_142ir1i").processInstanceId(instanceId).correlateAll();
+        runtimeService.createMessageCorrelation("Message_ActivatedLink").processInstanceId(instanceId).correlateAll();
 
-        URI yahoo = new URI("http://localhost:4200/auth/login");
+        URI yahoo = new URI("");
+        String userRegistrationType = (String) runtimeService.getVariable(exids[0],"userType");
+        if(userRegistrationType.equals("reader")){
+            yahoo = new URI("http://localhost:4200/auth/login");
+        }else{
+            yahoo = new URI("http://localhost:4200/register/fileUpload");
+        }
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(yahoo);
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
