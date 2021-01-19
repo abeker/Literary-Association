@@ -4,6 +4,7 @@ import com.lu.literaryassociation.dto.response.UserStored;
 import com.lu.literaryassociation.entity.User;
 import com.lu.literaryassociation.repository.IUserRepository;
 import com.lu.literaryassociation.services.definition.IUserService;
+import com.lu.literaryassociation.util.exceptions.GeneralException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

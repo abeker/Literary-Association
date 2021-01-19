@@ -16,7 +16,6 @@ public class ReaderService implements IReaderService {
 
     @Override
     public CreatedReader registration(ReaderRegistration request) {
-        // TODO Povezati sa Camundom i odraditi proces
 
         return CreatedReader.builder()
                 .email(request.getEmail())

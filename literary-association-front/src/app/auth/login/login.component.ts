@@ -31,8 +31,9 @@ export class LoginComponent implements OnInit {
       this.authService.login({
         username: this.validateForm.value.username,
         password: this.validateForm.value.password
-      }).subscribe(() => {
+      }).subscribe(user => {
         this.router.navigateByUrl('dashboard/welcome');
+        localStorage.setItem('user', JSON.stringify(user));
       }, error => {
         console.log(error);
       });

@@ -24,15 +24,12 @@ public class BookRequest extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Genre> genre;
 
-    private String sinopsis;
+    private String synopsis;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private EditorComment editorComment;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "bookRequest")
-    private Book book;
+    private boolean approved;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Handwriting handwriting;
+    @JoinColumn(name="editor_comment_id", referencedColumnName="id")
+    private EditorComment editorComment;
 
 }

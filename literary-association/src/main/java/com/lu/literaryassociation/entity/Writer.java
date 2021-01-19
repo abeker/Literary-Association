@@ -24,12 +24,9 @@ public class Writer extends User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private WriterMembershipStatus writerMembershipStatus;
 
-    private boolean registrationApproved;
-
-    // complex attribute, depends on writerMembershipStatus
-    private boolean membershipApproved;
-
-    private LocalDate dateToPayMembership;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="membership_id", referencedColumnName="id")
+    private Membership membership;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Book> books;

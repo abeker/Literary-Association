@@ -1,7 +1,7 @@
 package com.lu.literaryassociation.services.definition;
 
 import com.lu.literaryassociation.entity.Genre;
-import com.lu.literaryassociation.services.implementation.GeneralException;
+import com.lu.literaryassociation.util.exceptions.GeneralException;
 
 import java.util.List;
 

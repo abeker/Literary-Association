@@ -15,11 +15,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class Editor extends User {
 
-    private boolean approved;
-
     private boolean major;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "editor")
-    private Set<EditorComment> editorComment;
 
 }

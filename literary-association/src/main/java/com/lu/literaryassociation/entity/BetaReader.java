@@ -11,8 +11,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class BetaReader extends BaseEntity {
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -20,11 +20,8 @@ public class BetaReader extends BaseEntity {
 
     private int penaltyPoint = 0;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "reader_id", referencedColumnName = "id")
     private Reader reader;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "betaReader")
-    private Set<BetaReaderComment> betaReaderComments;
 
 }

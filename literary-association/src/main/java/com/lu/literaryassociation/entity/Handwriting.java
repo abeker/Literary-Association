@@ -17,15 +17,14 @@ import java.util.Set;
 @AllArgsConstructor
 public class Handwriting extends BaseEntity {
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "handwriting")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="book_request_id", referencedColumnName="id")
     private BookRequest bookRequest;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "handwriting")
     private Set<BetaReaderComment> betaReaderComments;
 
-    private String handwriteText;
-
-    private LocalDate deadlineDateToDeliver;
+    private String handwritePath;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "handwriting")
     private Set<LectorComment> lectorComments;

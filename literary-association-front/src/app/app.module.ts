@@ -16,11 +16,11 @@ import { environment } from './../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
+import { RegistrateComponent } from './auth/registrate/registrate.component';
+import { RegistrationComponent } from './auth/registration/registration.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
-import { RegistrationComponent } from './auth/registration/registration.component';
-import { SellerRegistrationComponent } from './pages/seller-registration/seller-registration.component';
-import { RegistrateComponent } from './auth/registrate/registrate.component';
+import { BookComponent } from './pages/book/book.component';
 
 registerLocaleData(en);
 
@@ -36,8 +36,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DashboardComponent,
     WelcomeComponent,
     RegistrationComponent,
-    SellerRegistrationComponent,
     RegistrateComponent,
+    BookComponent
   ],
   imports: [
     BrowserModule,

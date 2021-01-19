@@ -18,14 +18,8 @@ public class EditorComment extends BaseEntity {
 
     private String commentText;
 
-    private boolean approvedRequest;
-
-    private LocalDateTime dateToChangeHandwrite;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="editor_id", referencedColumnName="id")
     private Editor editor;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private BookRequest bookRequest;
 
 }

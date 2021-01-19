@@ -13,39 +13,57 @@ export class DashboardComponent implements OnInit {
   isCollapsed = false;
   private user: any;
   public isAdmin: boolean = true;
-  public isAgent: boolean;
-  public isSimpleUser: boolean;
-  public isCartChanged: boolean;
+  public isWriter: boolean;
+  public isReader: boolean;
+  public isEditor: boolean;
+  public isLector: boolean;
   state = 'normal';
 
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    this.setupUserRole();
   }
 
   private setupUser(): void {
-    this.user = JSON.parse(localStorage.getItem('userData'));
+    this.user = JSON.parse(localStorage.getItem('user'));
   }
 
   private setupUserRole(): void {
+    this.setupUser();
     if(this.user.userRole === 'ADMIN'){
+        this.setAllToFalse();
         this.isAdmin = true;
-        this.isAgent = false;
-        this.isSimpleUser = false;
-    }else if(this.user.userRole === 'AGENT'){
-      this.isAdmin = false;
-      this.isAgent = true;
-      this.isSimpleUser = false;
-    }else if(this.user.userRole === 'SIMPLE_USER'){
-      this.isAdmin = false;
-      this.isAgent = false;
-      this.isSimpleUser = true;
+    } else if(this.user.userRole === 'WRITER'){
+        this.setAllToFalse();
+        this.isWriter = true;
+    } else if(this.user.userRole === 'READER'){
+        this.setAllToFalse();
+        this.isReader = true;
+    } else if(this.user.userRole === 'EDITOR'){
+        this.setAllToFalse();
+        this.isEditor = true;
+    } else if(this.user.userRole === 'LECTOR'){
+        this.setAllToFalse();
+        this.isLector = true;
     }
+  }
+
+  setAllToFalse(): void {
+      this.isAdmin = false;
+      this.isWriter = false;
+      this.isReader = false;
+      this.isEditor = false;
+      this.isLector = false;
   }
 
   logout(): void {
     // this.store.dispatch(new AuthActions.Logout());
     this.router.navigateByUrl('/auth/login');
-    console.log('logout');
+    localStorage.removeItem("user");
+  }
+
+  bookClick(): void {
+    this.router.navigateByUrl('/dashboard/book');
   }
 }

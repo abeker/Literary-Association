@@ -1,6 +1,6 @@
 package com.lu.literaryassociation.controller;
 
-import com.lu.literaryassociation.services.implementation.GeneralException;
+import com.lu.literaryassociation.util.exceptions.GeneralException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;

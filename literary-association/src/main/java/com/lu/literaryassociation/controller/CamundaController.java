@@ -1,8 +1,8 @@
 package com.lu.literaryassociation.controller;
 
-import com.lu.literaryassociation.entity.FormFieldsDto;
-import com.lu.literaryassociation.entity.FormSubmissionDto;
-import com.lu.literaryassociation.entity.TaskDto;
+import com.lu.literaryassociation.dto.request.FormFieldsDto;
+import com.lu.literaryassociation.dto.request.FormSubmissionDto;
+import com.lu.literaryassociation.dto.request.TaskDto;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
 import com.lu.literaryassociation.services.implementation.GenreService;
 import com.lu.literaryassociation.services.implementation.ReaderService;
@@ -59,7 +59,6 @@ public class CamundaController {
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("Popuni_formu");
         return ResponseEntity.ok(pi.getId());
     }
-
 
     @GetMapping(path = "/get/{processInstanceId}", produces = "application/json")
     public @ResponseBody
