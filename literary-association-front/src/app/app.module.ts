@@ -21,6 +21,7 @@ import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { RegistrationComponent } from './auth/registration/registration.component';
 import { SellerRegistrationComponent } from './pages/seller-registration/seller-registration.component';
 import { RegistrateComponent } from './auth/registrate/registrate.component';
+import { FileUploadComponent } from './pages/file-upload/file-upload.component';
 
 registerLocaleData(en);
 
@@ -38,6 +39,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     RegistrationComponent,
     SellerRegistrationComponent,
     RegistrateComponent,
+    FileUploadComponent,
   ],
   imports: [
     BrowserModule,
