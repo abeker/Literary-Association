@@ -7,9 +7,9 @@
           <i nz-icon nzType="home" nzTheme="outline"></i>
           Welcome
         </li>
-        <li (click)="bookClick()" *ngIf="isWriter" nz-menu-item>
+        <li (click)="bookRequests()" *ngIf="isEditor" nz-menu-item>
           <i nz-icon nzType="book" nzTheme="outline"></i>
-          Book
+          Book Requests
         </li>
         <li (click)="chooseBetaReader()" *ngIf="isEditor" nz-menu-item>
           <i nz-icon nzType="unordered-list" nzTheme="outline"></i>
@@ -34,9 +34,17 @@
 
       <nz-sider nzWidth="250px" nzTheme="dark">
         <ul nz-menu nzMode="inline" class="sider-menu" nzTheme="dark">
-          <li *ngIf="isReader" nzSelected nz-menu-item>
-            <i nz-icon nzType="car" nzTheme="outline"></i>
-            Ads
+          <li (click)="bookClick()" *ngIf="isWriter" nz-menu-item>
+            <i nz-icon nzType="book" nzTheme="outline"></i>
+            New Book
+          </li>
+          <li (click)="handwriteClick()" *ngIf="isWriter" nz-menu-item>
+            <i nz-icon nzType="upload" nzTheme="outline"></i>
+            Upload Handwrite
+          </li>
+          <li (click)="checkForPlagiats()" *ngIf="isEditor" nz-menu-item>
+            <i nz-icon nzType="book" nzTheme="outline"></i>
+            Check Plagiats
           </li>
         </ul>
       </nz-sider>

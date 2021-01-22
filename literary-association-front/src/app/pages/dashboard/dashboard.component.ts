@@ -78,12 +78,20 @@ export class DashboardComponent implements OnInit {
     // this.store.dispatch(new AuthActions.Logout());
     this.router.navigateByUrl('/auth/login');
     localStorage.removeItem("user");
+    // localStorage.removeItem("publishBookProccessId");
   }
-
   bookClick(): void {
     this.router.navigateByUrl('/dashboard/book');
   }
-
+  bookRequests(): void {
+    this.router.navigateByUrl('/dashboard/book-requests');
+  }
+  handwriteClick(): void {
+    this.router.navigateByUrl('/dashboard/handwrite-upload');
+  }
+  checkForPlagiats(): void {
+    this.router.navigateByUrl('/dashboard/plagiats');
+  }
   
   chooseBetaReader(): void {
     //startujem moj proces

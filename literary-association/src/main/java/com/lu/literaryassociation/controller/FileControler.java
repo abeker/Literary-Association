@@ -38,7 +38,6 @@ public class FileControler {
         this.iFileService = iFileService;
     }
 
-
     @PostMapping("/fileUpload/{taskId}")
     public @ResponseBody
     ResponseEntity post(@RequestParam("files") MultipartFile[] files, @PathVariable String taskId) throws Exception {
@@ -47,6 +46,7 @@ public class FileControler {
         String processInstanceId = task.getProcessInstanceId();
         String listForProcesVariable = iFileService.filesStoreAndMap(files);
         runtimeService.setVariable(processInstanceId, "filesForUpload",listForProcesVariable);
+        runtimeService.setVariable(processInstanceId, "handwriteFileName", files[0].getOriginalFilename());
         formService.submitTaskForm(taskId, new HashMap<>());
         return new ResponseEntity<>(HttpStatus.OK);
     }

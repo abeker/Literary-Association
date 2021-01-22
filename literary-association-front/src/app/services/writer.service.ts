@@ -12,10 +12,13 @@ export class WriterService {
   constructor(private http: HttpClient) { }
 
   public publishStart(): Observable<any> {
-    return this.http.get(this.baseUrl+"/publish-start", {responseType: 'text'});
+    return this.http.get(this.baseUrl+"/publish-start");
   }
 
-  
+  public submitPublishForm(map: any): Observable<any> {
+    const processId = localStorage.getItem("publishBookProccessId");
+    return this.http.post(this.baseUrl+`/submit-form/${processId}`, map);
+  }
 
 }
 
