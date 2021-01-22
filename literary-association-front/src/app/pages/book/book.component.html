@@ -1,1 +1,54 @@
-<button nz-button nzType="primary" (click)="publishBook()">Add New Book</button>
+<div class="main-div">
+  <form  nz-form [formGroup]="validateForm" (ngSubmit)="submitForm(validateForm.value)">
+
+    <div *ngFor="let field of formFieldsDto" >
+    <nz-form-item>
+        <nz-form-label [nzSpan]="7" nzRequired>{{field.label}}</nz-form-label>
+        <nz-form-control nzHasFeedback [nzSm]="12" [nzXs]="24" [nzErrorTip]="err">
+
+            <input nz-input
+                type="text"
+                formControlName={{field.id}}
+                id={{field.id}}
+                ngModel
+                *ngIf="field.type.name=='string' && !field.properties.enum">
+            <input type="number"
+                formControlName={{ field.id }}
+                id={{field.id}}
+                ngModel
+                *ngIf="field.type.name=='long'">
+            <nz-select *ngIf="field.properties.enum"
+                id={{field.id}}
+                nzMode="multiple"
+                [ngModelOptions]="{standalone: true}"
+                nzPlaceHolder="Please select"
+                [(ngModel)]="multipleValue">
+              <nz-option *ngFor="let option of field.type.values"
+                  [nzLabel]="option.label"
+                  [nzValue]="option.value">
+            </nz-option>
+           </nz-select>
+
+            <ng-template #err let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                  Please fill this field!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('minlength')">
+                  Not enough characters!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('maxlength')">
+                 Too much characters!
+             </ng-container>
+            </ng-template>
+       </nz-form-control>
+     </nz-form-item>
+
+    </div>
+
+    <nz-form-item>
+      <nz-form-control [nzOffset]="7" [nzSpan]="12">
+        <button nz-button nzType="primary" [disabled]="!validateForm.valid">Submit</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</div>

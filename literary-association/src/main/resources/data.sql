@@ -19,7 +19,7 @@ values ('0896abd9-932d-4998-8a83-2a00d9bf77e5', 'Subotica', 'Serbia', false, 'co
 insert into user_entity(id, city, country, deleted, email, first_name, last_name, last_password_reset_date, password, user_type, username, is_approved)
 values ('70249358-0f4d-4010-9361-26c5e533a979', 'Novi Sad', 'Serbia', false, 'writer@gmail.com', 'Marc', 'Paliestri', '2020-11-12 21:58:58.508-07', '$2y$12$bAOFqaGgFr4CKERAoscGDu9SzjHG29MM8c9zEPqVX.AeQKo6hpGBe', 'WRITER', 'writer', true);
 insert into user_entity(id, city, country, deleted, email, first_name, last_name, last_password_reset_date, password, user_type, username, is_approved)
-values ('be18edb8-2bd1-4d77-a0b9-9edf9e66a4d2', 'Nis', 'Serbia', false, 'majorEditor@gmail.com', 'Marek', 'Hamsik', '2020-11-12 21:58:58.508-07', '$2y$12$NXtdgD/KkoCIRKBz3nK2OOvje.3l9P.Lsu/Ya5FYsleceiki6e.7G', 'EDITOR', 'm_editor', true);
+values ('be18edb8-2bd1-4d77-a0b9-9edf9e66a4d2', 'Nis', 'Serbia', false, 'acabeker@gmail.com', 'Marek', 'Hamsik', '2020-11-12 21:58:58.508-07', '$2y$12$NXtdgD/KkoCIRKBz3nK2OOvje.3l9P.Lsu/Ya5FYsleceiki6e.7G', 'EDITOR', 'm_editor', true);
 insert into user_entity(id, city, country, deleted, email, first_name, last_name, last_password_reset_date, password, user_type, username, is_approved)
 values ('3166f4d2-cb44-401a-bca4-32f9e871ebf2', 'Leskovac', 'Serbia', false, 'majorCommittee@gmail.com', 'Martin', 'Molnar', '2020-11-12 21:58:58.508-07', '$2y$12$gybDgJIv2AUWRDF5cXcrBukmP/SHshcXRic1QyRvq5ymHJK0Siqnu', 'COMMITTEE_MEMBER', 'm_committee', true);
 
@@ -31,11 +31,13 @@ insert into membership (id, amount, date_opened, date_closed) values
 insert into writer_membership_status (id, try_counter)
 values ('334567b2-645d-4102-9688-a6d30563b5aa', 1);
 
-insert into editor (major, id) values (true, '2b052fd4-fbc0-462f-8db3-650b3c89e20a');
+insert into editor (major, id) values
+    (false, '2b052fd4-fbc0-462f-8db3-650b3c89e20a'),
+    (true, 'be18edb8-2bd1-4d77-a0b9-9edf9e66a4d2');
 insert into lector (id) values ('cfd4b4a6-4d0b-4b33-bc25-3e87607b4f24');
 insert into reader (id) values ('f4d9353c-be37-4272-b631-7262e2e2d28b');
 insert into committee_member (id, major) values ('0896abd9-932d-4998-8a83-2a00d9bf77e5', true);
-insert into writer (id, writer_membership_status_id, membership_id) values ('0896abd9-932d-4998-8a83-2a00d9bf77e5', '334567b2-645d-4102-9688-a6d30563b5aa', 'ff5c1778-c150-4ea9-9100-a4c78d9b81a6');
+insert into writer (id, writer_membership_status_id, membership_id) values ('70249358-0f4d-4010-9361-26c5e533a979', '334567b2-645d-4102-9688-a6d30563b5aa', 'ff5c1778-c150-4ea9-9100-a4c78d9b81a6');
 
 insert into genre(id, code, genre_name, deleted) values ('b10c65ec-3a63-47c5-a87c-500aa71d9427', '5656545', 'thriller', false);
 insert into genre(id, code, genre_name, deleted) values ('10b2d90b-0cbc-4ec2-b165-6c5c959737c6', '546484978', 'fiction', false);

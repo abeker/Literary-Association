@@ -23,6 +23,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { FileUploadComponent } from './pages/file-upload/file-upload.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { BookRequestsComponent } from './pages/editor/book-requests/book-requests.component';
+import { HandwriteUploadComponent } from './pages/handwrite-upload/handwrite-upload.component';
 
 registerLocaleData(en);
 
@@ -41,6 +43,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     RegistrateComponent,
     BookComponent,
     FileUploadComponent,
+    BookRequestsComponent,
+    HandwriteUploadComponent,
   ],
   imports: [
     BrowserModule,

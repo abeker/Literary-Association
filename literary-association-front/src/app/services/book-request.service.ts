@@ -6,18 +6,18 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class WriterService {
-  private baseUrl = environment.baseUrl + "writers";
+export class BookRequestService {
+  private baseUrl = environment.baseUrl + "book-requests";
 
   constructor(private http: HttpClient) { }
 
-  public publishStart(): Observable<any> {
-    return this.http.get(this.baseUrl+"/publish-start");
+  public getAll(): Observable<any> {
+    return this.http.get(this.baseUrl);
   }
 
-  public submitPublishForm(map: any): Observable<any> {
+  public getBookRequestFromProcess(): Observable<any> {
     const processId = localStorage.getItem("publishBookProccessId");
-    return this.http.post(this.baseUrl+`/submit-form/${processId}`, map);
+    return this.http.get(this.baseUrl+`/process/${processId}`);
   }
 
 }

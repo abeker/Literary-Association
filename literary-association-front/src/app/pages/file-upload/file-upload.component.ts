@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Observable, Observer } from 'rxjs';
-import { FilesService } from './../../services/files.service';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { FilesService } from './../../services/files.service';
 
 @Component({
   selector: 'app-file-upload',
@@ -19,7 +18,6 @@ export class FileUploadComponent implements OnInit {
 
   myFile:string [] = [];
   myFiles = new Map<string, string[]>();
-
 
   constructor(private router: Router, private filesService: FilesService, private http: HttpClient, private fb: FormBuilder) {
       this.fileForm = this.fb.group({});
@@ -39,14 +37,13 @@ export class FileUploadComponent implements OnInit {
     });
   }
 
-
   uploadFiles(value){
     console.log("FAJLOVI SUBMIT:");
     console.log(this.myFiles);
-    for (let oneFileFiled of this.myFiles.values()) {  
-       console.log("Map Values= " +oneFileFiled); 
+    for (let oneFileFiled of this.myFiles.values()) {
+       console.log("Map Values= " +oneFileFiled);
        const formData = new FormData();
-       for (var i = 0; i < oneFileFiled.length; i++) { 
+       for (var i = 0; i < oneFileFiled.length; i++) {
            formData.append("files", oneFileFiled[i]);
            this.filesService.upload(formData, this.formFieldsDto.taskId)
             .subscribe(response => {
@@ -57,10 +54,8 @@ export class FileUploadComponent implements OnInit {
                    console.log("Something gone wrong. File didn't upload!");
           });
        }
-      }     
+      }
   }
-
-
 
   changeFormFieldsDTO(){
     console.log("change input");
@@ -78,16 +73,14 @@ export class FileUploadComponent implements OnInit {
     console.log(this.formFields);
   }
 
-  
   onFileChange(event){
     console.log("FILE ID"+ event.target.id);
     var files = [];
-    for (var i = 0; i < event.target.files.length; i++) { 
+    for (var i = 0; i < event.target.files.length; i++) {
       files.push(event.target.files[i]);
     }
-    this.myFiles.set(event.target.id, files);   
+    this.myFiles.set(event.target.id, files);
   }
-
 
    resetForm(e: MouseEvent): void {
     e.preventDefault();
@@ -95,12 +88,12 @@ export class FileUploadComponent implements OnInit {
     for (const key in this.fileForm.controls) {
       this.fileForm.controls[key].markAsPristine();
       this.fileForm.controls[key].updateValueAndValidity();
-    } 
+    }
     this.myFile = [];
     this.myFiles = new Map<string, string[]>();
   }
 
-   
+
 
 
 }

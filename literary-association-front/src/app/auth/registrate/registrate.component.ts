@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { NzSelectSizeType } from 'ng-zorro-antd/select';
-import { AuthService } from '../../services/auth.service';
-import { Observable, Observer } from 'rxjs';
-import { NzMessageService, valueFunctionProp } from 'ng-zorro-antd';
-import { UserService } from './../../services/user.service';
-import { ReaderService } from './../../services/reader.service';
 import { HttpClient } from '@angular/common/http';
-import { __assign } from 'tslib';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd';
+import { NzSelectSizeType } from 'ng-zorro-antd/select';
+import { Observable, Observer } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { ReaderService } from './../../services/reader.service';
+import { UserService } from './../../services/user.service';
 
 @Component({
   selector: 'app-registrate',
@@ -35,7 +34,7 @@ export class RegistrateComponent implements OnInit {
   processInstace: any
 
   constructor(private router: Router, private authService: AuthService, private fb: FormBuilder,
-              private userService: UserService,  private message: NzMessageService, private readerService: ReaderService, private http: HttpClient) {
+              private userService: UserService, private message: NzMessageService, private readerService: ReaderService, private http: HttpClient) {
 
       this.validateForm = this.fb.group({});
       // this.http.get("http://localhost:8084/welcome/startProcess").subscribe(resp => {
@@ -63,7 +62,7 @@ export class RegistrateComponent implements OnInit {
         this.formFields.forEach( (field) =>{
           //console.log(field);
           let field_validations = field.validationConstraints;
-          let validators = this.newValidationRule(field_validations, field);    
+          let validators = this.newValidationRule(field_validations, field);
           this.validateForm.addControl(field.id, this.fb.control('', validators));
          //console.log(field.id, validators);
         });
