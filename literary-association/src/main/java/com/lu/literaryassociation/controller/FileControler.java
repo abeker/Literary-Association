@@ -4,14 +4,18 @@ import com.lu.literaryassociation.services.definition.IFileService;
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
+import org.camunda.bpm.engine.runtime.ActivityInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,11 +45,12 @@ public class FileControler {
         System.out.println("USLA U SUBMIT UPLOADA");
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
         String processInstanceId = task.getProcessInstanceId();
-        List<String> listForProcesVariable = iFileService.filesStoreAndMap(files);
+        String listForProcesVariable = iFileService.filesStoreAndMap(files);
         runtimeService.setVariable(processInstanceId, "filesForUpload",listForProcesVariable);
         formService.submitTaskForm(taskId, new HashMap<>());
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 
     @GetMapping("/download/{fileName}")
     public ResponseEntity downloadPDF(@PathVariable("fileName") String fileName) throws MalformedURLException {

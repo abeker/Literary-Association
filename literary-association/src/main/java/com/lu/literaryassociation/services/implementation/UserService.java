@@ -8,6 +8,8 @@ import com.lu.literaryassociation.util.exceptions.GeneralException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class UserService implements IUserService {
 
@@ -23,6 +25,12 @@ public class UserService implements IUserService {
         return mapUserToUserStored(user);
     }
 
+    @Override
+    public User getUserById(UUID uuid){
+       return _userRepository.findOneById(uuid);
+    }
+
+    @Override
     public User findUser(String username){
         User user = _userRepository.findOneByUsername(username);
         return user;

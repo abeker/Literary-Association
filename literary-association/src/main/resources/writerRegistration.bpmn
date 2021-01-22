@@ -17,19 +17,29 @@
       <bpmn:startEvent id="Event_1s8e7n4">
         <bpmn:outgoing>Flow_104rzcv</bpmn:outgoing>
       </bpmn:startEvent>
-      <bpmn:userTask id="Activity_1ba2m5h" name="Review submission and vote" camunda:assignee="${boardMember}">
+      <bpmn:userTask id="Activity_1ba2m5h" name="Review submission and vote" camunda:assignee="${commitee}">
         <bpmn:extensionElements>
           <camunda:formData>
-            <camunda:formField id="vote" type="enum">
-              <camunda:value id="voteYes" name="Yes" />
-              <camunda:value id="voteNo" name="No" />
-              <camunda:value id="voteMoreInfo" name="More info" />
+            <camunda:formField id="vote" label="Vote" type="enum">
+              <camunda:value id="APPROVED" name="approved" />
+              <camunda:value id="DENIED" name="denied" />
+              <camunda:value id="MORE_MATERIAL" name="more material" />
+            </camunda:formField>
+            <camunda:formField id="comment" label="Comment" type="string">
+              <camunda:properties>
+                <camunda:property id="textArea" value="true" />
+              </camunda:properties>
+            </camunda:formField>
+            <camunda:formField id="nonEditibleFiles" label="Download files" type="string" defaultValue="${filesForUpload}">
+              <camunda:properties>
+                <camunda:property id="nonEditible" value="true" />
+              </camunda:properties>
             </camunda:formField>
           </camunda:formData>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_104rzcv</bpmn:incoming>
         <bpmn:outgoing>Flow_0kupqju</bpmn:outgoing>
-        <bpmn:multiInstanceLoopCharacteristics camunda:collection="boardMembers" camunda:elementVariable="boardMember" />
+        <bpmn:multiInstanceLoopCharacteristics camunda:collection="commitees" camunda:elementVariable="commitee" />
       </bpmn:userTask>
       <bpmn:exclusiveGateway id="Gateway_17xl875" name="Vote">
         <bpmn:incoming>Flow_1xiuo1y</bpmn:incoming>
@@ -41,11 +51,20 @@
       <bpmn:sequenceFlow id="Flow_0bvoa0w" name="dennied" sourceRef="Gateway_17xl875" targetRef="Event_0so757q">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${votedDecision== "denied"}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
-      <bpmn:userTask id="Activity_0wkkw1t" name="Submit more works">
+      <bpmn:userTask id="Activity_0wkkw1t" name="Form for submit more files">
+        <bpmn:extensionElements>
+          <camunda:formData>
+            <camunda:formField id="files" label="File" type="string">
+              <camunda:properties>
+                <camunda:property id="file" value="true" />
+              </camunda:properties>
+            </camunda:formField>
+          </camunda:formData>
+        </bpmn:extensionElements>
         <bpmn:incoming>Flow_1whxkz6</bpmn:incoming>
         <bpmn:outgoing>Flow_1wif65d</bpmn:outgoing>
       </bpmn:userTask>
-      <bpmn:serviceTask id="Activity_0lafsy7" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
+      <bpmn:serviceTask id="Activity_0lafsy7" name="Send notification" camunda:class="com.lu.literaryassociation.services.camunda.writerReg.SendNotification">
         <bpmn:incoming>Flow_1b312wt</bpmn:incoming>
         <bpmn:outgoing>Flow_1whxkz6</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -75,19 +94,19 @@
         <bpmn:escalationEventDefinition id="EscalationEventDefinition_0939lvv" escalationRef="Escalation_1hx5htv" />
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_1b312wt" sourceRef="Gateway_17xl875" targetRef="Activity_0lafsy7">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${votedDecision== "moreMeterials"}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${votedDecision== "moreMaterials"}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_05df5be" name="approved" sourceRef="Gateway_17xl875" targetRef="Event_0xvd6m7">
         <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${votedDecision== "approved"}</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_1xiuo1y" sourceRef="Activity_1pnid79" targetRef="Gateway_17xl875" />
-      <bpmn:serviceTask id="Activity_1pnid79" name="Check vote" camunda:type="external" camunda:topic="CheckVote">
+      <bpmn:serviceTask id="Activity_1pnid79" name="Check votes" camunda:class="com.lu.literaryassociation.services.camunda.writerReg.CheckVotes">
         <bpmn:incoming>Flow_0kupqju</bpmn:incoming>
         <bpmn:outgoing>Flow_1xiuo1y</bpmn:outgoing>
       </bpmn:serviceTask>
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_1175clc" sourceRef="Activity_0uq5jur" targetRef="Activity_0cd4dlo" />
-    <bpmn:serviceTask id="Activity_0uq5jur" name="Deactivate writer&#39;s account" camunda:type="external" camunda:topic="deactivateWriter">
+    <bpmn:serviceTask id="Activity_0uq5jur" name="Deactivate writer&#39;s account" camunda:class="com.lu.literaryassociation.services.camunda.writerReg.DeactivateAccount">
       <bpmn:incoming>Flow_1i6jruz</bpmn:incoming>
       <bpmn:incoming>Flow_12x8hk6</bpmn:incoming>
       <bpmn:incoming>Flow_0gwrc53</bpmn:incoming>
@@ -102,7 +121,7 @@
       <bpmn:escalationEventDefinition id="EscalationEventDefinition_18m71y4" escalationRef="Escalation_1b1olni" />
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_0aw7022" sourceRef="Event_1r1970f" targetRef="Activity_1kled6l" />
-    <bpmn:serviceTask id="Activity_1kled6l" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
+    <bpmn:serviceTask id="Activity_1kled6l" name="Send notification" camunda:class="com.lu.literaryassociation.services.camunda.writerReg.SendNotification">
       <bpmn:incoming>Flow_0aw7022</bpmn:incoming>
       <bpmn:outgoing>Flow_18pmeok</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -115,7 +134,7 @@
       <bpmn:incoming>Flow_1k9stt7</bpmn:incoming>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_0yw21z4" />
     </bpmn:endEvent>
-    <bpmn:userTask id="Activity_0lxr096" name="Upload files form" camunda:assignee="${username}">
+    <bpmn:userTask id="Activity_0lxr096" name="Form for upload files" camunda:assignee="${username}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="files" label="File" type="string">
@@ -132,7 +151,7 @@
       <bpmn:outgoing>Flow_04v1jq5</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1atqddl" sourceRef="Activity_0cd4dlo" targetRef="Event_064ddmq" />
-    <bpmn:serviceTask id="Activity_0cd4dlo" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
+    <bpmn:serviceTask id="Activity_0cd4dlo" name="Send notification" camunda:class="com.lu.literaryassociation.services.camunda.writerReg.SendNotification">
       <bpmn:incoming>Flow_1175clc</bpmn:incoming>
       <bpmn:outgoing>Flow_1atqddl</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -174,7 +193,7 @@ execution.setVariable("genresJSON",org.camunda.spin.Spin.JSON(genres));
     <bpmn:sequenceFlow id="Flow_09h7b5t" sourceRef="Event_0ckieft" targetRef="Activity_0nmejlj" />
     <bpmn:sequenceFlow id="Flow_04v1jq5" sourceRef="Activity_0lxr096" targetRef="Activity_0bkvxk9" />
     <bpmn:sequenceFlow id="Flow_0atedaf" sourceRef="Activity_00i23m3" targetRef="Activity_18cf2u0" />
-    <bpmn:serviceTask id="Activity_00i23m3" name="Get reviewers" camunda:type="external" camunda:topic="getReviewers">
+    <bpmn:serviceTask id="Activity_00i23m3" name="Get commitees" camunda:class="com.lu.literaryassociation.services.camunda.writerReg.GetCommitees">
       <bpmn:incoming>Flow_1ucyxbz</bpmn:incoming>
       <bpmn:outgoing>Flow_0atedaf</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -288,8 +307,8 @@ execution.setVariable("genresJSON",org.camunda.spin.Spin.JSON(genres));
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="Flow_0yuf87t" sourceRef="Event_089seez" targetRef="Activity_1o3x4u7" />
   </bpmn:process>
-  <bpmn:escalation id="Escalation_1hx5htv" name="VoteNo" escalationCode="no" />
-  <bpmn:escalation id="Escalation_1b1olni" name="VoteYes" escalationCode="yes" />
+  <bpmn:escalation id="Escalation_1hx5htv" name="VoteNo" escalationCode="VoteNo" />
+  <bpmn:escalation id="Escalation_1b1olni" name="VoteYes" escalationCode="VoteYes" />
   <bpmn:message id="Message_1gbyc5c" />
   <bpmn:message id="Message_0h9ivu8" name="subScrib" />
   <bpmn:error id="Error_0ps7g9e" name="Wrong input" errorCode="Wrong input" />
@@ -365,7 +384,7 @@ execution.setVariable("genresJSON",org.camunda.spin.Spin.JSON(genres));
         <di:waypoint x="1390" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_09h7b5t_di" bpmnElement="Flow_09h7b5t">
-        <di:waypoint x="188" y="120" />
+        <di:waypoint x="208" y="120" />
         <di:waypoint x="360" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0bol37t_di" bpmnElement="Flow_0bol37t">
@@ -423,31 +442,31 @@ execution.setVariable("genresJSON",org.camunda.spin.Spin.JSON(genres));
         <dc:Bounds x="250" y="300" width="1020" height="300" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1xiuo1y_di" bpmnElement="Flow_1xiuo1y">
-        <di:waypoint x="610" y="400" />
-        <di:waypoint x="705" y="400" />
+        <di:waypoint x="620" y="430" />
+        <di:waypoint x="705" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_05df5be_di" bpmnElement="Flow_05df5be">
-        <di:waypoint x="730" y="425" />
-        <di:waypoint x="730" y="450" />
-        <di:waypoint x="802" y="450" />
+        <di:waypoint x="730" y="405" />
+        <di:waypoint x="730" y="350" />
+        <di:waypoint x="802" y="350" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="751" y="423" width="47" height="14" />
+          <dc:Bounds x="736" y="353" width="47" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1b312wt_di" bpmnElement="Flow_1b312wt">
-        <di:waypoint x="755" y="400" />
-        <di:waypoint x="840" y="400" />
+        <di:waypoint x="755" y="430" />
+        <di:waypoint x="910" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_104rzcv_di" bpmnElement="Flow_104rzcv">
-        <di:waypoint x="308" y="400" />
-        <di:waypoint x="360" y="400" />
+        <di:waypoint x="308" y="430" />
+        <di:waypoint x="360" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1wif65d_di" bpmnElement="Flow_1wif65d">
-        <di:waypoint x="1170" y="400" />
-        <di:waypoint x="1202" y="400" />
+        <di:waypoint x="1170" y="430" />
+        <di:waypoint x="1212" y="430" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_07dgnfs_di" bpmnElement="Flow_07dgnfs">
-        <di:waypoint x="1120" y="458" />
+        <di:waypoint x="1120" y="488" />
         <di:waypoint x="1120" y="540" />
         <di:waypoint x="1212" y="540" />
         <bpmndi:BPMNLabel>
@@ -455,58 +474,28 @@ execution.setVariable("genresJSON",org.camunda.spin.Spin.JSON(genres));
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1whxkz6_di" bpmnElement="Flow_1whxkz6">
-        <di:waypoint x="940" y="400" />
-        <di:waypoint x="1070" y="400" />
+        <di:waypoint x="1010" y="430" />
+        <di:waypoint x="1070" y="430" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="763" y="373" width="53" height="53" />
+          <dc:Bounds x="813" y="403" width="53" height="53" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0bvoa0w_di" bpmnElement="Flow_0bvoa0w">
-        <di:waypoint x="730" y="425" />
+        <di:waypoint x="730" y="455" />
         <di:waypoint x="730" y="530" />
         <di:waypoint x="802" y="530" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="755" y="500" width="40" height="14" />
+          <dc:Bounds x="740" y="513" width="40" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0kupqju_di" bpmnElement="Flow_0kupqju">
-        <di:waypoint x="460" y="400" />
-        <di:waypoint x="510" y="400" />
+        <di:waypoint x="460" y="430" />
+        <di:waypoint x="520" y="430" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_1s8e7n4_di" bpmnElement="Event_1s8e7n4">
-        <dc:Bounds x="272" y="382" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0g33w7r_di" bpmnElement="Activity_1ba2m5h">
-        <dc:Bounds x="360" y="360" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_17xl875_di" bpmnElement="Gateway_17xl875" isMarkerVisible="true">
-        <dc:Bounds x="705" y="375" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="719" y="353" width="22" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1rlqinz_di" bpmnElement="Activity_0wkkw1t">
-        <dc:Bounds x="1070" y="360" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0lafsy7_di" bpmnElement="Activity_0lafsy7">
-        <dc:Bounds x="840" y="360" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_19t65vf_di" bpmnElement="Event_18a7upv">
         <dc:Bounds x="1212" y="522" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1222" y="565" width="17" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_05iur3l_di" bpmnElement="Event_05iur3l">
-        <dc:Bounds x="1202" y="382" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1208" y="425" width="25" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_07tmxz2_di" bpmnElement="Event_0xvd6m7">
-        <dc:Bounds x="802" y="432" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="809" y="475" width="22" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0mv0szd_di" bpmnElement="Event_0so757q">
@@ -515,11 +504,41 @@ execution.setVariable("genresJSON",org.camunda.spin.Spin.JSON(genres));
           <dc:Bounds x="812" y="555" width="17" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1s8e7n4_di" bpmnElement="Event_1s8e7n4">
+        <dc:Bounds x="272" y="412" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0g33w7r_di" bpmnElement="Activity_1ba2m5h">
+        <dc:Bounds x="360" y="390" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0fdhltc_di" bpmnElement="Activity_1pnid79">
-        <dc:Bounds x="510" y="360" width="100" height="80" />
+        <dc:Bounds x="520" y="390" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_17xl875_di" bpmnElement="Gateway_17xl875" isMarkerVisible="true">
+        <dc:Bounds x="705" y="405" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="689" y="393" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_07tmxz2_di" bpmnElement="Event_0xvd6m7">
+        <dc:Bounds x="802" y="332" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="809" y="375" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rlqinz_di" bpmnElement="Activity_0wkkw1t">
+        <dc:Bounds x="1070" y="390" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_05iur3l_di" bpmnElement="Event_05iur3l">
+        <dc:Bounds x="1212" y="412" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1218" y="455" width="25" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0lafsy7_di" bpmnElement="Activity_0lafsy7">
+        <dc:Bounds x="910" y="390" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0jxoocj_di" bpmnElement="Event_0jxoocj">
-        <dc:Bounds x="1102" y="422" width="36" height="36" />
+        <dc:Bounds x="1102" y="452" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0o39dzq_di" bpmnElement="Activity_0uq5jur">
         <dc:Bounds x="1380" y="470" width="100" height="80" />
@@ -558,7 +577,7 @@ execution.setVariable("genresJSON",org.camunda.spin.Spin.JSON(genres));
         <dc:Bounds x="1120" y="80" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0ckieft_di" bpmnElement="Event_0ckieft">
-        <dc:Bounds x="152" y="102" width="36" height="36" />
+        <dc:Bounds x="172" y="102" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1kt2o3o_di" bpmnElement="Activity_00i23m3">
         <dc:Bounds x="1540" y="80" width="100" height="80" />

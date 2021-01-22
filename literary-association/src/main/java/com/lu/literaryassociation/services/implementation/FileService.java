@@ -1,18 +1,23 @@
 package com.lu.literaryassociation.services.implementation;
 
+import com.lu.literaryassociation.entity.Genre;
 import com.lu.literaryassociation.services.definition.IFileService;
 import com.lu.literaryassociation.util.exceptions.GeneralException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,7 +51,7 @@ public class FileService implements IFileService {
 
 
     @Override
-    public List<String> filesStoreAndMap(MultipartFile[] files) throws  Exception
+    public String filesStoreAndMap(MultipartFile[] files) throws  Exception
     {
         List<String> listForProcesVariable = new ArrayList<>();
         Arrays.asList(files)
@@ -61,7 +66,17 @@ public class FileService implements IFileService {
                                 + ". Please try again!", HttpStatus.BAD_REQUEST);
                     }
                 });
-        return listForProcesVariable;
+        return this.filesToString(listForProcesVariable);
+    }
+
+
+    public String filesToString(List<String>files){
+        String returnString = "";
+        for (String f: files) {
+            //genres=romance;horror
+            returnString = returnString.concat(f.concat(";"));
+        }
+        return returnString;
     }
 
 
@@ -82,18 +97,30 @@ public class FileService implements IFileService {
 
 
     @Override
-    public ResponseEntity download(String fileName) throws MalformedURLException {
-        System.out.println("USLA U DOWNLOAD" + fileName);
-        Path filepath = Paths.get("\\src\\main\\resources\\files".concat("\\").concat(fileName));
+    public ResponseEntity download(String fileN) throws MalformedURLException {
+        System.out.println("USLA U DOWNLOAD" + fileN);
+        String fileName = fileN+ ".pdf";
 
-        File file = new File(filepath.toAbsolutePath().toString().concat("/"+fileName));
+        Path filepath = Paths.get("src\\main\\resources\\files", fileName);
+        File file = new File(filepath.toAbsolutePath().toString());
 
-        UrlResource urlResource = new UrlResource("file:///" + filepath.toAbsolutePath().toString());
-        System.out.println("URL" + urlResource);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Content-Disposition", "attachment; filename=\"" + file.getName() + "\"");
-        System.out.println("FILE" + file.getName());
-        return new ResponseEntity<>(urlResource, httpHeaders, HttpStatus.OK);
+        InputStreamResource resource = null;
+        try {
+            resource = new InputStreamResource(new FileInputStream(filepath.toAbsolutePath().toString()));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(file.getName());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", String.format("attachment; filename="+file.getName()));
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        ResponseEntity<Object> responseEntity = ResponseEntity.ok().headers(headers).contentLength(file.length())
+                .contentType(MediaType.parseMediaType("application/octet-stream")).body(resource);
+        return responseEntity;
     }
 
 }

@@ -14,5 +14,8 @@ export class WriterService {
   public publishStart(): Observable<any> {
     return this.http.get(this.baseUrl+"/publish-start", {responseType: 'text'});
   }
+
+  
+
 }
 
