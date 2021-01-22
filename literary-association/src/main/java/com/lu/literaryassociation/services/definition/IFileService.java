@@ -11,7 +11,7 @@ public interface IFileService {
 
     public void upload(MultipartFile file) throws Exception;
 
-    public List<String> filesStoreAndMap(MultipartFile[] files) throws Exception;
+    public String filesStoreAndMap(MultipartFile[] files) throws Exception;
 
     public Resource loadFile(String fileName) throws  Exception;
 

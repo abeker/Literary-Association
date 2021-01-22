@@ -7,10 +7,13 @@ import { RegistrationComponent } from './auth/registration/registration.componen
 import { BookComponent } from './pages/book/book.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
-import { FileUploadComponent} from './pages/file-upload/file-upload.component'
 import { BookRequestsComponent } from './pages/editor/book-requests/book-requests.component';
 import { HandwriteUploadComponent } from './pages/handwrite-upload/handwrite-upload.component';
 import { PlagiatsComponent } from './pages/editor/plagiats/plagiats.component';
+import { FileUploadComponent} from './pages/file-upload/file-upload.component';
+import { VoteComponent} from './pages/vote/vote.component';
+import { BetaReaderListComponent } from './pages/beta-reader-list/beta-reader-list.component';
+import { BetaReaderCommentComponent } from './pages/beta-reader-comment/beta-reader-comment.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
@@ -24,7 +27,10 @@ const routes: Routes = [
       { path: 'book', component: BookComponent },
       { path: 'book-requests', component: BookRequestsComponent},
       { path: 'handwrite-upload', component: HandwriteUploadComponent},
-      { path: 'plagiats', component: PlagiatsComponent}
+      { path: 'plagiats', component: PlagiatsComponent},
+      { path: 'vote', component: VoteComponent },
+      { path: 'betaReader', component: BetaReaderListComponent},
+      { path: 'betaReaderComment', component: BetaReaderCommentComponent}
     ]
   }
 ];

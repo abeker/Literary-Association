@@ -17,7 +17,7 @@ public class BetaReaderComment extends BaseEntity {
 
     private String commentText;
 
-    private LocalDateTime commentDateTime;
+    private String processInstance;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Handwrite handwrite;

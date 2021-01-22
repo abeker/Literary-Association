@@ -1,5 +1,6 @@
 package com.lu.literaryassociation.util.exceptions;
 
+import org.camunda.bpm.spring.boot.starter.CamundaBpmNestedRuntimeException;
 import org.springframework.http.HttpStatus;
 
 public class GeneralException extends RuntimeException {

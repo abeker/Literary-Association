@@ -186,6 +186,9 @@
         <bpmn:extensionElements>
           <camunda:formData>
             <camunda:formField id="comment" label="Leave comment" type="string">
+              <camunda:properties>
+                <camunda:property id="textArea" value="true" />
+              </camunda:properties>
               <camunda:validation>
                 <camunda:constraint name="required" />
               </camunda:validation>

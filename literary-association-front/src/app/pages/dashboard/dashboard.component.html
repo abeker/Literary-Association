@@ -11,6 +11,14 @@
           <i nz-icon nzType="book" nzTheme="outline"></i>
           Book Requests
         </li>
+        <li (click)="chooseBetaReader()" *ngIf="isEditor" nz-menu-item>
+          <i nz-icon nzType="unordered-list" nzTheme="outline"></i>
+            Choose betareader
+        </li>
+        <li (click)="betaReaderComment()" *ngIf="isReader && isBetaReader" nz-menu-item>
+          <i nz-icon nzType="comment" nzTheme="outline"></i>
+            Leave comment
+        </li>
         <li nz-menu-item style="float: right;" (click)="logout()">
           <i nz-icon nzType="user" nzTheme="outline"></i>
           Logout

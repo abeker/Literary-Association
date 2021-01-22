@@ -1,6 +1,9 @@
 package com.lu.literaryassociation.controller;
 
 import com.lu.literaryassociation.util.exceptions.GeneralException;
+import org.camunda.bpm.engine.BpmnParseException;
+import org.camunda.bpm.spring.boot.starter.CamundaBpmNestedRuntimeException;
+import org.hibernate.cache.CacheException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -28,5 +31,7 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     public ResponseEntity<String> handleGeneralException(GeneralException e) {
         return new ResponseEntity<>(e.getMessage(), e.getHttpStatus());
     }
+
+
 
 }
