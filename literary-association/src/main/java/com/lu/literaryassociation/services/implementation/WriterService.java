@@ -100,8 +100,10 @@ public class WriterService implements IWriterService {
             switch (formField.getFieldId()) {
                 case "title": bookRequest.setTitle(formField.getFieldValue());
                 break;
-                case "genre": bookRequest.setGenre(parseGenres(formField.getFieldValue()));
-                break;
+                case "genre":
+                    _runtimeService.setVariable(processInstanceId, "bookRequestGenres", formField.getFieldValue());
+                    bookRequest.setGenre(parseGenres(formField.getFieldValue()));
+                    break;
                 case "synopsis": bookRequest.setSynopsis(formField.getFieldValue());
             }
         }

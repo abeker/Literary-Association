@@ -25,6 +25,7 @@ import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { BookRequestsComponent } from './pages/editor/book-requests/book-requests.component';
 import { HandwriteUploadComponent } from './pages/handwrite-upload/handwrite-upload.component';
+import { PlagiatsComponent } from './pages/editor/plagiats/plagiats.component';
 
 registerLocaleData(en);
 
@@ -45,6 +46,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     FileUploadComponent,
     BookRequestsComponent,
     HandwriteUploadComponent,
+    PlagiatsComponent,
   ],
   imports: [
     BrowserModule,

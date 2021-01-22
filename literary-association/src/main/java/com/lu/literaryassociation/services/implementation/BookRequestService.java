@@ -1,15 +1,13 @@
 package com.lu.literaryassociation.services.implementation;
 
 import com.lu.literaryassociation.dto.response.BookRequestDTO;
-import com.lu.literaryassociation.entity.Book;
-import com.lu.literaryassociation.entity.BookRequest;
-import com.lu.literaryassociation.entity.Genre;
-import com.lu.literaryassociation.entity.Writer;
+import com.lu.literaryassociation.dto.response.HandwriteDto;
+import com.lu.literaryassociation.entity.*;
 import com.lu.literaryassociation.repository.IBookRepository;
 import com.lu.literaryassociation.repository.IBookRequestRepository;
+import com.lu.literaryassociation.repository.IHandwriteRepository;
 import com.lu.literaryassociation.services.definition.IBookRequestService;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -20,11 +18,13 @@ public class BookRequestService implements IBookRequestService {
     private final IBookRequestRepository _bookRequestRepository;
     private final IBookRepository _bookRepository;
     private final RuntimeService _runtimeService;
+    private final IHandwriteRepository _handwriteRepository;
 
-    public BookRequestService(IBookRequestRepository bookRequestRepository, IBookRepository bookRepository, RuntimeService runtimeService) {
+    public BookRequestService(IBookRequestRepository bookRequestRepository, IBookRepository bookRepository, RuntimeService runtimeService, IHandwriteRepository handwriteRepository) {
         _bookRequestRepository = bookRequestRepository;
         _bookRepository = bookRepository;
         _runtimeService = runtimeService;
+        _handwriteRepository = handwriteRepository;
     }
 
     @Override
@@ -43,6 +43,29 @@ public class BookRequestService implements IBookRequestService {
         BookRequest bookRequest = getBookRequestFromId(processInstanceId);
         if(bookRequest != null) {
             return mapBookRequestToDTO(bookRequest);
+        }
+        return null;
+    }
+
+    @Override
+    public HandwriteDto getHandwriteFromProccess(String processInstanceId) {
+        BookRequest bookRequest = getBookRequestFromId(processInstanceId);
+        Handwrite handwrite = getHandwriteForBookRequest(bookRequest);
+        if(bookRequest != null && handwrite != null) {
+            HandwriteDto handwriteDto = new HandwriteDto();
+            handwriteDto.setBookRequestDTO(mapBookRequestToDTO(bookRequest));
+            handwriteDto.setHandwriteFileName(handwrite.getHandwriteFileName());
+            handwriteDto.setId(handwrite.getId().toString());
+            return handwriteDto;
+        }
+        return null;
+    }
+
+    private Handwrite getHandwriteForBookRequest(BookRequest bookRequest) {
+        for (Handwrite handwrite : _handwriteRepository.findAll()) {
+            if(handwrite.getBookRequest().getId().equals(bookRequest.getId())) {
+                return handwrite;
+            }
         }
         return null;
     }

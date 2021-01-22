@@ -3,10 +3,7 @@ package com.lu.literaryassociation.services.implementation;
 import com.lu.literaryassociation.dto.request.FormFieldsDto;
 import com.lu.literaryassociation.dto.request.FormSubmissionDto;
 import com.lu.literaryassociation.entity.*;
-import com.lu.literaryassociation.repository.IBookRequestRepository;
-import com.lu.literaryassociation.repository.IEditorCommentRepository;
-import com.lu.literaryassociation.repository.IEditorRepository;
-import com.lu.literaryassociation.repository.IUserRepository;
+import com.lu.literaryassociation.repository.*;
 import com.lu.literaryassociation.services.definition.IEditorService;
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.RuntimeService;
@@ -28,15 +25,17 @@ public class EditorService implements IEditorService {
     private final IEditorRepository _editorRepository;
     private final IUserRepository _userRepository;
     private final IEditorCommentRepository _editorCommentRepository;
+    private final IWriterRepository _writerRepository;
     private final IBookRequestRepository _bookRequestRepository;
 
-    public EditorService(TaskService taskService, RuntimeService runtimeService, FormService formService, IEditorRepository editorRepository, IUserRepository userRepository, IEditorCommentRepository editorCommentRepository, IBookRequestRepository bookRequestRepository) {
+    public EditorService(TaskService taskService, RuntimeService runtimeService, FormService formService, IEditorRepository editorRepository, IUserRepository userRepository, IEditorCommentRepository editorCommentRepository, IWriterRepository writerRepository, IBookRequestRepository bookRequestRepository) {
         _taskService = taskService;
         _runtimeService = runtimeService;
         _formService = formService;
         _editorRepository = editorRepository;
         _userRepository = userRepository;
         _editorCommentRepository = editorCommentRepository;
+        _writerRepository = writerRepository;
         _bookRequestRepository = bookRequestRepository;
     }
 
@@ -69,6 +68,33 @@ public class EditorService implements IEditorService {
 
         Task task = _taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
         _formService.submitTaskForm(task.getId(), map);
+    }
+
+    @Override
+    public FormFieldsDto getPlagiatForm(String processInstanceId) {
+        System.out.println("PROCES: " + processInstanceId);
+        Task task = _taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
+
+        BookRequest bookRequest = getBookRequestFromProcess(processInstanceId);
+        TaskFormData tfd = _formService.getTaskFormData(task.getId());
+        List<FormField> properties = tfd.getFormFields();
+        for(FormField fp : properties) {
+            if(fp.getId().equals("writer")) {
+                fp.getProperties().put("writer", getWriterNameFromProccess(processInstanceId));
+            }
+        }
+
+        return new FormFieldsDto(task.getId(),processInstanceId, properties);
+    }
+
+    private String getWriterNameFromProccess(String processInstanceId) {
+        String writerUsername = (String)_runtimeService.getVariable(processInstanceId, "writerUsername");
+        Writer writer = _writerRepository.findOneByUsername(writerUsername);
+        if(writer != null &&
+            !writer.isDeleted()) {
+            return writer.getFirstName() + " " + writer.getLastName();
+        }
+        return null;
     }
 
     private boolean getApprovementFromFields(List<FormSubmissionDto> submitedFields) {

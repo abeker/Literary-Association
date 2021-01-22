@@ -10,4 +10,6 @@ public interface IEditorService {
     FormFieldsDto getFormFieldsForReview(String processInstanceId);
 
     void submitWriterBookRequest(List<FormSubmissionDto> submitedFields, String processInstanceId, String reason);
+
+    FormFieldsDto getPlagiatForm(String processInstanceId);
 }

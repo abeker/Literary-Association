@@ -34,6 +34,10 @@
             <i nz-icon nzType="upload" nzTheme="outline"></i>
             Upload Handwrite
           </li>
+          <li (click)="checkForPlagiats()" *ngIf="isEditor" nz-menu-item>
+            <i nz-icon nzType="book" nzTheme="outline"></i>
+            Check Plagiats
+          </li>
         </ul>
       </nz-sider>
     </nz-layout>

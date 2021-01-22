@@ -10,6 +10,7 @@ import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { FileUploadComponent} from './pages/file-upload/file-upload.component'
 import { BookRequestsComponent } from './pages/editor/book-requests/book-requests.component';
 import { HandwriteUploadComponent } from './pages/handwrite-upload/handwrite-upload.component';
+import { PlagiatsComponent } from './pages/editor/plagiats/plagiats.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
@@ -22,7 +23,8 @@ const routes: Routes = [
       { path: 'welcome', component: WelcomeComponent },
       { path: 'book', component: BookComponent },
       { path: 'book-requests', component: BookRequestsComponent},
-      { path: 'handwrite-upload', component: HandwriteUploadComponent}
+      { path: 'handwrite-upload', component: HandwriteUploadComponent},
+      { path: 'plagiats', component: PlagiatsComponent}
     ]
   }
 ];

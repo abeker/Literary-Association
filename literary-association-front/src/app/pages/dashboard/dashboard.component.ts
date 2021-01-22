@@ -72,4 +72,7 @@ export class DashboardComponent implements OnInit {
   handwriteClick(): void {
     this.router.navigateByUrl('/dashboard/handwrite-upload');
   }
+  checkForPlagiats(): void {
+    this.router.navigateByUrl('/dashboard/plagiats');
+  }
 }

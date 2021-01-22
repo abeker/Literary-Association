@@ -22,11 +22,11 @@ public class Handwrite extends BaseEntity {
     @JoinColumn(name="book_request_id", referencedColumnName="id")
     private BookRequest bookRequest;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "handwriting")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "handwrite")
     private Set<BetaReaderComment> betaReaderComments = new HashSet<>();
 
     private String handwriteFileName;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "handwriting")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "handwrite")
     private Set<LectorComment> lectorComments = new HashSet<>();
 }

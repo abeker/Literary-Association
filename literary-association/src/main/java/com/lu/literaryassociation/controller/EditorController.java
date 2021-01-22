@@ -31,6 +31,9 @@ public class EditorController {
                                         @PathVariable("reason") String reason) {
         _editorService.submitWriterBookRequest(submitedFields, processInstanceId, reason);
     }
-
-
+    
+    @GetMapping(path = "/get-plagiat-form/{processInstanceId}", produces = "application/json")
+    public FormFieldsDto getPlagiatForm(@PathVariable("processInstanceId") String processInstanceId) {
+        return _editorService.getPlagiatForm(processInstanceId);
+    }
 }
