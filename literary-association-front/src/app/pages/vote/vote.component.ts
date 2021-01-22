@@ -1,10 +1,9 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
-import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Observable, Observer } from 'rxjs';
-import { CommitteeService } from './../../services/committee.service';
 import { HttpClient } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser'
+import { Component, OnInit, SecurityContext } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { CommitteeService } from './../../services/committee.service';
 declare var require: any
 const FileSaver = require('file-saver');
 
@@ -67,7 +66,7 @@ export class VoteComponent implements OnInit {
             }, error => {
               console.log("Error occured!");
           })
-    
+
   }
 
 
@@ -94,7 +93,7 @@ export class VoteComponent implements OnInit {
     this.formFields = copyFormFields;
   }
 
-  
+
   createListForOption(optionsString){
     const children: Array<{ label: string; value: string }> = [];
     for (var key in optionsString) {
@@ -104,7 +103,7 @@ export class VoteComponent implements OnInit {
   }
     this.listOfOption = children;
  }
- 
+
 
   createListFiles(array){
     let genres = array.split(";");
@@ -112,10 +111,10 @@ export class VoteComponent implements OnInit {
     for (let i = 0; i < genres.length-1; i++) {
       children.push(genres[i]);
     }
-    this.filesOption = children;  
+    this.filesOption = children;
   }
 
-   
+
   downloadFile(fileName): void {
      console.log("klik na download" + fileName);
      this.committeeService.downloadFile(fileName).
@@ -123,7 +122,7 @@ export class VoteComponent implements OnInit {
         this.showDownloadFile(res,fileName);
     }, error => {
       console.log(error);
-    });     
+    });
   }
 
 
