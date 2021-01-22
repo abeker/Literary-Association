@@ -67,6 +67,16 @@ public class CamundaController {
         return ResponseEntity.ok(pi.getId());
     }
 
+
+    @GetMapping(path = "/startPublish2Process", produces = "application/json")
+    public  ResponseEntity<String> startPublish2Process(){
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("Process_publishBook2");
+        return ResponseEntity.ok(pi.getId());
+    }
+
+
+
+
     @GetMapping(path = "/get/{processInstanceId}", produces = "application/json")
     public @ResponseBody
     FormFieldsDto getFormFields(@PathVariable("processInstanceId") String processInstanceId) {
@@ -93,6 +103,28 @@ public class CamundaController {
         }
 
         return new ResponseEntity(dtos,  HttpStatus.OK);
+    }
+
+    //IZVLACIM USER TASK KOJI JE DODELJEN NEKOM
+    @GetMapping(path = "/get/{processInstanceId}/{username}", produces = "application/json")
+    public @ResponseBody
+    FormFieldsDto getFormFieldsMultiTask(@PathVariable("processInstanceId") String processInstanceId,
+                                         @PathVariable("username") String username) {
+        System.out.println("PROCES: " + processInstanceId);
+        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+        Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
+        for (Task taskTemp : tasks) {
+            System.out.println(taskTemp.getAssignee());
+            if(taskTemp.getAssignee().equals(username))
+                task = taskTemp;
+        }
+        TaskFormData tfd = formService.getTaskFormData(task.getId());
+        List<FormField> properties = tfd.getFormFields();
+        for(FormField fp : properties) {
+            System.out.println(fp.getId() + fp.getType());
+        }
+
+        return new FormFieldsDto(task.getId(),processInstanceId, properties);
     }
 
 

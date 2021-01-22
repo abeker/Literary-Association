@@ -23,6 +23,9 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { FileUploadComponent } from './pages/file-upload/file-upload.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { VoteComponent } from './pages/vote/vote.component';
+import { BetaReaderListComponent } from './pages/beta-reader-list/beta-reader-list.component';
+import { BetaReaderCommentComponent } from './pages/beta-reader-comment/beta-reader-comment.component';
 
 registerLocaleData(en);
 
@@ -41,6 +44,9 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     RegistrateComponent,
     BookComponent,
     FileUploadComponent,
+    VoteComponent,
+    BetaReaderListComponent,
+    BetaReaderCommentComponent,
   ],
   imports: [
     BrowserModule,

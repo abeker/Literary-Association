@@ -9,5 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface IReaderRepository extends JpaRepository<Reader, UUID> {
+
     Reader findOneByUsername(String username);
+
 }
