@@ -39,8 +39,6 @@ insert into writer (id, writer_membership_status_id, membership_id) values
 ('70249358-0f4d-4010-9361-26c5e533a979', '334567b2-645d-4102-9688-a6d30563b5aa', 'ff5c1778-c150-4ea9-9100-a4c78d9b81a6');
 insert into reader (id) values ('16805d59-3133-4ee5-9a42-6fc2578a627a');
 insert into reader (id) values ('fb70ab80-925d-4b4a-8eab-97728e46fac1');
---insert into committee_member (id, major) values ('0896abd9-932d-4998-8a83-2a00d9bf77e5', true);
---insert into committee_member (id, major) values ('3166f4d2-cb44-401a-bca4-32f9e871ebf2', false);
 insert into committee_member (id, major) values ('ca4e550a-b66f-46b0-a27e-52551a6fb012', false);
 insert into committee_member (id, major) values ('d0f20303-468b-4ebe-bb23-48003fc8a38e', false);
 
@@ -64,13 +62,13 @@ insert into beta_reader_genres (beta_reader_id, genres_id) values
 
 
 insert into editor_comment (id, comment_text, editor_id) values
-('cd484a86-fd3e-4bc3-80c8-f81182787769', 'This is awesome!', '2b052fd4-fbc0-462f-8db3-650b3c89e20a');
-
-insert into handwrite (id, handwrite_file_name) values
-('e95aaf6e-2ac6-49ac-a486-d9d7923c8e4e', 'C:\Program Files\Handwrites');
+    ('cd484a86-fd3e-4bc3-80c8-f81182787769', 'This is awesome!', '2b052fd4-fbc0-462f-8db3-650b3c89e20a');
 
 insert into book_request (id, synopsis, title, editor_comment_id, approved) values
-('e38d8dad-0327-4b6a-ac04-b74a509946a0', 'This is great synopsis', 'The Great Idea', 'cd484a86-fd3e-4bc3-80c8-f81182787769', true);
+    ('e38d8dad-0327-4b6a-ac04-b74a509946a0', 'This is great synopsis', 'The Great Idea', 'cd484a86-fd3e-4bc3-80c8-f81182787769', true);
+
+insert into handwrite (id, handwrite_file_name, book_request_id) values
+    ('e95aaf6e-2ac6-49ac-a486-d9d7923c8e4e', 'C:\Program Files\Handwrites', 'e38d8dad-0327-4b6a-ac04-b74a509946a0');
 
 insert into book (id, isbn, publish_year, publish_place, number_of_pages, deleted, book_request_id) values
-('fc8eeb62-9f4f-42bf-b344-90102672a554', '978-3-16-148410-0', '2012-11-11', 'Futog', 317, false, 'e38d8dad-0327-4b6a-ac04-b74a509946a0');
+    ('fc8eeb62-9f4f-42bf-b344-90102672a554', '978-3-16-148410-0', '2012-11-11', 'Futog', 317, false, 'e38d8dad-0327-4b6a-ac04-b74a509946a0');

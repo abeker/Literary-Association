@@ -7,12 +7,12 @@
 
           <nz-form-item>
               <nz-form-label [nzSpan]="7" nzRequired>{{field.label}}</nz-form-label>
-              <nz-form-control nzHasFeedback [nzSm]="12" [nzXs]="24" [nzErrorTip]="err">
+              <nz-form-control nzHasFeedback [nzSm]="12" [nzXs]="24">
 
 
                    <textarea rows="4" cols="45" *ngIf="field.type.name=='textArea'" id={{field.id}}  [ngModelOptions]="{standalone: true}" [(ngModel)]="inputValue"></textarea>
 
-                   <nz-select *ngIf="field.type.name=='enum'" id={{field.id}} [[nzSize]="size"  [ngModelOptions]="{standalone: true}" nzPlaceHolder="Please select"  [(ngModel)]="multipleValue">
+                   <nz-select *ngIf="field.type.name=='enum'" id={{field.id}}  [ngModelOptions]="{standalone: true}" nzPlaceHolder="Please select"  [(ngModel)]="multipleValue">
                       <nz-option *ngFor="let option of field.type.values" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
                    </nz-select>
 

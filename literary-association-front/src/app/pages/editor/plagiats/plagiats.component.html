@@ -8,5 +8,72 @@
 </div>
 
 <div *ngIf="!isAlertMessageVisible">
+  <form  nz-form [formGroup]="voteForm" (ngSubmit)="submitForm(voteForm.value)">
 
+    <div *ngFor="let field of formFields" >
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>{{field.label}}</nz-form-label>
+            <nz-form-control [nzSm]="12" [nzXs]="24">
+
+                  <input nz-input
+                    type="text"
+                    formControlName={{field.id}}
+                    id={{field.id}}
+                    *ngIf="field.type.name=='string'">
+
+                <label formControlName={{field.id}}
+                    nz-checkbox
+                    [(ngModel)]="isPlagiat"
+                    *ngIf="field.type.name=='boolean'"></label>
+
+                 <div *ngIf="field.type.name=='nonEditibleFiles'">
+                      <div *ngFor="let file of field.type.values" >
+                        <a (click)="downloadFile(file)">
+                           {{file}}
+                        </a>
+                      </div>
+                 </div>
+
+           </nz-form-control>
+         </nz-form-item>
+
+    </div>
+
+    <nz-form-item>
+      <nz-form-control [nzOffset]="7" [nzSpan]="12">
+          <button nz-button nzType="primary">Submit</button>
+        <br/>
+        <br/>
+      </nz-form-control>
+    </nz-form-item>
+
+
+  </form>
+</div>
+
+<div>
+  <nz-modal
+    [(nzVisible)]="isModalVisible"
+    nzTitle="Book Request Denied"
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+    [nzOkLoading]="isModalOkLoading"
+  >
+    <label>Reason: </label>
+    <textarea rows="4" nz-input [(ngModel)]="textareaText"></textarea>
+  </nz-modal>
+</div>
+
+<div>
+  <nz-modal
+    [(nzVisible)]="isModalBetaReadersVisible"
+    nzTitle="Book Request Denied"
+    (nzOnCancel)="handleCancelBetaReaders()"
+    (nzOnOk)="handleOkBetaReaders()"
+    [nzOkLoading]="isModalBetaReadersOkLoading"
+  >
+    <label>Send to Beta Readers: </label>
+    <label nz-checkbox [(ngModel)]="sendToBetaReaders"></label>
+  </nz-modal>
 </div>

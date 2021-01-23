@@ -31,6 +31,14 @@ public class EditorController {
                                         @PathVariable("reason") String reason) {
         _editorService.submitWriterBookRequest(submitedFields, processInstanceId, reason);
     }
+
+    @PostMapping(path = "/submit-form-plagiarism/{processInstanceId}/{reason}/{sendToBetaReaders}", produces = "application/json")
+    public void submitPlagiarismCheck(@RequestBody List<FormSubmissionDto> submitedFields,
+                                        @PathVariable("processInstanceId") String processInstanceId,
+                                        @PathVariable("reason") String reason,
+                                        @PathVariable("sendToBetaReaders") boolean sendToBetaReaders) {
+        _editorService.submitPlagiarismCheck(submitedFields, processInstanceId, reason, sendToBetaReaders);
+    }
     
     @GetMapping(path = "/get-plagiat-form/{processInstanceId}", produces = "application/json")
     public FormFieldsDto getPlagiatForm(@PathVariable("processInstanceId") String processInstanceId) {

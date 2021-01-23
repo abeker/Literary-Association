@@ -66,7 +66,6 @@ export class VoteComponent implements OnInit {
             }, error => {
               console.log("Error occured!");
           })
-
   }
 
 

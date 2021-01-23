@@ -12,4 +12,6 @@ public interface IEditorService {
     void submitWriterBookRequest(List<FormSubmissionDto> submitedFields, String processInstanceId, String reason);
 
     FormFieldsDto getPlagiatForm(String processInstanceId);
+
+    void submitPlagiarismCheck(List<FormSubmissionDto> submitedFields, String processInstanceId, String reason, boolean sendToBetaReaders);
 }

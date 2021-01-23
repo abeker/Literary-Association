@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./beta-reader-comment.component.css']
 })
 export class BetaReaderCommentComponent implements OnInit {
-  
+
   betaCommentForm: FormGroup;
   formFieldsDto = null;
   formFields = [];
@@ -27,7 +27,7 @@ export class BetaReaderCommentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let proecesInstanceId = localStorage.getItem("processInstance");
+    let proecesInstanceId = localStorage.getItem("publishBookProccessId");
     this.user = JSON.parse(localStorage.getItem('user'));
     console.log("PROCES KOMENTARISANJA-BETA READER: " + proecesInstanceId + this.user.username);
     this.readerService.startBetaReaderComment(proecesInstanceId, this.user.username).
@@ -64,7 +64,7 @@ export class BetaReaderCommentComponent implements OnInit {
 
   }
 
-  
+
 
   changeFormFieldsDTO(){
     let formFields = this.formFieldsDto.formFields;

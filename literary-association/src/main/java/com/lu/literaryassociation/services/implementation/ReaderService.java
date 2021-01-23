@@ -8,6 +8,7 @@ import com.lu.literaryassociation.entity.Genre;
 import com.lu.literaryassociation.entity.Reader;
 import com.lu.literaryassociation.repository.IBetaReaderCommentRepository;
 import com.lu.literaryassociation.repository.IBetaReaderRepository;
+import com.lu.literaryassociation.repository.IGenreRepository;
 import com.lu.literaryassociation.repository.IReaderRepository;
 import com.lu.literaryassociation.services.definition.IGenreService;
 import com.lu.literaryassociation.services.definition.IReaderService;
@@ -21,17 +22,15 @@ import java.util.List;
 public class ReaderService implements IReaderService {
 
     private final IReaderRepository iReaderRepository;
-
+    private final IGenreRepository _genreRepository;
     private final IBetaReaderRepository iBetaReaderRepository;
-
     private final IBetaReaderCommentRepository iBetaReaderCommentRepository;
-
     private final IGenreService iGenreService;
-
     private final IUserService iUserService;
 
-    public ReaderService(IReaderRepository iReaderRepository, IBetaReaderRepository iBetaReaderRepository, IBetaReaderCommentRepository iBetaReaderCommentRepository, IGenreService iGenreService, IUserService iUserService) {
+    public ReaderService(IReaderRepository iReaderRepository, IGenreRepository genreRepository, IBetaReaderRepository iBetaReaderRepository, IBetaReaderCommentRepository iBetaReaderCommentRepository, IGenreService iGenreService, IUserService iUserService) {
         this.iReaderRepository = iReaderRepository;
+        _genreRepository = genreRepository;
         this.iBetaReaderRepository = iBetaReaderRepository;
         this.iBetaReaderCommentRepository = iBetaReaderCommentRepository;
         this.iGenreService = iGenreService;
@@ -94,6 +93,45 @@ public class ReaderService implements IReaderService {
         return iBetaReaderCommentRepository.findByProcessInstance(processId);
     }
 
+    @Override
+    public List<String> findBetaReaderInfoByMultiGenre(String genreName) {
+        List<String> retBetaReaders = new ArrayList<>();
+        List<Genre> listOfGenres = getGenresFromString(genreName);
+        List<BetaReader> listOfBetaReaders = getBetaReadersForGenres(listOfGenres);
+        for (BetaReader betaReader : listOfBetaReaders) {
+            retBetaReaders.add(mapBetaReaderToString(betaReader));
+        }
+        return retBetaReaders;
+    }
+
+    private String mapBetaReaderToString(BetaReader betaReader) {
+        return betaReader.getReader().getUsername() + ":" + betaReader.getReader().getFirstName() + " " + betaReader.getReader().getLastName();
+    }
+
+    private List<BetaReader> getBetaReadersForGenres(List<Genre> listOfGenres) {
+        List<BetaReader> retBetaReaders = new ArrayList<>();
+        for (BetaReader betaReader : iBetaReaderRepository.findAll()) {
+            for (Genre genre : listOfGenres) {
+                if(betaReader.getGenres().contains(genre)) {
+                    retBetaReaders.add(betaReader);
+                    break;
+                }
+            }
+        }
+        return retBetaReaders;
+    }
+
+    private List<Genre> getGenresFromString(String genreName) {
+        String[] genreList = genreName.split(";");
+        List<Genre> retGenreList = new ArrayList<>();
+        for (String genreString : genreList) {
+            Genre genre = _genreRepository.findByGenreName(genreString.trim());
+            if(genre != null) {
+                retGenreList.add(genre);
+            }
+        }
+        return retGenreList;
+    }
 
 
 }

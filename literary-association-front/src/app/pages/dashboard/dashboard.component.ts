@@ -92,25 +92,23 @@ export class DashboardComponent implements OnInit {
   checkForPlagiats(): void {
     this.router.navigateByUrl('/dashboard/plagiats');
   }
-  
+
   chooseBetaReader(): void {
     //startujem moj proces
-    this.literaryService.publishBook2Start().
-    subscribe((res) => {
-        console.log("start publish-2deo"+ res);
-        localStorage.setItem("processInstance", res);
-        this.router.navigateByUrl('/dashboard/betaReader');
-    }, error => {
-      console.log(error);
-    }); 
+    this.router.navigateByUrl('/dashboard/betaReader');
+    // this.literaryService.publishBook2Start().
+    // subscribe((res) => {
+    //     console.log("start publish-2deo"+ res);
+    //     localStorage.setItem("processInstance", res);
+    // }, error => {
+    //   console.log(error);
+    // });
   }
-
 
   betaReaderComment(): void {
     this.router.navigateByUrl('/dashboard/betaReaderComment');
   }
 
-  
   checkIsBetaReader(username): void {
     this.readerService.isBetaReader(username).
     subscribe((res) => {
@@ -120,7 +118,7 @@ export class DashboardComponent implements OnInit {
         }
     }, error => {
       console.log(error);
-    }); 
+    });
   }
 
 

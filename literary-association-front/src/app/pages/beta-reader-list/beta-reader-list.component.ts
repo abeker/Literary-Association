@@ -10,7 +10,7 @@ import { LiteraryAssociationService } from './../../services/literary-associatio
   styleUrls: ['./beta-reader-list.component.css']
 })
 export class BetaReaderListComponent implements OnInit {
-  
+
   betaReaderForm: FormGroup;
   formFieldsDto = null;
   formFields = [];
@@ -28,7 +28,7 @@ export class BetaReaderListComponent implements OnInit {
 
 
   ngOnInit(): void {
-        let proecesInstanceId = localStorage.getItem("processInstance");
+        let proecesInstanceId = localStorage.getItem("publishBookProccessId");
         this.user = JSON.parse(localStorage.getItem('user'));
         console.log("preuzimam listu beta readera: " + proecesInstanceId + this.user.username);
         this.literaryService.getBetaReadersFormField(proecesInstanceId).
@@ -41,7 +41,7 @@ export class BetaReaderListComponent implements OnInit {
         }, error => {
           console.log(error);
         });
-        
+
   }
 
 
@@ -83,8 +83,8 @@ export class BetaReaderListComponent implements OnInit {
     });
     this.formFields = copyFormFields;
   }
-   
-  
+
+
   createListForOption(betaReadersString){
     const children: Array<{ label: string; value: string }> = [];
     let readers = betaReadersString.split(";");

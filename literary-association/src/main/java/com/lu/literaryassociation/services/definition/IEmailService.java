@@ -10,4 +10,5 @@ public interface IEmailService {
     void sendNotificationToWriter(Writer writer, String subject, String title, String synopsis);
 
     void sendHandwrite(Writer writer, String subject, String title, String synopsis);
+
 }

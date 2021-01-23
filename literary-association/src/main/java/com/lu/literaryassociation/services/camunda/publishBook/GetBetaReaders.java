@@ -16,13 +16,12 @@ public class GetBetaReaders implements JavaDelegate {
         this.iReaderService = iReaderService;
     }
 
-
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
 
         System.out.println("Usla u izlacenje beta readera");
-        String genreName = "poetry"; //ovo izvuci iz procesne varijable zanra knjige
-        List<String> betaReadersList = iReaderService.findBetaReaderInfoByGenre(genreName);
+        String genreName = (String)delegateExecution.getVariable("bookRequestGenres");
+        List<String> betaReadersList = iReaderService.findBetaReaderInfoByMultiGenre(genreName);
         String chooseBetaReaders = "";
 
         for(String br : betaReadersList){

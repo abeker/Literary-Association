@@ -22,7 +22,7 @@ export class ReaderService {
   public isBetaReader(username): Observable<any> {
     return this.http.get(this.baseUrlReader + `/isBetaReader/${username}`);
   }
-  
+
   public startBetaReaderComment(processId, username): Observable<any> {
       return this.http.get(`${this.baseUrl}welcome/get/${processId}/${username}`);
   }

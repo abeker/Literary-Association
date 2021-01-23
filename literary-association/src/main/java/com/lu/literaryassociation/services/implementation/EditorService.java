@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@SuppressWarnings("DuplicatedCode")
+@SuppressWarnings({"DuplicatedCode", "UnusedReturnValue"})
 @Service
 public class EditorService implements IEditorService {
 
@@ -63,7 +63,7 @@ public class EditorService implements IEditorService {
 
     @Override
     public void submitWriterBookRequest(List<FormSubmissionDto> submitedFields, String processInstanceId, String reason) {
-        updateBookRequest(getApprovementFromFields(submitedFields), processInstanceId, reason);
+        updateBookRequest(getBooleanFromFields(submitedFields, "isApproved"), processInstanceId, reason);
         HashMap<String, Object> map = mapListToDto(submitedFields);
 
         Task task = _taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
@@ -73,18 +73,48 @@ public class EditorService implements IEditorService {
     @Override
     public FormFieldsDto getPlagiatForm(String processInstanceId) {
         System.out.println("PROCES: " + processInstanceId);
-        Task task = _taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
+        Object hasPlagiatFormRetrieved = _runtimeService.getVariable(processInstanceId, "isPlagiat");
+        if(hasPlagiatFormRetrieved == null) {
+            Task task = _taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
 
-        BookRequest bookRequest = getBookRequestFromProcess(processInstanceId);
-        TaskFormData tfd = _formService.getTaskFormData(task.getId());
-        List<FormField> properties = tfd.getFormFields();
-        for(FormField fp : properties) {
-            if(fp.getId().equals("writer")) {
-                fp.getProperties().put("writer", getWriterNameFromProccess(processInstanceId));
+            BookRequest bookRequest = getBookRequestFromProcess(processInstanceId);
+            TaskFormData tfd = _formService.getTaskFormData(task.getId());
+            List<FormField> properties = tfd.getFormFields();
+            for(FormField fp : properties) {
+                if(fp.getId().equals("writer")) {
+                    fp.getProperties().put("writer", getWriterNameFromProccess(processInstanceId));
+                }
             }
-        }
 
-        return new FormFieldsDto(task.getId(),processInstanceId, properties);
+            return new FormFieldsDto(task.getId(),processInstanceId, properties);
+        }
+        return null;
+    }
+
+    @Override
+    public void submitPlagiarismCheck(List<FormSubmissionDto> submitedFields, String processInstanceId, String reason, boolean sendToBetaReaders) {
+        updateHandwrite(getBooleanFromFields(submitedFields, "isPlagiat"), processInstanceId, reason, sendToBetaReaders);
+        HashMap<String, Object> map = mapListToDto(submitedFields);
+
+        Task task = _taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
+        _formService.submitTaskForm(task.getId(), map);
+    }
+
+    private BookRequest updateHandwrite(boolean isPlagiat, String processInstanceId, String reason, boolean sendToBetaReaders) {
+        String requestBookId = (String)_runtimeService.getVariable(processInstanceId, "requestBookId");
+        _runtimeService.setVariable(processInstanceId, "sendToBetaReaders", sendToBetaReaders);
+        _runtimeService.setVariable(processInstanceId, "isPlagiat", isPlagiat);
+        Optional<BookRequest> bookRequestOptional = _bookRequestRepository.findById(UUID.fromString(requestBookId));
+        if(bookRequestOptional.isPresent()) {
+            BookRequest bookRequest = bookRequestOptional.get();
+            bookRequest.setApproved(!isPlagiat);
+            if(!reason.equals("no_reason")) {
+                EditorComment editorComment = createEditorComment(processInstanceId, reason);
+                bookRequest.setEditorComment(editorComment);
+            }
+            return _bookRequestRepository.save(bookRequest);
+        }
+        return null;
     }
 
     private String getWriterNameFromProccess(String processInstanceId) {
@@ -97,9 +127,9 @@ public class EditorService implements IEditorService {
         return null;
     }
 
-    private boolean getApprovementFromFields(List<FormSubmissionDto> submitedFields) {
+    private boolean getBooleanFromFields(List<FormSubmissionDto> submitedFields, String fieldName) {
         for (FormSubmissionDto field : submitedFields) {
-            if(field.getFieldId().equals("isApproved")) {
+            if(field.getFieldId().equals(fieldName)) {
                 return Boolean.parseBoolean(field.getFieldValue());
             }
         }

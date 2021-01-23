@@ -25,4 +25,5 @@ public interface IReaderService {
 
     List<BetaReaderComment> getBetaReaderCommentByProcess(String processId);
 
+    List<String> findBetaReaderInfoByMultiGenre(String genreName);
 }
