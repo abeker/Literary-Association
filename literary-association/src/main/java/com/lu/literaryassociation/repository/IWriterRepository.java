@@ -8,4 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface IWriterRepository extends JpaRepository<Writer, UUID> {
+
+    Writer findOneByUsername(String username);
+
 }

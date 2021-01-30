@@ -17,7 +17,4 @@ public class CommitteeMember extends User {
 
     private boolean major;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<WriterRegistrationComment> writerRegistrationComment;
-
 }

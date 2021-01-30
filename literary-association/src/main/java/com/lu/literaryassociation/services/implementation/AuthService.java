@@ -2,21 +2,25 @@ package com.lu.literaryassociation.services.implementation;
 
 import com.lu.literaryassociation.dto.request.LoginRequest;
 import com.lu.literaryassociation.dto.response.UserResponse;
-import com.lu.literaryassociation.entity.*;
+import com.lu.literaryassociation.entity.User;
+import com.lu.literaryassociation.entity.UserDetailsImpl;
 import com.lu.literaryassociation.repository.IUserRepository;
 import com.lu.literaryassociation.security.TokenUtils;
 import com.lu.literaryassociation.services.definition.IAuthService;
+import com.lu.literaryassociation.util.exceptions.GeneralException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 @Service
 public class AuthService implements IAuthService {
@@ -41,11 +45,11 @@ public class AuthService implements IAuthService {
         }
 
         checkUserStatus(user);
-        Authentication authentication = loginSimpleUser(request.getUsername(), request.getPassword());
+        Authentication authentication = loginSimpleUser(request.getUsername(), request.getPassword(), httpServletRequest);
         return createLoginUserResponse(authentication, user);
     }
 
-    private Authentication loginSimpleUser(String mail, String password) {
+    private Authentication loginSimpleUser(String mail, String password, HttpServletRequest request) {
         Authentication authentication = null;
         try {
             authentication = _authenticationManager
@@ -58,32 +62,15 @@ public class AuthService implements IAuthService {
             e.printStackTrace();
         }
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(authentication);
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
 
     private void checkUserStatus(User userToCheck) {
-        switch (userToCheck.getUserType()){
-            case EDITOR:
-                if(!((Editor)userToCheck).isApproved()) {
-                    throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-                }
-            break;
-            case LECTOR:
-                if(!((Lector)userToCheck).isApproved()) {
-                    throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-                }
-            break;
-            case READER:
-                if(!((Reader)userToCheck).isApproved()) {
-                    throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-                }
-            break;
-            case WRITER:
-                if(!((Writer)userToCheck).isRegistrationApproved()) {
-                    throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
-                }
-            break;
+        if(!userToCheck.isApproved()) {
+            throw new GeneralException("Your registration hasn't been approved yet.", HttpStatus.BAD_REQUEST);
         }
     }
 

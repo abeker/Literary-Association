@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { NzSelectSizeType } from 'ng-zorro-antd/select';
-import { AuthService } from '../../services/auth.service';
-import { Observable, Observer } from 'rxjs';
-import { NzMessageService, valueFunctionProp } from 'ng-zorro-antd';
-import { UserService } from './../../services/user.service';
-import { ReaderService } from './../../services/reader.service';
 import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd';
+import { NzSelectSizeType } from 'ng-zorro-antd/select';
+import { Observable, Observer } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { ReaderService } from './../../services/reader.service';
+import { UserService } from './../../services/user.service';
 
 @Component({
   selector: 'app-registrate',
@@ -34,7 +34,7 @@ export class RegistrateComponent implements OnInit {
   processInstace: any
 
   constructor(private router: Router, private authService: AuthService, private fb: FormBuilder,
-              private userService: UserService,  private message: NzMessageService, private readerService: ReaderService, private http: HttpClient) {
+              private userService: UserService, private message: NzMessageService, private readerService: ReaderService, private http: HttpClient) {
 
       this.validateForm = this.fb.group({});
       // this.http.get("http://localhost:8084/welcome/startProcess").subscribe(resp => {
@@ -48,32 +48,23 @@ export class RegistrateComponent implements OnInit {
 
 
   ngOnInit(): void {
-    let proecesInstanceId = localStorage.getItem("processInstance")
-    console.log("ISCITAVAM: " + proecesInstanceId)
+    let proecesInstanceId = localStorage.getItem("processInstance");
+    let registrationType = localStorage.getItem("registrationType");
+    console.log("ISCITAVAM: " + proecesInstanceId + "TIPA: " + registrationType);
     this.authService.startRegistrationProcess(proecesInstanceId).
     subscribe((res) => {
-        console.log(res);
+        // console.log(res);
         this.initFieldsDto = res;
         this.formFieldsDto = res;
         this.changeFormFieldsDTO();
-        console.log(this.formFields);
+        //console.log(this.formFields);
         this.processInstance = res.processInstanceId;
         this.formFields.forEach( (field) =>{
-          console.log(field);
+          //console.log(field);
           let field_validations = field.validationConstraints;
-          let validators = this.newValidationRule(field_validations);
-          if(field.type.name == "confirm_password"){
-            //this.validateForm.addControl(field.id, this.fb.control('', validators,[this.confirmValidator]));
-            validators.push(this.confirmValidator);
-          }else if(field.properties.hasOwnProperty('email')){
-            validators.push(Validators.email);
-            // validators.push(this.userNameAsyncValidator);
-          }else if(field.type.name == "password" && field.properties.hasOwnProperty('pattern') ){
-            let obj = field.properties;
-            validators.push(Validators.pattern(new RegExp(obj['pattern'])));
-          }
+          let validators = this.newValidationRule(field_validations, field);
           this.validateForm.addControl(field.id, this.fb.control('', validators));
-          console.log(field.id, validators);
+         //console.log(field.id, validators);
         });
     }, error => {
       console.log(error);
@@ -83,51 +74,48 @@ export class RegistrateComponent implements OnInit {
 
 
   submitForm(value){
-    for (const key in this.validateForm.controls) {
-      this.validateForm.controls[key].markAsDirty();
-      this.validateForm.controls[key].updateValueAndValidity();
-    }
-
-    console.log("SUBMIT");
-    let o = new Array();
-    for (var property in value) {
-      //console.log(value);
-     // console.log(property);
-      if(property === "betaReader"){
-        o.push({fieldId : property, fieldValue : this.isBetareader});
-      }else if (property === "genre"){
-        console.log("ZANROVIIIII");
-        let genreString = "";
-
-        for(let i=0;i<this.multipleValue.length;i++){
-              //console.log(this.multipleValue[i]);
-              genreString += (this.multipleValue[i]);
-              genreString += (";");
+        for (const key in this.validateForm.controls) {
+          this.validateForm.controls[key].markAsDirty();
+          this.validateForm.controls[key].updateValueAndValidity();
         }
-       // console.log(genreString);
-        o.push({fieldId : property, fieldValue : genreString});
-      }else{
-        o.push({fieldId : property, fieldValue : value[property]});
-      }
-    }
 
-    console.log(o);
-    //console.log(this.multipleValue);
+      // console.log("SUBMIT");
+        let o = new Array();
+        for (var property in value) {
+          if(property === "betaReader"){
+              o.push({fieldId : property, fieldValue : this.isBetareader});
+          }else if (property === "genre" || property === "genres"){
+              let genreString = "";
+              for(let i=0;i<this.multipleValue.length;i++){
+                    genreString += (this.multipleValue[i]);
+                    genreString += (";");
+              }
+              // console.log(genreString);
+              o.push({fieldId : property, fieldValue : genreString});
+          }else{
+              o.push({fieldId : property, fieldValue : value[property]});
+          }
+        }
 
-    if(this.isBetareader && this.multipleValue.length === 0){
-          alert("Please select some genre");
-    }else{
-        this.authService.registerUser(o,this.formFieldsDto.taskId)
-        .subscribe(response => {
-          console.log(response);
-          console.log('REGISTER SUCCES');
-          alert("You registered successfully! Please check email to confirm registration!")
-        }, error => {
-          console.log("Error occured!");
-      })
+        console.log(o);
+        //console.log(this.multipleValue);
 
-      this.resetForm(new MouseEvent('click'));
-      }
+        if(this.isBetareader && this.multipleValue.length === 0){   ///ZA BETA READERA IZBACITI JOS NEKI BOX GDE CE PONOVO BIRATI??
+              alert("Please select some genre");
+        }else if(this.multipleValue.length === 0){
+              alert("Please select some genre");
+        }else{
+            this.authService.registerUser(o,this.formFieldsDto.taskId)
+            .subscribe(response => {
+              console.log(response);
+              console.log('REGISTER SUCCES');
+              alert("You registered successfully! Please check email to confirm registration!")
+            }, error => {
+              console.log("Error occured!");
+          })
+
+          this.resetForm(new MouseEvent('click'));
+          }
 
   }
 
@@ -178,7 +166,7 @@ export class RegistrateComponent implements OnInit {
 
 
 
-  newValidationRule(field_validations): any {
+  newValidationRule(field_validations, field): any {
     let validators = [];
     field_validations.forEach(tep => {
       switch(tep.name) {
@@ -193,12 +181,21 @@ export class RegistrateComponent implements OnInit {
           break;
       }
     });
+    if(field.type.name == "confirm_password"){
+         validators.push(this.confirmValidator);
+    }else if(field.properties.hasOwnProperty('email')){
+         validators.push(Validators.email);
+         //validators.push(this.userNameAsyncValidator);
+    }else if(field.type.name == "password" && field.properties.hasOwnProperty('pattern') ){
+         let obj = field.properties;
+         validators.push(Validators.pattern(new RegExp(obj['pattern'])));
+    }
     return validators;
   }
 
 
    confirmValidator = (control: FormControl): { [s: string]: boolean } => {
-     console.log("USLAA OVDE");
+     //console.log("USLAA OVDE");
     if (!control.value) {
       return { error: true, required: true };
     } else if (control.value !== this.validateForm.controls.password.value) {
@@ -216,7 +213,6 @@ export class RegistrateComponent implements OnInit {
 
   userNameAsyncValidator = (control: FormControl) =>
     new Observable((observer: Observer<ValidationErrors | null>) => {
-      console.log("VOLIM TE");
       this.userService.getUser(control.value).subscribe(() => {
         this.isUsernameExist = true;
       }, () => {
@@ -232,12 +228,6 @@ export class RegistrateComponent implements OnInit {
         observer.complete();
       }, 1000);
     });
-
-
-
-
-
-
 
 
 
@@ -262,70 +252,9 @@ export class RegistrateComponent implements OnInit {
 
 
   onPasswordChange(passwordInput): void {
-    this.checkPassword(passwordInput, false);
   }
 
   onPasswordConfirmChange(passwordInput): void {
-    this.checkPassword(passwordInput, true);
   }
 
-  checkPassword(password, isConfirm: boolean): void {
-    let coefficientAccuracy = 0;
-    /*if(hasLowerCase(password)) {
-      coefficientAccuracy += 1;
-    } if(hasUpperCase(password)) {
-      coefficientAccuracy += 1;
-    } if(hasNumber(password)) {
-      coefficientAccuracy += 1;
-    } if(hasSpecialCharacter(password)) {
-      coefficientAccuracy += 1;
-    } if(hasMinLength(password)) {
-      coefficientAccuracy += 1;
-    }*/
-    if(password === this.validateForm.value.password && isConfirm) {
-      coefficientAccuracy += 1;
-    }
-
-    if(!isConfirm) {
-      this.passwordPercentage = coefficientAccuracy * 100;
-    } else {
-      this.passwordConfirmPercentage = coefficientAccuracy * 100;
-    }
-
-  }
-
-
-
-}
-
-
-
-function hasLowerCase(str) {
-  if(str != null) {
-    return (/[a-z]/.test(str));
-  }
-}
-
-function hasUpperCase(str) {
-  if(str != null) {
-    return (/[A-Z]/.test(str));
-  }
-}
-
-function hasNumber(str) {
-  if(str != null) {
-    return (/[0-9]/.test(str));
-  }
-}
-
-function hasSpecialCharacter(str) {
-  if(str != null) {
-    return (/[!@#$%^&.]/.test(str));
-  }
-}
-
-function hasMinLength(str: string) {
-  if(str != null) {
-    return (str.length >= 9);
-  }
 }

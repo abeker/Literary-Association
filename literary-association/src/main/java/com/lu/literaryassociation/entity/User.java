@@ -40,6 +40,8 @@ public class User extends BaseEntity implements Serializable {
 
     private String country;
 
+    private boolean isApproved;
+
     @Enumerated(EnumType.STRING)
     private UserType userType;
 

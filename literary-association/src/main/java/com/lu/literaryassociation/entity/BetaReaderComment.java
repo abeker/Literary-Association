@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,12 +17,12 @@ public class BetaReaderComment extends BaseEntity {
 
     private String commentText;
 
-    private LocalDateTime commentDateTime;
+    private String processInstance;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Handwriting handwriting;
+    private Handwrite handwrite;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="beta_reader_id", referencedColumnName="id")
     private BetaReader betaReader;
-
 }

@@ -31,8 +31,9 @@ export class LoginComponent implements OnInit {
       this.authService.login({
         username: this.validateForm.value.username,
         password: this.validateForm.value.password
-      }).subscribe(() => {
+      }).subscribe(user => {
         this.router.navigateByUrl('dashboard/welcome');
+        localStorage.setItem('user', JSON.stringify(user));
       }, error => {
         console.log(error);
       });
@@ -43,12 +44,24 @@ export class LoginComponent implements OnInit {
     this.authService.startProcess().subscribe((data: string)=>{
       console.log("PROCES_INSTANCE" + data);
       localStorage.setItem("processInstance", data);
+      localStorage.setItem("registrationType","reader");
+      this.router.navigateByUrl('auth/registrate');
     })
-    this.router.navigateByUrl('auth/registrate');
+  }
+
+  registerAsWriter(): void {
+    this.authService.startWriterRegistrationProcess().subscribe((data: string)=>{
+      console.log("PROCES_INSTANCE" + data);
+      localStorage.setItem("processInstance", data);
+      localStorage.setItem("registrationType","writer");
+      this.router.navigateByUrl('auth/registrate');
+    })
   }
 
   registerAsSeller(): void {
     this.router.navigateByUrl('auth/seller-registration');
   }
 
+
+  
 }

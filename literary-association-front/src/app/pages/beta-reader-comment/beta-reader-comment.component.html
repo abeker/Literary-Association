@@ -1,0 +1,33 @@
+<div class="main-div">
+    <h1>BetaReader comment form</h1>
+    <!--NA OSNOVU MDELA FORME IZ CAMUNDE SE GENERESE FORMA-->
+    <form  nz-form [formGroup]="betaCommentForm" (ngSubmit)="submitForm(betaCommentForm.value)">
+  
+      <div *ngFor="let field of formFields" >
+  
+          <nz-form-item>
+              <nz-form-label [nzSpan]="7" nzRequired for={{field.id}}>{{field.label}}</nz-form-label>
+              <nz-form-control nzHasFeedback [nzSm]="12" [nzXs]="24" [nzErrorTip]="err">
+  
+                   <textarea rows="4" cols="45" *ngIf="field.type.name=='textArea'" id={{field.id}}  [ngModelOptions]="{standalone: true}" [(ngModel)]="inputValue"></textarea>
+        
+             </nz-form-control>
+           </nz-form-item>
+  
+      </div>
+  
+      <nz-form-item>
+        <nz-form-control [nzOffset]="7" [nzSpan]="12">
+            <button nz-button nzType="primary">Submit</button>
+          <br/>
+          <br/>
+        </nz-form-control>
+      </nz-form-item>
+  
+  
+    </form>
+  
+  
+  </div>
+  
+

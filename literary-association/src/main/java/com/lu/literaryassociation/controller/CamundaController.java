@@ -1,8 +1,8 @@
 package com.lu.literaryassociation.controller;
 
-import com.lu.literaryassociation.entity.FormFieldsDto;
-import com.lu.literaryassociation.entity.FormSubmissionDto;
-import com.lu.literaryassociation.entity.TaskDto;
+import com.lu.literaryassociation.dto.request.FormFieldsDto;
+import com.lu.literaryassociation.dto.request.FormSubmissionDto;
+import com.lu.literaryassociation.dto.request.TaskDto;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
 import com.lu.literaryassociation.services.implementation.GenreService;
 import com.lu.literaryassociation.services.implementation.ReaderService;
@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -60,6 +61,21 @@ public class CamundaController {
         return ResponseEntity.ok(pi.getId());
     }
 
+    @GetMapping(path = "/startReaderProcess", produces = "application/json")
+    public  ResponseEntity<String> startReaderRegistrationProcess(){
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("Process_writerRegistration");
+        return ResponseEntity.ok(pi.getId());
+    }
+
+
+    @GetMapping(path = "/startPublish2Process", produces = "application/json")
+    public  ResponseEntity<String> startPublish2Process(){
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("Process_publishBook2");
+        return ResponseEntity.ok(pi.getId());
+    }
+
+
+
 
     @GetMapping(path = "/get/{processInstanceId}", produces = "application/json")
     public @ResponseBody
@@ -87,6 +103,28 @@ public class CamundaController {
         }
 
         return new ResponseEntity(dtos,  HttpStatus.OK);
+    }
+
+    //IZVLACIM USER TASK KOJI JE DODELJEN NEKOM
+    @GetMapping(path = "/get/{processInstanceId}/{username}", produces = "application/json")
+    public @ResponseBody
+    FormFieldsDto getFormFieldsMultiTask(@PathVariable("processInstanceId") String processInstanceId,
+                                         @PathVariable("username") String username) {
+        System.out.println("PROCES: " + processInstanceId);
+        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+        Task task = taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
+        for (Task taskTemp : tasks) {
+            System.out.println(taskTemp.getAssignee());
+            if(taskTemp.getAssignee().equals(username))
+                task = taskTemp;
+        }
+        TaskFormData tfd = formService.getTaskFormData(task.getId());
+        List<FormField> properties = tfd.getFormFields();
+        for(FormField fp : properties) {
+            System.out.println(fp.getId() + fp.getType());
+        }
+
+        return new FormFieldsDto(task.getId(),processInstanceId, properties);
     }
 
 
@@ -136,9 +174,16 @@ public class CamundaController {
         String[] exids = activityInstance.getExecutionIds();
         System.out.println("DUZINA: " + exids.length + "  PRVI: " + exids[0]);
         runtimeService.setVariable(exids[0],"confirmationToken",token);
-        runtimeService.createMessageCorrelation("Message_142ir1i").processInstanceId(instanceId).correlateAll();
+        runtimeService.createMessageCorrelation("Message_ActivatedLink").processInstanceId(instanceId).correlateAll();
 
-        URI yahoo = new URI("http://localhost:4200/auth/login");
+        URI yahoo = new URI("");
+        String userRegistrationType = (String) runtimeService.getVariable(exids[0],"userType");
+        if(userRegistrationType.equals("reader")){
+            yahoo = new URI("http://localhost:4200/auth/login");
+        }else{
+            yahoo = new URI("http://localhost:4200/register/fileUpload");
+        }
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(yahoo);
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);

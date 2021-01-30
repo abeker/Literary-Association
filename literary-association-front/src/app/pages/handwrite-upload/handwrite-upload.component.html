@@ -1,0 +1,22 @@
+<div *ngIf="!isFileUploadEnabled">
+  <nz-alert
+    nzType="warning"
+    nzMessage="Warning Text"
+    nzDescription="You cannot upload Handwrite until the Editor approves the Book Request!"></nz-alert>
+</div>
+
+<div *ngIf="isFileUploadEnabled" class="fileUploadForm">
+  <h1 class="h2">Upload Handwrite</h1>
+  <br>
+  <br>
+  <input
+    type='file'
+    (change)="onFileChange($event)">
+    <br>
+    <br>
+    <br>
+    <button nz-button nzType="primary" (click)="uploadFiles()" [nzSize]="buttonSize">
+      <i nz-icon nzType="upload" nzTheme="outline"></i>
+      Upload
+    </button>
+</div>

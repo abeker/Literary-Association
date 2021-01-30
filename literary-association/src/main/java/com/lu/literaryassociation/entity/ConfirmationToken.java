@@ -2,7 +2,6 @@ package com.lu.literaryassociation.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity

@@ -14,4 +14,19 @@ export class LiteraryAssociationService {
   public createLA(body): Observable<any> {
     return this.http.post(this.baseUrl + 'la', body);
   }
+
+
+  public publishBook2Start(): Observable<any> {
+    return this.http.get(this.baseUrl+"welcome/startPublish2Process", {responseType: 'text'});
+  }
+
+  public getBetaReadersFormField(processId): Observable<any> {
+    return this.http.get(`${this.baseUrl}welcome/get/${processId}`);
+  }
+
+  public sendChoosenBetaReaders(body, taskId): Observable<any> {
+    return this.http.post(`${this.baseUrl}readers/post/${taskId}`, body);
+  }
+
+
 }

@@ -20,11 +20,13 @@ public class Genre extends BaseEntity implements Serializable {
 
     private String genreName;
 
+    private boolean deleted;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<BetaReader> betaReader;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Writer> genres;
+    private Set<Writer> writers;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<BookRequest> bookRequests;

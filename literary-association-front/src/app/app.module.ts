@@ -1,5 +1,5 @@
 import { CommonModule, registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import en from '@angular/common/locales/en';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -16,11 +16,19 @@ import { environment } from './../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login.component';
-import { DashboardComponent } from './pages/dashboard/dashboard.component';
-import { WelcomeComponent } from './pages/welcome/welcome.component';
-import { RegistrationComponent } from './auth/registration/registration.component';
-import { SellerRegistrationComponent } from './pages/seller-registration/seller-registration.component';
 import { RegistrateComponent } from './auth/registrate/registrate.component';
+import { RegistrationComponent } from './auth/registration/registration.component';
+import { BookComponent } from './pages/book/book.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { FileUploadComponent } from './pages/file-upload/file-upload.component';
+import { WelcomeComponent } from './pages/welcome/welcome.component';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { BookRequestsComponent } from './pages/editor/book-requests/book-requests.component';
+import { HandwriteUploadComponent } from './pages/handwrite-upload/handwrite-upload.component';
+import { PlagiatsComponent } from './pages/editor/plagiats/plagiats.component';
+import { VoteComponent } from './pages/vote/vote.component';
+import { BetaReaderListComponent } from './pages/beta-reader-list/beta-reader-list.component';
+import { BetaReaderCommentComponent } from './pages/beta-reader-comment/beta-reader-comment.component';
 
 registerLocaleData(en);
 
@@ -36,8 +44,15 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     DashboardComponent,
     WelcomeComponent,
     RegistrationComponent,
-    SellerRegistrationComponent,
     RegistrateComponent,
+    BookComponent,
+    FileUploadComponent,
+    BookRequestsComponent,
+    HandwriteUploadComponent,
+    PlagiatsComponent,
+    VoteComponent,
+    BetaReaderListComponent,
+    BetaReaderCommentComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +69,12 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     ReactiveFormsModule,
     StoreDevtoolsModule.instrument({ logOnly: environment.production }),
   ],
-  providers: [{ provide: NZ_I18N, useValue: en_US }],
+  providers: [{ provide: NZ_I18N, useValue: en_US },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

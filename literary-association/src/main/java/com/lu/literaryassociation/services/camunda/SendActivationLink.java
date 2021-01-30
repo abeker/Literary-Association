@@ -26,24 +26,22 @@ import java.util.UUID;
 
 @Service
 public class SendActivationLink implements JavaDelegate {
-    @Autowired
-    IConformationTokenRepository iConformationTokenRepository;
+    final IConformationTokenRepository iConformationTokenRepository;
+    final IUserRepository iUserRepository;
+    final EmailService emailService;
+    final ConfirmationTokenService confirmationTokenService;
+    final JavaMailSender javaMailSender;
 
-    @Autowired
-    IUserRepository iUserRepository;
-
-    @Autowired
-    EmailService emailService;
-
-    @Autowired
-    ConfirmationTokenService confirmationTokenService;
-
-    @Autowired
-    JavaMailSender javaMailSender;
+    public SendActivationLink(IConformationTokenRepository iConformationTokenRepository, IUserRepository iUserRepository, EmailService emailService, ConfirmationTokenService confirmationTokenService, JavaMailSender javaMailSender) {
+        this.iConformationTokenRepository = iConformationTokenRepository;
+        this.iUserRepository = iUserRepository;
+        this.emailService = emailService;
+        this.confirmationTokenService = confirmationTokenService;
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
-
         String email = (String) execution.getVariable("email");
         String username = (String)execution.getVariable("username");
         User userEntity = iUserRepository.findOneByUsername(username);
@@ -53,6 +51,7 @@ public class SendActivationLink implements JavaDelegate {
         }
         String processInstanceId = execution.getProcessInstanceId();
 
-        emailService.sendEmail(email,processInstanceId,confirmationToken.getConfirmationToken());
+        emailService.sendEmail(email, "to address verification", "To confirm your account, please click here : "
+                +"http://localhost:8084/welcome/confirm-account/"+processInstanceId+"?token="+confirmationToken);
     }
 }

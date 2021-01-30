@@ -18,7 +18,6 @@ public class CamundaGenresService implements JavaDelegate {
         this.iGenreService = iGenreService;
     }
 
-
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
 
@@ -30,6 +29,5 @@ public class CamundaGenresService implements JavaDelegate {
         }
         delegateExecution.setVariable("genres", genres);
         System.out.println(delegateExecution.getVariable("genres"));
-
     }
 }

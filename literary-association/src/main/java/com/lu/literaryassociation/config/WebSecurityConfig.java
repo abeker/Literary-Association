@@ -2,7 +2,9 @@ package com.lu.literaryassociation.config;
 
 import com.lu.literaryassociation.auth.RestAuthenticationEntryPoint;
 import com.lu.literaryassociation.auth.TokenAuthenticationFilter;
+import com.lu.literaryassociation.entity.ActiveUserStore;
 import com.lu.literaryassociation.security.TokenUtils;
+import com.lu.literaryassociation.services.implementation.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,15 +25,15 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @SuppressWarnings({"unused", "SpellCheckingInspection"})
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService jwtUserDetailsService;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;  // Neautorizovani pristup zasticenim resursima
     private final TokenUtils tokenUtils;
 
-    public WebSecurityConfig(UserDetailsService jwtUserDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint, TokenUtils tokenUtils) {
-        this.jwtUserDetailsService = jwtUserDetailsService;
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, RestAuthenticationEntryPoint restAuthenticationEntryPoint, TokenUtils tokenUtils) {
+        this.jwtUserDetailsService = userDetailsService;
         this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
         this.tokenUtils = tokenUtils;
     }
@@ -39,6 +41,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public ActiveUserStore activeUserStore(){
+        return new ActiveUserStore();
     }
 
     @Bean
@@ -63,8 +70,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
-                .anyRequest().authenticated().and()
+                .anyRequest().authenticated()
 
+                .and().csrf().disable()
                 .cors().and()
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService),
                         BasicAuthenticationFilter.class);
