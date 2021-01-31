@@ -9,5 +9,5 @@ public interface ILiteraryAssociationService {
 
     LiteraryAssociationResponse createLA(LiteraryAssociationRequest request);
 
-    ReaderPaymentRequestResponse createReaderPaymentRequest(ReaderPaymentRequestDTO request);
+    void createReaderPaymentRequest(ReaderPaymentRequestDTO request);
 }

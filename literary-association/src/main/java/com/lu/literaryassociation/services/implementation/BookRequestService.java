@@ -85,7 +85,8 @@ public class BookRequestService implements IBookRequestService {
         return false;
     }
 
-    private BookRequestDTO mapBookRequestToDTO(BookRequest bookRequest) {
+    @Override
+    public BookRequestDTO mapBookRequestToDTO(BookRequest bookRequest) {
         BookRequestDTO bookRequestDTO = new BookRequestDTO();
         bookRequestDTO.setId(bookRequest.getId().toString());
         bookRequestDTO.setGenres(getGenreNamesToString(bookRequest.getGenre()));

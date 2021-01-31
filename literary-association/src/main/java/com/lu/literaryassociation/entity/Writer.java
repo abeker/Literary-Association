@@ -28,18 +28,7 @@ public class Writer extends User {
     @JoinColumn(name="membership_id", referencedColumnName="id")
     private Membership membership;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Book> books;
-
-    public boolean isMembershipApproved() {
-        for (WriterRegistrationComment registrationComment : writerMembershipStatus.getWriterRegistrationComment()) {
-            if(registrationComment.getMembershipApproved().equals(WriterStatus.DENIED)) {
-                return false;
-            }
-        }
-
-        // TODO proveriti jos ako treba da se dostavi jos materijala i da li je dostavio na vreme
-        return true;
-    }
+    @ManyToMany(mappedBy = "writers")
+    private Set<BookRequest> bookRequest;
 
 }

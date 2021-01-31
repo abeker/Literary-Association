@@ -26,8 +26,8 @@ public class LiteraryAssociationController {
     }
 
     @PostMapping("/reader-pay-request")
-    public ReaderPaymentRequestResponse createReaderPaymentRequest(@RequestBody ReaderPaymentRequestDTO request) {
-        return _literaryAssociationService.createReaderPaymentRequest(request);
+    public void createReaderPaymentRequest(@RequestBody ReaderPaymentRequestDTO request) {
+        _literaryAssociationService.createReaderPaymentRequest(request);
     }
 
 }

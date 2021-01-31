@@ -42,14 +42,33 @@ public class LiteraryAssociationService implements ILiteraryAssociationService {
     }
 
     @Override
-    public ReaderPaymentRequestResponse createReaderPaymentRequest(ReaderPaymentRequestDTO request) {
+    public void createReaderPaymentRequest(ReaderPaymentRequestDTO request) {
         ReaderPaymentRequest newReaderPaymentRequest = new ReaderPaymentRequest();
         newReaderPaymentRequest.setBankCode(request.getBankCode());
         newReaderPaymentRequest.setPaymentCounter(request.getPaymentCounter());
         newReaderPaymentRequest.setReader(getReaderFromId(UUID.fromString(request.getReaderId())));
-        newReaderPaymentRequest.setBook(getBookFromId(UUID.fromString(request.getBookId())));
-        _readerPaymentRequestRepository.save(newReaderPaymentRequest);
-        return mapReaderPaymentRequestToResponse(newReaderPaymentRequest);
+        createBookPayment(newReaderPaymentRequest, request);
+    }
+
+    private void createBookPayment(ReaderPaymentRequest readerPaymentRequest, ReaderPaymentRequestDTO request) {
+        for (String idAsString : request.getBookIds()) {
+            Optional<Book> bookOptional = _bookRepository.findById(UUID.fromString(idAsString));
+            if(bookOptional.isPresent()) {
+                Book book = bookOptional.get();
+                ReaderPaymentRequest newReaderPaymentRequest = createDeepCopyOfReaderPayment(readerPaymentRequest);
+                newReaderPaymentRequest.setBook(book);
+                _readerPaymentRequestRepository.save(newReaderPaymentRequest);
+            }
+        }
+    }
+
+    private ReaderPaymentRequest createDeepCopyOfReaderPayment(ReaderPaymentRequest request) {
+        ReaderPaymentRequest readerPaymentRequest = new ReaderPaymentRequest();
+        readerPaymentRequest.setReader(request.getReader());
+        readerPaymentRequest.setBankCode(request.getBankCode());
+        readerPaymentRequest.setPaymentCounter(request.getPaymentCounter());
+        readerPaymentRequest.setStatus(request.getStatus());
+        return readerPaymentRequest;
     }
 
     private Reader getReaderFromId(UUID readerId) {
