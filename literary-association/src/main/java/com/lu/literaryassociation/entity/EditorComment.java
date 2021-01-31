@@ -18,6 +18,8 @@ public class EditorComment extends BaseEntity {
 
     private String commentText;
 
+    private String title;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="editor_id", referencedColumnName="id")
     private Editor editor;

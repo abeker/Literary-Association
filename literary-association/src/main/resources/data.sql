@@ -61,8 +61,8 @@ insert into beta_reader_genres (beta_reader_id, genres_id) values
     ('d87974f4-ff25-4e8f-bbe2-98062bf733b6', '10b2d90b-0cbc-4ec2-b165-6c5c959737c6');
 
 
-insert into editor_comment (id, comment_text, editor_id) values
-    ('cd484a86-fd3e-4bc3-80c8-f81182787769', 'This is awesome!', '2b052fd4-fbc0-462f-8db3-650b3c89e20a');
+insert into editor_comment (id, comment_text, editor_id,title) values
+    ('cd484a86-fd3e-4bc3-80c8-f81182787769', 'This is awesome!', '2b052fd4-fbc0-462f-8db3-650b3c89e20a','The Great Idea');
 
 insert into book_request (id, synopsis, title, editor_comment_id, approved) values
     ('e38d8dad-0327-4b6a-ac04-b74a509946a0', 'This is great synopsis', 'The Great Idea', 'cd484a86-fd3e-4bc3-80c8-f81182787769', true);
