@@ -200,6 +200,7 @@
     <bpmn:exclusiveGateway id="Gateway_058daeo">
       <bpmn:incoming>Flow_1y45qg7</bpmn:incoming>
       <bpmn:incoming>Flow_1hb6atm</bpmn:incoming>
+      <bpmn:incoming>Flow_0nk7s47</bpmn:incoming>
       <bpmn:outgoing>Flow_1ngyxm7</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_1ngyxm7" sourceRef="Gateway_058daeo" targetRef="Activity_08b0a7m" />
@@ -221,6 +222,7 @@
     <bpmn:exclusiveGateway id="Gateway_1sgy193">
       <bpmn:incoming>Flow_1vp30iw</bpmn:incoming>
       <bpmn:outgoing>Flow_1njewzy</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0nk7s47</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_1njewzy" sourceRef="Gateway_1sgy193" targetRef="Activity_0uddwkj" />
     <bpmn:sequenceFlow id="Flow_1hb6atm" sourceRef="Activity_03xbuev" targetRef="Gateway_058daeo" />
@@ -228,6 +230,9 @@
       <bpmn:incoming>Flow_0h9g1it</bpmn:incoming>
       <bpmn:outgoing>Flow_1hb6atm</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0nk7s47" sourceRef="Gateway_1sgy193" targetRef="Gateway_058daeo">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_133fhxe">
@@ -298,6 +303,12 @@
         <di:waypoint x="2340" y="80" />
         <di:waypoint x="200" y="90" />
         <di:waypoint x="200" y="305" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nk7s47_di" bpmnElement="Flow_0nk7s47">
+        <di:waypoint x="920" y="355" />
+        <di:waypoint x="920" y="570" />
+        <di:waypoint x="200" y="570" />
+        <di:waypoint x="200" y="355" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="112" y="312" width="36" height="36" />
