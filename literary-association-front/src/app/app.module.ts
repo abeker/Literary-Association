@@ -29,6 +29,7 @@ import { PlagiatsComponent } from './pages/editor/plagiats/plagiats.component';
 import { VoteComponent } from './pages/vote/vote.component';
 import { BetaReaderListComponent } from './pages/beta-reader-list/beta-reader-list.component';
 import { BetaReaderCommentComponent } from './pages/beta-reader-comment/beta-reader-comment.component';
+import { BlockUserComponent } from './pages/block-user/block-user.component';
 
 registerLocaleData(en);
 
@@ -53,6 +54,7 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     VoteComponent,
     BetaReaderListComponent,
     BetaReaderCommentComponent,
+    BlockUserComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -14,9 +15,15 @@ export class LoginComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router) {}
+    private router: Router,
+    private message: NzMessageService) {}
 
   ngOnInit(): void {
+    const isUserBlocked = localStorage.getItem('userBlocked');
+    if(isUserBlocked) {
+      this.router.navigateByUrl('auth/block');
+    }
+
     this.validateForm = this.fb.group({
       username: [null, [Validators.required]],
       password: [null, [Validators.required]],
@@ -27,17 +34,24 @@ export class LoginComponent implements OnInit {
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
-
-      this.authService.login({
-        username: this.validateForm.value.username,
-        password: this.validateForm.value.password
-      }).subscribe(user => {
-        this.router.navigateByUrl('dashboard/welcome');
-        localStorage.setItem('user', JSON.stringify(user));
-      }, error => {
-        console.log(error);
-      });
     }
+
+    this.authService.login({
+      username: this.validateForm.value.username,
+      password: this.validateForm.value.password
+    }).subscribe(user => {
+      this.router.navigateByUrl('dashboard/welcome');
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.removeItem('userBlocked');
+    }, error => {
+      if(error.status === 400) {
+        this.message.error("Bad credentials");
+      } else if(error.status === 409) {
+        this.message.error("You have reached your logging limit, please try again later.");
+        localStorage.setItem('userBlocked', '1');
+        this.router.navigateByUrl('auth/block');
+      }
+    });
   }
 
   register(): void {
@@ -63,5 +77,5 @@ export class LoginComponent implements OnInit {
   }
 
 
-  
+
 }

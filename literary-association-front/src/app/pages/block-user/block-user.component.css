@@ -1,0 +1,10 @@
+.mainDiv {
+  background-image: url('https://wiki.ucl.ac.uk/download/attachments/112352426/image2019-3-15_14-31-29.png?version=1&modificationDate=1552660290000&api=v2');
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding-left: 15%;
+  padding-top: 10%;
+}

@@ -2,8 +2,10 @@ package com.lu.literaryassociation.services.implementation;
 
 import com.lu.literaryassociation.dto.request.LoginRequest;
 import com.lu.literaryassociation.dto.response.UserResponse;
+import com.lu.literaryassociation.entity.LoginAttempts;
 import com.lu.literaryassociation.entity.User;
 import com.lu.literaryassociation.entity.UserDetailsImpl;
+import com.lu.literaryassociation.repository.ILoginAttemptsRepository;
 import com.lu.literaryassociation.repository.IUserRepository;
 import com.lu.literaryassociation.security.TokenUtils;
 import com.lu.literaryassociation.services.definition.IAuthService;
@@ -20,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
 
 @Service
 public class AuthService implements IAuthService {
@@ -29,24 +31,53 @@ public class AuthService implements IAuthService {
     private final TokenUtils _tokenUtils;
     private final PasswordEncoder _passwordEncoder;
     private final IUserRepository _userRepository;
+    private final ILoginAttemptsRepository _loginAttemptsRepository;
 
-    public AuthService(AuthenticationManager authenticationManager, TokenUtils tokenUtils, PasswordEncoder passwordEncoder, IUserRepository userRepository) {
+    public AuthService(AuthenticationManager authenticationManager, TokenUtils tokenUtils, PasswordEncoder passwordEncoder, IUserRepository userRepository, ILoginAttemptsRepository loginAttemptsRepository) {
         _authenticationManager = authenticationManager;
         _tokenUtils = tokenUtils;
         _passwordEncoder = passwordEncoder;
         _userRepository = userRepository;
+        _loginAttemptsRepository = loginAttemptsRepository;
     }
 
     @Override
-    public UserResponse login(LoginRequest request, HttpServletRequest httpServletRequest) {
-        User user = _userRepository.findOneByUsername(request.getUsername());
-        if(!isUserFound(user, request)) {
+    public UserResponse login(LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
+        User user = _userRepository.findOneByUsername(loginRequest.getUsername());
+        LoginAttempts loginAttempt = _loginAttemptsRepository.findOneByIpAddress(httpServletRequest.getRemoteAddr());
+
+        if(isUserLoginBlocked(loginAttempt, httpServletRequest)) {
+            throw new GeneralException("You have reached your logging limit, please try again later.", HttpStatus.CONFLICT);
+        }
+
+        if(!isUserFound(user, loginRequest)) {
+            changeLoginAttempts(loginAttempt, httpServletRequest);
             throw new GeneralException("Bad credentials.", HttpStatus.BAD_REQUEST);
         }
 
         checkUserStatus(user);
-        Authentication authentication = loginSimpleUser(request.getUsername(), request.getPassword(), httpServletRequest);
+        Authentication authentication = loginSimpleUser(loginRequest.getUsername(), loginRequest.getPassword(), httpServletRequest);
         return createLoginUserResponse(authentication, user);
+    }
+
+    private void changeLoginAttempts(LoginAttempts loginAttempt, HttpServletRequest httpServletRequest) {
+        if(loginAttempt == null){
+            LoginAttempts newLoginAttempt = new LoginAttempts();
+            newLoginAttempt.setIpAddress(httpServletRequest.getRemoteAddr());
+            newLoginAttempt.setFirstMistakeDateTime(LocalDateTime.now());
+            newLoginAttempt.setAttempts(1);
+            _loginAttemptsRepository.save(newLoginAttempt);
+            return;
+        } else if(loginAttempt.getFirstMistakeDateTime().plusHours(12L).isBefore(LocalDateTime.now())){
+            loginAttempt.setFirstMistakeDateTime(LocalDateTime.now());
+            loginAttempt.setAttempts(0);
+        }
+        loginAttempt.setAttempts(loginAttempt.getAttempts() + 1);
+        _loginAttemptsRepository.save(loginAttempt);
+    }
+
+    private boolean isUserLoginBlocked(LoginAttempts loginAttempt, HttpServletRequest httpServletRequest) {
+        return loginAttempt != null && loginAttempt.getAttempts() > 5 && loginAttempt.getFirstMistakeDateTime().plusHours(12L).isAfter(LocalDateTime.now());
     }
 
     private Authentication loginSimpleUser(String mail, String password, HttpServletRequest request) {
