@@ -11,6 +11,10 @@
           <i nz-icon nzType="book" nzTheme="outline"></i>
           Book Requests
         </li>
+        <li (click)="changedHandwrite()" *ngIf="isEditor" nz-menu-item>
+          <i nz-icon nzType="book" nzTheme="outline"></i>
+          Changed Handwrite
+        </li>
         <li (click)="chooseBetaReader()" *ngIf="isEditor" nz-menu-item>
           <i nz-icon nzType="unordered-list" nzTheme="outline"></i>
             Choose betareader
@@ -18,6 +22,10 @@
         <li (click)="betaReaderComment()" *ngIf="isReader && isBetaReader" nz-menu-item>
           <i nz-icon nzType="comment" nzTheme="outline"></i>
             Leave comment
+        </li>
+        <li (click)="committeeVote()" *ngIf="isCommittee" nz-menu-item>
+          <i nz-icon nzType="comment" nzTheme="outline"></i>
+            Vote
         </li>
         <li nz-menu-item style="float: right;" (click)="logout()">
           <i nz-icon nzType="user" nzTheme="outline"></i>
@@ -41,6 +49,10 @@
           <li (click)="handwriteClick()" *ngIf="isWriter" nz-menu-item>
             <i nz-icon nzType="upload" nzTheme="outline"></i>
             Upload Handwrite
+          </li>
+          <li (click)="changeHandwriteClick()" *ngIf="isWriter" nz-menu-item>
+            <i nz-icon nzType="edit" nzTheme="outline"></i>
+            Change Handwrite
           </li>
           <li (click)="checkForPlagiats()" *ngIf="isEditor" nz-menu-item>
             <i nz-icon nzType="book" nzTheme="outline"></i>

@@ -11,7 +11,6 @@ import org.camunda.bpm.engine.form.FormFieldValidationConstraint;
 import org.camunda.bpm.engine.form.TaskFormData;
 import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.task.Task;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,14 +19,15 @@ import java.util.Map;
 @Service
 public class ValidatFormSerivce implements JavaDelegate {
 
-    @Autowired
-    IdentityService identityService;
+    private final IdentityService identityService;
+    private final TaskService taskService;
+    private final FormService formService;
 
-    @Autowired
-    TaskService taskService;
-
-    @Autowired
-    FormService formService;
+    public ValidatFormSerivce(IdentityService identityService, TaskService taskService, FormService formService) {
+        this.identityService = identityService;
+        this.taskService = taskService;
+        this.formService = formService;
+    }
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
