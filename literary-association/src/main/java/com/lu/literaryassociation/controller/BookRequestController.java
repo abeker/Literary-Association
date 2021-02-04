@@ -29,4 +29,10 @@ public class BookRequestController {
         return _bookRequestService.getBookRequestFromProcess(processInstanceId);
     }
 
+    @GetMapping(path = "/change/{processInstanceId}")
+    public boolean canChangeHandwrite(@PathVariable("processInstanceId") String processInstanceId) {
+        return _bookRequestService.canChangeHandwrite(processInstanceId);
+    }
+
+
 }

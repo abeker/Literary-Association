@@ -29,6 +29,8 @@ import { PlagiatsComponent } from './pages/editor/plagiats/plagiats.component';
 import { VoteComponent } from './pages/vote/vote.component';
 import { BetaReaderListComponent } from './pages/beta-reader-list/beta-reader-list.component';
 import { BetaReaderCommentComponent } from './pages/beta-reader-comment/beta-reader-comment.component';
+import { HandwriteChangeComponent } from './pages/handwrite-change/handwrite-change.component';
+import { ChangesApprovedComponent } from './pages/editor/changes-approved/changes-approved.component';
 
 registerLocaleData(en);
 
@@ -53,6 +55,8 @@ const icons: IconDefinition[] = Object.keys(antDesignIcons).map(key => antDesign
     VoteComponent,
     BetaReaderListComponent,
     BetaReaderCommentComponent,
+    HandwriteChangeComponent,
+    ChangesApprovedComponent,
   ],
   imports: [
     BrowserModule,

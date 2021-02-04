@@ -20,5 +20,16 @@ export class BookRequestService {
     return this.http.get(this.baseUrl+`/process/${processId}`);
   }
 
+  
+  public canChangeHandwrite(processId): Observable<any> {
+    return this.http.get(this.baseUrl+`/change/${processId}`);
+  }
+
+  public getFormFields(processId): Observable<any> {
+    return this.http.get(environment.baseUrl+`welcome/get/${processId}`);
+  }
+
+
+
 }
 
