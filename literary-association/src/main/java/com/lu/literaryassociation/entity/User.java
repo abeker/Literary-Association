@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +47,8 @@ public class User extends BaseEntity implements Serializable {
     private UserType userType;
 
     private Timestamp lastPasswordResetDate = new Timestamp(System.currentTimeMillis());
+
+    private LocalDateTime lastTimeActive = LocalDateTime.now();
 
     private boolean deleted = false;
 

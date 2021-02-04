@@ -123,7 +123,7 @@ public class WriterService implements IWriterService {
         User user = _userRepository.findOneByUsername(username);
         if(user != null) {
             if(!user.isDeleted()) {
-                Optional<Writer> retWriter = _writerRepository.findById(user.getId());
+                Optional<Writer> retWriter = _writerRepository.findById(user.getId()).filter(writer -> !writer.isDeleted());
                 return retWriter.get();
             }
         }

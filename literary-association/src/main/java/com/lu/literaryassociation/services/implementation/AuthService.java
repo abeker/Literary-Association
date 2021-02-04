@@ -46,7 +46,7 @@ public class AuthService implements IAuthService {
         User user = _userRepository.findOneByUsername(loginRequest.getUsername());
         LoginAttempts loginAttempt = _loginAttemptsRepository.findOneByIpAddress(httpServletRequest.getRemoteAddr());
 
-        if(isUserLoginBlocked(loginAttempt, httpServletRequest)) {
+        if(isUserLoginBlocked(loginAttempt)) {
             throw new GeneralException("You have reached your logging limit, please try again later.", HttpStatus.CONFLICT);
         }
 
@@ -56,8 +56,14 @@ public class AuthService implements IAuthService {
         }
 
         checkUserStatus(user);
-        Authentication authentication = loginSimpleUser(loginRequest.getUsername(), loginRequest.getPassword(), httpServletRequest);
+        Authentication authentication = loginSimpleUser(loginRequest.getUsername(), loginRequest.getPassword());
+        refreshUserActivityTime(user);
         return createLoginUserResponse(authentication, user);
+    }
+
+    private void refreshUserActivityTime(User user) {
+        user.setLastTimeActive(LocalDateTime.now());
+        _userRepository.save(user);
     }
 
     private void changeLoginAttempts(LoginAttempts loginAttempt, HttpServletRequest httpServletRequest) {
@@ -76,11 +82,11 @@ public class AuthService implements IAuthService {
         _loginAttemptsRepository.save(loginAttempt);
     }
 
-    private boolean isUserLoginBlocked(LoginAttempts loginAttempt, HttpServletRequest httpServletRequest) {
+    private boolean isUserLoginBlocked(LoginAttempts loginAttempt) {
         return loginAttempt != null && loginAttempt.getAttempts() > 5 && loginAttempt.getFirstMistakeDateTime().plusHours(12L).isAfter(LocalDateTime.now());
     }
 
-    private Authentication loginSimpleUser(String mail, String password, HttpServletRequest request) {
+    private Authentication loginSimpleUser(String mail, String password) {
         Authentication authentication = null;
         try {
             authentication = _authenticationManager

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -21,14 +22,18 @@ public class LiteraryAssociationService implements ILiteraryAssociationService {
     private final IMembershipRepository _membershipRepository;
     private final IBookRepository _bookRepository;
     private final IReaderRepository _readerRepository;
+    private final IUserRepository _userRepository;
+    private final IAuthorityRepository _authorityRepository;
     private final IReaderPaymentRequestRepository _readerPaymentRequestRepository;
 
-    public LiteraryAssociationService(ILiteraryAssociationRepository literaryAssociationRepository, IAddressRepository addressRepository, IMembershipRepository membershipRepository, IBookRepository bookRepository, IReaderRepository readerRepository, IReaderPaymentRequestRepository readerPaymentRequestRepository) {
+    public LiteraryAssociationService(ILiteraryAssociationRepository literaryAssociationRepository, IAddressRepository addressRepository, IMembershipRepository membershipRepository, IBookRepository bookRepository, IReaderRepository readerRepository, IUserRepository userRepository, IAuthorityRepository authorityRepository, IReaderPaymentRequestRepository readerPaymentRequestRepository) {
         _literaryAssociationRepository = literaryAssociationRepository;
         _addressRepository = addressRepository;
         _membershipRepository = membershipRepository;
         _bookRepository = bookRepository;
         _readerRepository = readerRepository;
+        _userRepository = userRepository;
+        _authorityRepository = authorityRepository;
         _readerPaymentRequestRepository = readerPaymentRequestRepository;
     }
 
@@ -48,6 +53,15 @@ public class LiteraryAssociationService implements ILiteraryAssociationService {
         newReaderPaymentRequest.setPaymentCounter(request.getPaymentCounter());
         newReaderPaymentRequest.setReader(getReaderFromId(UUID.fromString(request.getReaderId())));
         createBookPayment(newReaderPaymentRequest, request);
+        User user = _userRepository.findOneById(UUID.fromString(request.getReaderId()));
+        addRole(user, "ROLE_ADVANCED_READER");
+    }
+
+    @Override
+    public void addRole(User user, String role_name) {
+        Set<Authority> userRoles = user.getRoles();
+        userRoles.add(_authorityRepository.findByName(role_name));
+        _userRepository.save(user);
     }
 
     private void createBookPayment(ReaderPaymentRequest readerPaymentRequest, ReaderPaymentRequestDTO request) {
@@ -72,7 +86,7 @@ public class LiteraryAssociationService implements ILiteraryAssociationService {
     }
 
     private Reader getReaderFromId(UUID readerId) {
-        Optional<Reader> reader = _readerRepository.findById(readerId);
+        Optional<Reader> reader = _readerRepository.findById(readerId).filter(reader1 -> !reader1.isDeleted());
         return reader.orElse(null);
     }
 

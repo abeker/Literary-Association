@@ -20,4 +20,6 @@ public class Reader extends User {
     @OneToOne(mappedBy = "reader", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private BetaReader betaReader;
 
+
+
 }

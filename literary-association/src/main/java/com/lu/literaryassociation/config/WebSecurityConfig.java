@@ -69,7 +69,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/auth/**", "/books/**", "/books", "/book-requests", "/book-requests/**",
+                        "/welcome", "/welcome/**", "/committee", "/committee/**", "/editors", "/editors/**",
+                        "/file", "/file/**", "/readers", "/readers/**", "/users", "/users/**", "/writers", "/writers/**",
+                        "/handwrites", "/handwrites/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and().csrf().disable()

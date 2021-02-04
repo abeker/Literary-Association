@@ -163,7 +163,7 @@ public class EditorService implements IEditorService {
         String editorUsername = (String)_runtimeService.getVariable(processInstanceId, "mainEditor");
         User userEditor = _userRepository.findOneByUsername(editorUsername);
         if(userEditor != null) {
-            Optional<Editor> editor = _editorRepository.findById(userEditor.getId());
+            Optional<Editor> editor = _editorRepository.findById(userEditor.getId()).filter(editor1 -> !editor1.isDeleted());
             if(editor.isPresent()) {
                 return editor.get();
             }
