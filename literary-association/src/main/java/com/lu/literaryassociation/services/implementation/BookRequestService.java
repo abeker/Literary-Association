@@ -48,6 +48,17 @@ public class BookRequestService implements IBookRequestService {
     }
 
     @Override
+    public boolean canChangeHandwrite(String processInstanceId) {
+        List<BetaReaderComment> betaReaderCommentList = (List<BetaReaderComment>) _runtimeService.getVariable(processInstanceId, "betaReaderCommentList");
+        if( betaReaderCommentList == null){
+            return false;
+        }
+        return true;
+    }
+
+
+
+    @Override
     public HandwriteDto getHandwriteFromProccess(String processInstanceId) {
         BookRequest bookRequest = getBookRequestFromId(processInstanceId);
         Handwrite handwrite = getHandwriteForBookRequest(bookRequest);

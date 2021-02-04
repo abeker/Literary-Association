@@ -44,12 +44,18 @@ public class SendActivationLink implements JavaDelegate {
     public void execute(DelegateExecution execution) throws Exception {
         String email = (String) execution.getVariable("email");
         String username = (String)execution.getVariable("username");
+        String userType = (String)execution.getVariable("userType");
         User userEntity = iUserRepository.findOneByUsername(username);
         ConfirmationToken confirmationToken = confirmationTokenService.findByUser(userEntity);
         if (confirmationToken == null){
             return;
         }
         String processInstanceId = execution.getProcessInstanceId();
+        if(userType.equals("reader")){
+            User u = iUserRepository.findOneByUsername(username);
+            u.setApproved(true);
+            iUserRepository.save(u);
+        }
 
         emailService.sendEmail(email, "to address verification", "To confirm your account, please click here : "
                 +"http://localhost:8084/welcome/confirm-account/"+processInstanceId+"?token="+confirmationToken);

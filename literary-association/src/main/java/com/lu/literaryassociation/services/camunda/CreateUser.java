@@ -46,8 +46,12 @@ public class CreateUser implements JavaDelegate {
         String password = (String) execution.getVariable("password");
         String city = (String)execution.getVariable("city");
         String country = (String)execution.getVariable("country");
-        //boolean betaReader = (Boolean) execution.getVariable("betaReader");
         String genres = (String) execution.getVariable("genre");
+        boolean betaReader = false;
+        if(execution.hasVariable("betaReader")){
+            betaReader = true;
+        }
+
 
         System.out.println("USERNAME: "+ username+ "    Password: "+ password  + " " + email) ;
         System.out.println("GENRES"+ genres);
@@ -69,9 +73,8 @@ public class CreateUser implements JavaDelegate {
         System.out.println("KREIRAMO USERA U BAZI");
         if(execution.hasVariable("betaReader")){
             com.lu.literaryassociation.entity.Reader customUser = new com.lu.literaryassociation.entity.Reader();
-            execution.setVariable("userType", "reader");
             customUser.setUsername(username);
-            customUser.setPassword(password);
+            customUser.setPassword(_passwordEncoder.encode(password));
             customUser.setFirstName(firstname);
             customUser.setEmail(email);
             customUser.setApproved(false);
@@ -90,12 +93,12 @@ public class CreateUser implements JavaDelegate {
                 beta.setGenres(genreSet);
                 beta.setReader(customUser);
                 customUser.setBetaReader(beta);
-                customUser.setUserType(UserType.READER);
             }
             customUser.setCity(city);
             customUser.setCountry(country);
+            customUser.setUserType(UserType.READER);
             iUserRepository.save(customUser);
-
+            execution.setVariable("userType", "reader");
             //Create conformationToken which will be send to email
             String tokenUUID = UUID.randomUUID().toString();
             confirmationTokenService.save(customUser, tokenUUID);
@@ -103,7 +106,7 @@ public class CreateUser implements JavaDelegate {
             com.lu.literaryassociation.entity.Writer customUser = new com.lu.literaryassociation.entity.Writer();
             execution.setVariable("userType", "writer");
             customUser.setUsername(username);
-            customUser.setPassword(password);
+            customUser.setPassword(_passwordEncoder.encode(password));
             customUser.setFirstName(firstname);
             customUser.setEmail(email);
             customUser.setCity(city);

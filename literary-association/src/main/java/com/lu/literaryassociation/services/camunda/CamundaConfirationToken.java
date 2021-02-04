@@ -31,6 +31,9 @@ public class CamundaConfirationToken implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) throws Exception {
+        if(!execution.hasVariable("confirmationToken")){
+            return;
+        }
         String token = (String) execution.getVariable("confirmationToken");
         System.out.println("TOKEN"+ token);
         ConfirmationToken confirmationToken = confirmationTokenService.findByToken(token);
@@ -44,7 +47,6 @@ public class CamundaConfirationToken implements JavaDelegate {
         String userType = (String) execution.getVariable("userType");
         if(userType.equals("reader")){
             Reader user = readerService.findReaderByUsername(confirmationToken.getUserEntity().getUsername());
-            user.setApproved(true);
             userService.saveUser(user);
         }else{
             User user = userRepository.findOneByUsername(confirmationToken.getUserEntity().getUsername());

@@ -31,5 +31,18 @@ export class EditorService {
     return this.http.get(this.baseUrl + `/get-plagiat-form/${processId}`);
   }
 
+
+  public getFormField(): Observable<any> {
+    const processId = localStorage.getItem("publishBookProccessId");
+    return this.http.get(environment.baseUrl+`welcome/get/${processId}`);
+  }
+
+
+  public submitForm(taskId, formName, formFields): Observable<any> {
+    return this.http.post(environment.baseUrl + `welcome/submitForm/${taskId}/${formName}`, formFields);
+  }
+
+
+
 }
 

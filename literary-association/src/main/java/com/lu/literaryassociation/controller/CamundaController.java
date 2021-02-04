@@ -3,6 +3,7 @@ package com.lu.literaryassociation.controller;
 import com.lu.literaryassociation.dto.request.FormFieldsDto;
 import com.lu.literaryassociation.dto.request.FormSubmissionDto;
 import com.lu.literaryassociation.dto.request.TaskDto;
+import com.lu.literaryassociation.entity.User;
 import com.lu.literaryassociation.services.implementation.ConfirmationTokenService;
 import com.lu.literaryassociation.services.implementation.GenreService;
 import com.lu.literaryassociation.services.implementation.ReaderService;
@@ -148,6 +149,25 @@ public class CamundaController {
     }
 
 
+    //JEDINSTVEN API ZA SUBMIT
+    @PostMapping(path = "/submitForm/{taskId}/{formName}", produces = "application/json")
+    public @ResponseBody
+    ResponseEntity submitForm(@RequestBody List<FormSubmissionDto> dto,
+                              @PathVariable String taskId, @PathVariable String formName) {
+        HashMap<String, Object> map = this.mapListToDto(dto);
+        for(FormSubmissionDto d: dto){
+            System.out.println(d.getFieldId() + " : " + d.getFieldValue());
+        }
+
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        String processInstanceId = task.getProcessInstanceId();
+        runtimeService.setVariable(processInstanceId, formName, dto);
+        formService.submitTaskForm(taskId, map);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
     @PostMapping(path = "/tasks/claim/{taskId}", produces = "application/json")
     public @ResponseBody ResponseEntity claim(@PathVariable String taskId) {
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -178,7 +198,7 @@ public class CamundaController {
         String[] exids = activityInstance.getExecutionIds();
         System.out.println("DUZINA: " + exids.length + "  PRVI: " + exids[0]);
         runtimeService.setVariable(exids[0],"confirmationToken",token);
-        runtimeService.createMessageCorrelation("Message_ActivatedLink").processInstanceId(instanceId).correlateAll();
+        //runtimeService.createMessageCorrelation("Message_ActivatedLink").processInstanceId(instanceId).correlateAll();
 
         URI yahoo = new URI("");
         String userRegistrationType = (String) runtimeService.getVariable(exids[0],"userType");
@@ -188,6 +208,7 @@ public class CamundaController {
             yahoo = new URI("http://localhost:4200/register/fileUpload");
         }
 
+        runtimeService.createMessageCorrelation("Message_ActivatedLink").processInstanceId(instanceId).correlateAll();
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(yahoo);
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
@@ -202,6 +223,9 @@ public class CamundaController {
 
         return map;
     }
+
+
+
 }
 
 // list all running/unsuspended instances of the process
