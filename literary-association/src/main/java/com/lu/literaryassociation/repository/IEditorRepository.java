@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface IEditorRepository extends JpaRepository<Editor, UUID> {
+    Editor findByUsername(String username);
 }

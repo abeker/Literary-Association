@@ -75,7 +75,11 @@ public class CamundaController {
         return ResponseEntity.ok(pi.getId());
     }
 
-
+    @GetMapping(path = "/startPlagiatProcess", produces ="application/json")
+    public ResponseEntity<String> startPlagiatCheck(){
+        ProcessInstance pi = runtimeService.startProcessInstanceByKey("Process_133fhxe");
+        return ResponseEntity.ok(pi.getId());
+    }
 
 
     @GetMapping(path = "/get/{processInstanceId}", produces = "application/json")
