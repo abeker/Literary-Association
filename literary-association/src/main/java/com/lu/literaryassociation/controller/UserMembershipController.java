@@ -1,13 +1,9 @@
 package com.lu.literaryassociation.controller;
 
-import com.lu.literaryassociation.dto.response.UserMembershipDTO;
 import com.lu.literaryassociation.dto.response.UserMembershipsDTO;
 import com.lu.literaryassociation.services.definition.IUserMembershipService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/user-memberships")

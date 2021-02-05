@@ -68,7 +68,7 @@ public class UserMembershipService implements IUserMembershipService {
 
     @Override
     public UserMembershipsDTO payUserMembership(String token, String membershipIdString) {
-        UUID membershipId = null;
+        UUID membershipId = UUID.fromString(membershipIdString);
         if(membershipIdString.equals("empty")) {
             membershipId = _membershipRepository.findAll().get(0).getId();
         }
@@ -78,6 +78,17 @@ public class UserMembershipService implements IUserMembershipService {
         userMembership.setUser(getUserFromToken(token));
         _userMembershipRepository.save(userMembership);
         return getMembershipsForPeriod(token, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public boolean isUserPaidMembership(UUID userId, int membershipDuration) {
+        List<UserMembership> allUserMemberships = _userMembershipRepository.findAll()
+                .stream()
+                .filter(userMembership -> userMembership.getUser().getId().equals(userId) &&
+                        userMembership.getPaymentDate().plusDays(membershipDuration).isAfter(LocalDateTime.now()))
+                .collect(Collectors.toList());
+
+        return !allUserMemberships.isEmpty();
     }
 
     private User getUserFromToken(String token) {

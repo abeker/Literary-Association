@@ -7,6 +7,7 @@ import com.lu.literaryassociation.repository.IBookRepository;
 import com.lu.literaryassociation.repository.IReaderPaymentRequestRepository;
 import com.lu.literaryassociation.services.definition.IBookRequestService;
 import com.lu.literaryassociation.services.definition.IBookService;
+import com.lu.literaryassociation.util.enums.PaymentRequestStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -46,7 +47,7 @@ public class BookService implements IBookService {
     public List<BookResponse> getBooksForReader(UUID readerId) {
         List<ReaderPaymentRequest> paymentRequestsForReader = _readerPaymentRequestRepository.findAll()
                 .stream()
-                .filter(request -> request.getReader().getId().equals(readerId))
+                .filter(request -> request.getReader().getId().equals(readerId) && !request.getStatus().equals(PaymentRequestStatus.FAIL))
                 .collect(Collectors.toList());
 
         List<BookResponse> retBookList = new ArrayList<>();

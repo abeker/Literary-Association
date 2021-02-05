@@ -11,4 +11,6 @@ public interface IUserMembershipService {
     UserMembershipsDTO getMembershipsForPeriod(String token, int forPeriodInDays);
 
     UserMembershipsDTO payUserMembership(String token, String membershipIdString);
+
+    boolean isUserPaidMembership(UUID userId, int membershipDuration);
 }
