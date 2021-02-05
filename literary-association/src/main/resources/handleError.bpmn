@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0efhfl2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
-  <bpmn:process id="Process_0lcjs1v" isExecutable="true">
+  <bpmn:process id="handleError_process" isExecutable="true">
     <bpmn:subProcess id="Activity_1m5imgh" triggeredByEvent="true">
       <bpmn:startEvent id="Event_0xhij2l" name="Catch GeneralException">
         <bpmn:outgoing>Flow_18c4z0k</bpmn:outgoing>
@@ -24,36 +24,36 @@
   </bpmn:process>
   <bpmn:error id="Error_1xaw7np" name="Error_2n75ek9" errorCode="package com.lu.literaryassociation.util.exceptions" camunda:errorMessage="GeneralException" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0lcjs1v">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="handleError_process">
       <bpmndi:BPMNShape id="Activity_0dw8ojx_di" bpmnElement="Activity_1m5imgh" isExpanded="true">
-        <dc:Bounds x="160" y="80" width="530" height="290" />
+        <dc:Bounds x="160" y="100" width="530" height="290" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_18gdmhn_di" bpmnElement="TextAnnotation_18gdmhn">
-        <dc:Bounds x="420" y="130" width="100" height="70" />
+        <dc:Bounds x="420" y="150" width="100" height="70" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_18c4z0k_di" bpmnElement="Flow_18c4z0k">
-        <di:waypoint x="248" y="260" />
-        <di:waypoint x="320" y="260" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1ekfxyk_di" bpmnElement="Flow_1ekfxyk">
-        <di:waypoint x="420" y="260" />
-        <di:waypoint x="512" y="260" />
+        <di:waypoint x="420" y="280" />
+        <di:waypoint x="512" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_18c4z0k_di" bpmnElement="Flow_18c4z0k">
+        <di:waypoint x="248" y="280" />
+        <di:waypoint x="320" y="280" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0lciu4s_di" bpmnElement="Event_0xhij2l">
-        <dc:Bounds x="212" y="242" width="36" height="36" />
+        <dc:Bounds x="212" y="262" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="189" y="285" width="88" height="27" />
+          <dc:Bounds x="189" y="305" width="88" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1f6elo8_di" bpmnElement="Activity_1rewapn">
-        <dc:Bounds x="320" y="220" width="100" height="80" />
+        <dc:Bounds x="320" y="240" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_13ms7k0_di" bpmnElement="Event_1h65llk">
-        <dc:Bounds x="512" y="242" width="36" height="36" />
+        <dc:Bounds x="512" y="262" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1p05464_di" bpmnElement="Association_1p05464">
-        <di:waypoint x="405" y="220" />
-        <di:waypoint x="422" y="200" />
+        <di:waypoint x="405" y="240" />
+        <di:waypoint x="422" y="220" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

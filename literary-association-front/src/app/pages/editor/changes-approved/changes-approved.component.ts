@@ -25,6 +25,7 @@ export class ChangesApprovedComponent implements OnInit {
   filesOption = []; //votes value
   multipleValue = []; //selected values of vote
   inputValue = null;  //textArea
+  isOk: boolean;
 
   constructor(private router: Router, private fb: FormBuilder,  private sanitizer: DomSanitizer,
                private editorService: EditorService, private committeeService: CommitteeService) {
@@ -50,10 +51,25 @@ export class ChangesApprovedComponent implements OnInit {
        console.log("submit form");
        console.log(this.multipleValue);
        let o = new Array();
-       o.push({fieldId : "decision", fieldValue : this.multipleValue});
    
        //gadjam jedinstveni api
-       this.editorService.submitForm(this.taskInstance,"MoreEditsOrForward",o)
+       let formName = "";
+       let user = JSON.parse(localStorage.getItem("user"));
+       if(user.userRole == "EDITOR" && (localStorage.getItem("editorAction") == "editsOrForward" )){
+         formName = "MoreEditsOrForward";
+         o.push({fieldId : "decision", fieldValue : this.multipleValue});
+       }else if(user.userRole == "LECTOR"){
+         formName = "LectorReview";
+         o.push({fieldId : "mistakes", fieldValue : this.inputValue});
+         o.push({fieldId : "isOk", fieldValue : this.isOk});
+       }else   if(user.userRole == "EDITOR" && (localStorage.getItem("editorAction") == "confirmation" )){
+         formName = "EditorConfirmation";
+         o.push({fieldId : "finalComments", fieldValue : this.inputValue});
+         o.push({fieldId : "finalApprove", fieldValue : this.isOk});
+       }
+       console.log(o);
+
+       this.editorService.submitForm(this.taskInstance,formName,o)
                .subscribe(response => {
                  console.log(response);
                  console.log("You review changes successfully");

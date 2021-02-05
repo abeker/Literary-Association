@@ -1,16 +1,14 @@
 package com.lu.literaryassociation.services.camunda.publishBook;
 
 import com.lu.literaryassociation.dto.request.FormSubmissionDto;
+import com.lu.literaryassociation.repository.ILectorRepository;
+import com.lu.literaryassociation.services.definition.IUserService;
 import org.camunda.bpm.engine.FormService;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
-import org.camunda.bpm.engine.form.FormField;
-import org.camunda.bpm.engine.form.TaskFormData;
-import org.camunda.bpm.engine.task.Task;
-import org.camunda.feel.syntaxtree.For;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,12 +20,14 @@ public class ForwardDecision implements JavaDelegate {
     private final TaskService taskService;
     private final RuntimeService runtimeService;
     private final FormService formService;
+    private final IUserService iUserService;
 
-    public ForwardDecision(IdentityService identityService, TaskService taskService, RuntimeService runtimeService, FormService formService) {
+    public ForwardDecision(IdentityService identityService, TaskService taskService, RuntimeService runtimeService, FormService formService, ILectorRepository iLectorRepository, IUserService iUserService) {
         this.identityService = identityService;
         this.taskService = taskService;
         this.runtimeService = runtimeService;
         this.formService = formService;
+        this.iUserService = iUserService;
     }
 
 
@@ -36,17 +36,17 @@ public class ForwardDecision implements JavaDelegate {
         System.out.println("forward decision");
         boolean isMoreEditsNeeded = true;
 
-        Task task = taskService.createTaskQuery().processInstanceId(execution.getProcessInstanceId()).list().get(0);
-        TaskFormData tfd = formService.getTaskFormData(task.getId());
-        List<FormField> properties = tfd.getFormFields();
+        List<FormSubmissionDto> submissionDtoList = (List<FormSubmissionDto>) execution.getVariable("MoreEditsOrForward");
 
-        for(FormField formField: properties){
-            if(formField.getValue().equals("send_to_lector")){
+        for(FormSubmissionDto fd: submissionDtoList){
+            System.out.println(fd.getFieldValue());
+            if(fd.getFieldValue().equals("send_to_lector")){
                 isMoreEditsNeeded = false;
             }
         }
 
         execution.setVariable("isMoreEditsNeeded", isMoreEditsNeeded);
+        execution.setVariable("lector", "lector"); //ovde izvuci username lectora iz baze
 
     }
 }

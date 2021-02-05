@@ -89,23 +89,27 @@ export class DashboardComponent implements OnInit {
     this.router.navigateByUrl('/dashboard/handwrite-change');
   }
   changedHandwrite(): void {
+    localStorage.setItem("editorAction","editsOrForward");
     this.router.navigateByUrl('/dashboard/changes-approved');
   }
   checkForPlagiats(): void {
     this.router.navigateByUrl('/dashboard/plagiats');
   }
-
   chooseBetaReader(): void {
     this.router.navigateByUrl('/dashboard/betaReader');
   }
-
   betaReaderComment(): void {
     this.router.navigateByUrl('/dashboard/betaReaderComment');
   }
-
-
   committeeVote(): void {
     this.router.navigateByUrl('/dashboard/vote');
+  }
+  lectorMistake(): void {
+    this.router.navigateByUrl('/dashboard/changes-approved');
+  }
+  editorApproveBook(): void {
+    localStorage.setItem("editorAction","confirmation");
+    this.router.navigateByUrl('/dashboard/changes-approved');
   }
 
 

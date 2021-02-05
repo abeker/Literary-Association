@@ -16,6 +16,11 @@
             <nz-form-label [nzSpan]="7" nzRequired>{{field.label}}</nz-form-label>
             <nz-form-control [nzSm]="12" [nzXs]="24">
 
+                  <input type="number" 
+                  formControlName={{field.id}} 
+                  id={{field.id}}  [(ngModel)]="inputValue"
+                  *ngIf="field.type.name=='long'">
+
                   <input nz-input
                     type="text"
                     formControlName={{field.id}}

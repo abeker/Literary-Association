@@ -1,5 +1,5 @@
 <div class="main-div">
-    <h1>Vote form</h1>
+    <h1>Handwrite review</h1>
     <!--NA OSNOVU MDELA FORME IZ CAMUNDE SE GENERESE FORMA-->
     <form  nz-form [formGroup]="voteForm" (ngSubmit)="submitForm(voteForm.value)">
 
@@ -23,6 +23,8 @@
                           </a>
                         </div>
                    </div>
+
+                   <label nz-checkbox *ngIf="field.type.name=='boolean'" [ngModelOptions]="{standalone: true}"  [(ngModel)]="isOk" ></label>
 
              </nz-form-control>
            </nz-form-item>
