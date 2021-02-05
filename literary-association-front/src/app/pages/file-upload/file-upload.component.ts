@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
 import { FilesService } from './../../services/files.service';
 
 @Component({
-  selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html',
-  styleUrls: ['./file-upload.component.css']
+  selector: 'app-registrate',
+  templateUrl: './../../auth/registrate/registrate.component.html',
+  styleUrls: ['./../../auth/registrate/registrate.component.css']
 })
 export class FileUploadComponent implements OnInit {
 
-  fileForm: FormGroup;
+  validateForm: FormGroup;
   formFieldsDto = null;
   formFields = [];
   processInstance = "";
@@ -20,7 +20,7 @@ export class FileUploadComponent implements OnInit {
   myFiles = new Map<string, string[]>();
 
   constructor(private router: Router, private filesService: FilesService, private http: HttpClient, private fb: FormBuilder) {
-      this.fileForm = this.fb.group({});
+      this.validateForm = this.fb.group({});
    }
 
   ngOnInit(): void {
@@ -37,7 +37,7 @@ export class FileUploadComponent implements OnInit {
     });
   }
 
-  uploadFiles(value){
+  submitForm(value){
     console.log("FAJLOVI SUBMIT:");
     console.log(this.myFiles);
     for (let oneFileFiled of this.myFiles.values()) {
@@ -84,15 +84,33 @@ export class FileUploadComponent implements OnInit {
 
    resetForm(e: MouseEvent): void {
     e.preventDefault();
-    this.fileForm.reset();
-    for (const key in this.fileForm.controls) {
-      this.fileForm.controls[key].markAsPristine();
-      this.fileForm.controls[key].updateValueAndValidity();
+    this.validateForm.reset();
+    for (const key in this.validateForm.controls) {
+      this.validateForm.controls[key].markAsPristine();
+      this.validateForm.controls[key].updateValueAndValidity();
     }
     this.myFile = [];
     this.myFiles = new Map<string, string[]>();
   }
 
+
+  
+   //Its a bad practice to use expressions in angular bindings, so move the class expression into controller.
+   isPassword(item): boolean {
+    return (item.id === 'password' || item.id === "c_password");
+  }
+
+  isString(item) : boolean {
+    return (item.type.name === 'string' && !this.isPassword(item));
+  }
+
+  afterClose(): void {
+    console.log('close');
+  }
+  
+  onLogin(): void {
+    this.router.navigateByUrl('auth/login');
+  }
 
 
 

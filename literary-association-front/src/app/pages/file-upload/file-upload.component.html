@@ -1,7 +1,7 @@
 <div class="main-div">
     <h1>File upload</h1>
     <!--NA OSNOVU MDELA FORME IZ CAMUNDE SE GENERESE FORMA-->
-    <form  nz-form [formGroup]="fileForm" (ngSubmit)="uploadFiles(fileForm.value)">
+    <form  nz-form [formGroup]="validateForm" (ngSubmit)="uploadFiles(validateForm.value)">
 
       <div *ngFor="let field of formFields" >
 
