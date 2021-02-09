@@ -101,7 +101,6 @@ public class AuthService implements IAuthService {
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(authentication);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
 
