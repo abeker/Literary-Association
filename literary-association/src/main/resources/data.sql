@@ -9,7 +9,7 @@ insert into permission (name) values
     ('VIEW_BOOKS'), ('PURCHASE_BOOK'), ('PURCHASE_MEMBERSHIP'),     -- 16, 17, 18
     ('MARK_PLAGIAT'), ('APPROVE_EDITORS'), ('DENY_EDITORS'), ('APPROVE_LECTORS'), ('DENY_LECTORS'),           -- 19, 20, 21, 22, 23
     ('RETRIEVE_PURCHASED_BOOKS'), ('CREATE_LITERARY_ASSOCIATION'),           -- 24, 25
-    ('DELETE_INACTIVE_USERS');              -- 26
+    ('DELETE_INACTIVE_USERS'), ('GET_SECRET');              -- 26, 27
 
 insert into authority (name) values
     ('ROLE_ADMIN'), ('ROLE_READER'), ('ROLE_WRITER'),
@@ -18,7 +18,7 @@ insert into authority (name) values
 
 insert into authorities_permissions (authority_id, permission_id) values
     (1, 1), (1, 2), (1, 16), (1, 20), (1, 21), (1, 22), (1, 23), (1, 25), (1, 26),
-    (2, 1), (2, 16), (2, 17), (2, 18),
+    (2, 1), (2, 16), (2, 17), (2, 18), (2, 27),
     (3, 1), (3, 3), (3, 16), (3, 18),
     (4, 1), (4, 10),
     (5, 1), (5, 9), (5, 7), (5, 8), (5, 19),
@@ -26,21 +26,34 @@ insert into authorities_permissions (authority_id, permission_id) values
     (7, 1), (7, 14),
     (8, 24);
 
+insert into address (id, street_number, city, country, zip_code) values
+    ('371e4ee3-2804-4179-a5cb-c5dc91dbd5cb', 'Pionirska 21', 'Futog', 'Serbia', '21410'),
+    ('90e5eca8-9faa-4150-ba4c-1f98b46a952d', 'Ive Lole Ribara', 'Novi Sad', 'Serbia', '21400'),
+    ('336422ad-39cc-4a12-b555-0a1337ba0d19', 'Dusana Savica', 'Cerevic', 'Serbia', '21311');
+
+insert into membership (id, amount, date_opened, date_closed) values
+    ('ff5c1778-c150-4ea9-9100-a4c78d9b81a6', 10, '2020-02-11', null),
+    ('53d377d7-506f-4723-89e3-3c51debb182d', 20, '2020-12-21', null),
+    ('1497507f-7f27-4f66-9383-0dfb3f02e4f8', 50, '2020-02-12', null);
+
+insert into literary_association (id, name, address_id, membership_id, secret, password) values
+    ('d0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Vulkan', '371e4ee3-2804-4179-a5cb-c5dc91dbd5cb', '53d377d7-506f-4723-89e3-3c51debb182d', '$2y$12$EuGJAkwDhO7EkLtptgtBdOUK/LJu4EwNeHsalwx6.lW0Za349XW.K', '$2y$12$.sH7J.TguRCOjm6xTBH1s.QtP7yug9hZXuN2TfQA9SxmYtaozyIBy');
+
 --<Role>123!!!
-insert into user_entity(id, city, country, deleted, email, first_name, last_name, last_password_reset_date, last_time_active, password, user_type, username, is_approved) values
-    ('f219fc63-be00-42c2-86d0-6c2d9e969709', 'Novi Sad', 'Serbia', false, 'admin@gmail.com', 'Glen', 'Greenwald', '2020-11-12 21:58:58.508-07', '2021-01-31 12:30:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'ADMIN', 'admin', true),
-    ('2b052fd4-fbc0-462f-8db3-650b3c89e20a', 'Cerevic', 'Serbia', false, 'editor@gmail.com', 'Marc', 'Calmer', '2020-11-12 21:58:58.508-07', '2021-02-03 10:20:00','$2y$12$NXtdgD/KkoCIRKBz3nK2OOvje.3l9P.Lsu/Ya5FYsleceiki6e.7G', 'EDITOR', 'editor', true),
-    ('be18edb8-2bd1-4d77-a0b9-9edf9e66a4d2', 'Futog', 'Serbia', false, 'majorEditor@gmail.com', 'Marek', 'Hamsik', '2020-11-12 21:58:58.508-07', '2021-01-31 12:00:00', '$2y$12$NXtdgD/KkoCIRKBz3nK2OOvje.3l9P.Lsu/Ya5FYsleceiki6e.7G', 'EDITOR', 'm_editor', true),
-    ('cfd4b4a6-4d0b-4b33-bc25-3e87607b4f24', 'Banja Luka', 'Bosnia and Herzegovina', false, 'lector@gmail.com', 'Vic', 'Kohen', '2020-11-12 21:58:58.508-07', '2021-01-26 00:30:00', '$2y$12$fDPoGa8V.lq7DBojL6aAZ.2MEUZOorerDFiwT45ZBJa19tFDEeeGq', 'LECTOR', 'lector', true),
-    ('f4d9353c-be37-4272-b631-7262e2e2d28b', 'Podgorica', 'Montenegro', false, 'reader@gmail.com', 'Andrey', 'Grim', '2020-11-12 21:58:58.508-07', '2021-01-28 17:00:00', '$2y$12$cgOgmH.rBRoBTFde.YLEuOJbZgRykdSivxMXo/UkpE7u0Z4VXFBdK', 'READER', 'reader', true),
-    ('16805d59-3133-4ee5-9a42-6fc2578a627a', 'Niksic', 'Montenegro', false, 'reader1@gmail.com', 'John', 'Grim', '2020-11-12 21:58:58.508-07', '2021-02-02 12:40:00', '$2y$12$cgOgmH.rBRoBTFde.YLEuOJbZgRykdSivxMXo/UkpE7u0Z4VXFBdK', 'READER', 'reader1', true),
-    ('fb70ab80-925d-4b4a-8eab-97728e46fac1', 'Bijelo Polje', 'Montenegro', false, 'reader2@gmail.com', 'Jack', 'Grim', '2020-11-12 21:58:58.508-07', '2021-01-05 08:30:00', '$2y$12$cgOgmH.rBRoBTFde.YLEuOJbZgRykdSivxMXo/UkpE7u0Z4VXFBdK', 'READER', 'reader2', true),
-    ('70249358-0f4d-4010-9361-26c5e533a979', 'Novi Sad', 'Serbia', false, 'writer@gmail.com', 'Marc', 'Paliestri', '2020-11-12 21:58:58.508-07', '2021-02-03 05:00:00', '$2y$12$bAOFqaGgFr4CKERAoscGDu9SzjHG29MM8c9zEPqVX.AeQKo6hpGBe', 'WRITER', 'writer', true),
-    ('06743d0d-4376-483d-bb36-334584458345', 'Pljevlja', 'Montenegro', false, 'secondWriter@gmail.com', 'Michel', 'Donald', '2020-11-12 21:58:58.508-07', '2021-02-02 14:25:00', '$2y$12$bAOFqaGgFr4CKERAoscGDu9SzjHG29MM8c9zEPqVX.AeQKo6hpGBe', 'WRITER', 'writer2', true),
-    ('0896abd9-932d-4998-8a83-2a00d9bf77e5', 'Subotica', 'Serbia', false, 'majorCommittee@gmail.com', 'Garet', 'Potson', '2020-11-12 21:58:58.508-07', '2021-01-28 12:30:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'COMMITTE_MEMBER', 'm_committee', true),
-    ('3166f4d2-cb44-401a-bca4-32f9e871ebf2', 'Leskovac', 'Serbia', false, 'thirdCommittee@gmail.com', 'Mika', 'Mikic', '2020-11-12 21:58:58.508-07', '2021-01-24 12:20:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'COMMITTE_MEMBER', 'committee', true),
-    ('ca4e550a-b66f-46b0-a27e-52551a6fb012', 'Kikinda', 'Serbia', false, 'oneCommittee@gmail.com', 'Zika', 'Zikic', '2020-11-12 21:58:58.508-07', '2021-01-21 17:00:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'COMMITTE_MEMBER', 'committee1', true),
-    ('d0f20303-468b-4ebe-bb23-48003fc8a38e', 'Valjevo', 'Serbia', false, 'secondCommittee@gmail.com', 'Jova', 'Jovic', '2020-11-12 21:58:58.508-07', '2021-01-12 12:41:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'COMMITTE_MEMBER', 'committee2', true);
+insert into user_entity(id, city, country, deleted, email, lu_id, first_name, last_name, last_password_reset_date, last_time_active, password, user_type, username, is_approved) values
+    ('f219fc63-be00-42c2-86d0-6c2d9e969709', 'Novi Sad', 'Serbia', false, 'admin@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Glen', 'Greenwald', '2020-11-12 21:58:58.508-07', '2021-01-31 12:30:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'ADMIN', 'admin', true),
+    ('2b052fd4-fbc0-462f-8db3-650b3c89e20a', 'Cerevic', 'Serbia', false, 'editor@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Marc', 'Calmer', '2020-11-12 21:58:58.508-07', '2021-02-03 10:20:00','$2y$12$NXtdgD/KkoCIRKBz3nK2OOvje.3l9P.Lsu/Ya5FYsleceiki6e.7G', 'EDITOR', 'editor', true),
+    ('be18edb8-2bd1-4d77-a0b9-9edf9e66a4d2', 'Futog', 'Serbia', false, 'majorEditor@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Marek', 'Hamsik', '2020-11-12 21:58:58.508-07', '2021-01-31 12:00:00', '$2y$12$NXtdgD/KkoCIRKBz3nK2OOvje.3l9P.Lsu/Ya5FYsleceiki6e.7G', 'EDITOR', 'm_editor', true),
+    ('cfd4b4a6-4d0b-4b33-bc25-3e87607b4f24', 'Banja Luka', 'Bosnia and Herzegovina', false, 'lector@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Vic', 'Kohen', '2020-11-12 21:58:58.508-07', '2021-01-26 00:30:00', '$2y$12$fDPoGa8V.lq7DBojL6aAZ.2MEUZOorerDFiwT45ZBJa19tFDEeeGq', 'LECTOR', 'lector', true),
+    ('f4d9353c-be37-4272-b631-7262e2e2d28b', 'Podgorica', 'Montenegro', false, 'reader@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Andrey', 'Grim', '2020-11-12 21:58:58.508-07', '2021-01-28 17:00:00', '$2y$12$cgOgmH.rBRoBTFde.YLEuOJbZgRykdSivxMXo/UkpE7u0Z4VXFBdK', 'READER', 'reader', true),
+    ('16805d59-3133-4ee5-9a42-6fc2578a627a', 'Niksic', 'Montenegro', false, 'reader1@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'John', 'Grim', '2020-11-12 21:58:58.508-07', '2021-02-02 12:40:00', '$2y$12$cgOgmH.rBRoBTFde.YLEuOJbZgRykdSivxMXo/UkpE7u0Z4VXFBdK', 'READER', 'reader1', true),
+    ('fb70ab80-925d-4b4a-8eab-97728e46fac1', 'Bijelo Polje', 'Montenegro', false, 'reader2@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Jack', 'Grim', '2020-11-12 21:58:58.508-07', '2021-01-05 08:30:00', '$2y$12$cgOgmH.rBRoBTFde.YLEuOJbZgRykdSivxMXo/UkpE7u0Z4VXFBdK', 'READER', 'reader2', true),
+    ('70249358-0f4d-4010-9361-26c5e533a979', 'Novi Sad', 'Serbia', false, 'writer@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Marc', 'Paliestri', '2020-11-12 21:58:58.508-07', '2021-02-03 05:00:00', '$2y$12$bAOFqaGgFr4CKERAoscGDu9SzjHG29MM8c9zEPqVX.AeQKo6hpGBe', 'WRITER', 'writer', true),
+    ('06743d0d-4376-483d-bb36-334584458345', 'Pljevlja', 'Montenegro', false, 'secondWriter@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Michel', 'Donald', '2020-11-12 21:58:58.508-07', '2021-02-02 14:25:00', '$2y$12$bAOFqaGgFr4CKERAoscGDu9SzjHG29MM8c9zEPqVX.AeQKo6hpGBe', 'WRITER', 'writer2', true),
+    ('0896abd9-932d-4998-8a83-2a00d9bf77e5', 'Subotica', 'Serbia', false, 'majorCommittee@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Garet', 'Potson', '2020-11-12 21:58:58.508-07', '2021-01-28 12:30:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'COMMITTE_MEMBER', 'm_committee', true),
+    ('3166f4d2-cb44-401a-bca4-32f9e871ebf2', 'Leskovac', 'Serbia', false, 'thirdCommittee@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Mika', 'Mikic', '2020-11-12 21:58:58.508-07', '2021-01-24 12:20:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'COMMITTE_MEMBER', 'committee', true),
+    ('ca4e550a-b66f-46b0-a27e-52551a6fb012', 'Kikinda', 'Serbia', false, 'oneCommittee@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Zika', 'Zikic', '2020-11-12 21:58:58.508-07', '2021-01-21 17:00:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'COMMITTE_MEMBER', 'committee1', true),
+    ('d0f20303-468b-4ebe-bb23-48003fc8a38e', 'Valjevo', 'Serbia', false, 'secondCommittee@gmail.com', 'd0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Jova', 'Jovic', '2020-11-12 21:58:58.508-07', '2021-01-12 12:41:00', '$2y$10$UFTyoDVYFFUqlb0lnKfoKe7H/EbQOqZH.ZYHf6sOYiOWSRCmpcJ5K', 'COMMITTE_MEMBER', 'committee2', true);
 
 insert into user_authority (user_id, authority_id) values
     ('f219fc63-be00-42c2-86d0-6c2d9e969709', 1),
@@ -57,23 +70,10 @@ insert into user_authority (user_id, authority_id) values
     ('ca4e550a-b66f-46b0-a27e-52551a6fb012', 5),
     ('d0f20303-468b-4ebe-bb23-48003fc8a38e', 5);
 
-insert into address (id, street_number, city, country, zip_code) values
-    ('371e4ee3-2804-4179-a5cb-c5dc91dbd5cb', 'Pionirska 21', 'Futog', 'Serbia', '21410'),
-    ('90e5eca8-9faa-4150-ba4c-1f98b46a952d', 'Ive Lole Ribara', 'Novi Sad', 'Serbia', '21400'),
-    ('336422ad-39cc-4a12-b555-0a1337ba0d19', 'Dusana Savica', 'Cerevic', 'Serbia', '21311');
-
-insert into membership (id, amount, date_opened, date_closed) values
-    ('ff5c1778-c150-4ea9-9100-a4c78d9b81a6', 10, '2020-02-11', null),
-    ('53d377d7-506f-4723-89e3-3c51debb182d', 20, '2020-12-21', null),
-    ('1497507f-7f27-4f66-9383-0dfb3f02e4f8', 50, '2020-02-12', null);
-
 insert into user_membership (id, payment_date, membership_id, user_id) values
     ('f1caff85-d27b-4afa-82fc-6b4bbe55aea4', '2021-01-31 12:00:00', '53d377d7-506f-4723-89e3-3c51debb182d', 'f4d9353c-be37-4272-b631-7262e2e2d28b'),
     ('37da47aa-ee75-4b8a-8c46-ce79752c238f', '2020-12-31 12:25:00', '53d377d7-506f-4723-89e3-3c51debb182d', 'f4d9353c-be37-4272-b631-7262e2e2d28b'),
     ('0115664d-302e-4ef2-8183-bb64c1da1afd', '2020-11-30 12:25:00', '53d377d7-506f-4723-89e3-3c51debb182d', 'fb70ab80-925d-4b4a-8eab-97728e46fac1');
-
-insert into literary_association (id, name, address_id, membership_id) values
-    ('d0c213f7-1e95-4ce4-8a65-334071e31ce8', 'Vulkan', '371e4ee3-2804-4179-a5cb-c5dc91dbd5cb', '53d377d7-506f-4723-89e3-3c51debb182d');
 
 insert into literary_user(id, username, password) values
     ('f538aab6-31b1-11eb-adc1-0242ac120002', 'admin', '$2y$12$pX2eXOUilJhK7ywx3qhcoe8fE6knGB7Mbp.H04DtaJYlmKXcueoEm'),

@@ -42,12 +42,16 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public UserResponse login(LoginRequest loginRequest, HttpServletRequest httpServletRequest) {
+    public UserResponse login(LoginRequest loginRequest, HttpServletRequest httpServletRequest, String luName) {
         User user = _userRepository.findOneByUsername(loginRequest.getUsername());
         LoginAttempts loginAttempt = _loginAttemptsRepository.findOneByIpAddress(httpServletRequest.getRemoteAddr());
 
         if(isUserLoginBlocked(loginAttempt)) {
             throw new GeneralException("You have reached your logging limit, please try again later.", HttpStatus.CONFLICT);
+        }
+
+        if(!user.getLiteraryAssociation().getName().toLowerCase().equals(luName.toLowerCase())) {
+            throw new GeneralException("Incorrect Literary Association.", HttpStatus.NOT_EXTENDED);
         }
 
         if(!isUserFound(user, loginRequest)) {

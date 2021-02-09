@@ -8,6 +8,6 @@ import java.sql.SQLException;
 
 public interface IAuthService {
 
-    UserResponse login(LoginRequest request, HttpServletRequest httpServletRequest) throws SQLException;
+    UserResponse login(LoginRequest request, HttpServletRequest httpServletRequest, String luName) throws SQLException;
 
 }

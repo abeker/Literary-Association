@@ -4,8 +4,10 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class LiteraryAssociationResponse {
+@Builder
+public class LuSecret {
 
-    private String luId;
+    private String secret;
+    private String password;
 
 }

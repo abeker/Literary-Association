@@ -17,9 +17,11 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PutMapping("/login")
-    public UserResponse login(@RequestBody LoginRequest request, HttpServletRequest httpServletRequest) throws Exception{
-        return authService.login(request, httpServletRequest);
+    @PutMapping("/login/{luName}")
+    public UserResponse login(@RequestBody LoginRequest request,
+                              @PathVariable("luName") String luName,
+                              HttpServletRequest httpServletRequest) throws Exception{
+        return authService.login(request, httpServletRequest, luName);
     }
 
 }

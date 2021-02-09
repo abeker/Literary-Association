@@ -15,6 +15,8 @@ import javax.persistence.*;
 public class LiteraryAssociation extends BaseEntity {
 
     private String name;
+    private String secret;
+    private String password;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name="address_id", referencedColumnName="id")

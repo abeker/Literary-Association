@@ -52,6 +52,10 @@ public class User extends BaseEntity implements Serializable {
 
     private boolean deleted = false;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name="lu_id", referencedColumnName="id")
+    private LiteraryAssociation literaryAssociation;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_authority",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
