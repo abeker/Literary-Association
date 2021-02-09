@@ -70,7 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
                 .antMatchers("/auth/**", "/books/**", "/books", "/book-requests", "/book-requests/**",
-                        "/welcome", "/welcome/**", "/committee", "/committee/**", "/editors", "/editors/**",
+                        "/genres/**", "/genres", "/welcome", "/welcome/**", "/committee", "/committee/**", "/editors", "/editors/**",
                         "/file", "/file/**", "/readers", "/readers/**", "/users", "/users/**", "/writers", "/writers/**",
                         "/handwrites", "/handwrites/**").permitAll()
                 .anyRequest().authenticated()

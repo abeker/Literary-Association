@@ -11,5 +11,4 @@ import java.util.UUID;
 public interface IGenreRepository extends JpaRepository<Genre, UUID> {
 
      Genre findByGenreName(String genreName);
-
 }

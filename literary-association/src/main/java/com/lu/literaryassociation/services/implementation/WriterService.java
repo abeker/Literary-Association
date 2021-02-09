@@ -1,16 +1,12 @@
 package com.lu.literaryassociation.services.implementation;
 
+import com.lu.literaryassociation.dto.request.BookCreate;
 import com.lu.literaryassociation.dto.request.FormFieldsDto;
 import com.lu.literaryassociation.dto.request.FormSubmissionDto;
 import com.lu.literaryassociation.dto.response.PublishPaperForm;
-import com.lu.literaryassociation.entity.BookRequest;
-import com.lu.literaryassociation.entity.Genre;
-import com.lu.literaryassociation.entity.User;
-import com.lu.literaryassociation.entity.Writer;
-import com.lu.literaryassociation.repository.IBookRequestRepository;
-import com.lu.literaryassociation.repository.IGenreRepository;
-import com.lu.literaryassociation.repository.IUserRepository;
-import com.lu.literaryassociation.repository.IWriterRepository;
+import com.lu.literaryassociation.dto.response.WriterBookCreate;
+import com.lu.literaryassociation.entity.*;
+import com.lu.literaryassociation.repository.*;
 import com.lu.literaryassociation.security.TokenUtils;
 import com.lu.literaryassociation.services.definition.IGenreService;
 import com.lu.literaryassociation.services.definition.IWriterService;
@@ -23,6 +19,7 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @SuppressWarnings("UnusedReturnValue")
@@ -38,8 +35,9 @@ public class WriterService implements IWriterService {
     private final IWriterRepository _writerRepository;
     private final IUserRepository _userRepository;
     private final RuntimeService _runtimeService;
+    private final IBookRepository _bookRepository;
 
-    public WriterService(TokenUtils tokenUtils, TaskService taskService, FormService formService, IGenreService genreService, IGenreRepository genreRepository, IBookRequestRepository bookRequestRepository, IWriterRepository writerRepository, IUserRepository userRepository, RuntimeService runtimeService) {
+    public WriterService(TokenUtils tokenUtils, TaskService taskService, FormService formService, IGenreService genreService, IGenreRepository genreRepository, IBookRequestRepository bookRequestRepository, IWriterRepository writerRepository, IUserRepository userRepository, RuntimeService runtimeService, IBookRepository bookRepository) {
         _tokenUtils = tokenUtils;
         _taskService = taskService;
         _formService = formService;
@@ -49,6 +47,7 @@ public class WriterService implements IWriterService {
         _writerRepository = writerRepository;
         _userRepository = userRepository;
         _runtimeService = runtimeService;
+        _bookRepository = bookRepository;
     }
 
     @Override
@@ -92,6 +91,54 @@ public class WriterService implements IWriterService {
         Task task = _taskService.createTaskQuery().processInstanceId(processInstanceId).list().get(0);
         _runtimeService.setVariable(processInstanceId, "requestBookId", bookRequest.getId().toString());
         _formService.submitTaskForm(task.getId(), map);
+    }
+
+    @Override
+    public WriterBookCreate createBook(String token, BookCreate bookCreateBody) {
+        String username = _tokenUtils.getUsernameFromToken(token);
+        BookRequest bookRequest = createBookRequest(username, bookCreateBody);
+        Book book = createBook(bookRequest, bookCreateBody);
+        return mapBookToWriterBookCreate(book);
+    }
+
+    private WriterBookCreate mapBookToWriterBookCreate(Book book) {
+        return WriterBookCreate.builder()
+                .id(book.getId().toString())
+                .build();
+    }
+
+    private Book createBook(BookRequest bookRequest, BookCreate bookCreateBody) {
+        Book book = new Book();
+        book.setBookRequest(bookRequest);
+        book.setISBN("978-3-16-456890-1");
+        book.setNumberOfPages(bookCreateBody.getNumberOfPages());
+        book.setPublishPlace("Novi Sad");
+        book.setPublishYear(LocalDate.now());
+        book.setRecommendedPrice(bookCreateBody.getPrice());
+        return _bookRepository.save(book);
+    }
+
+    private BookRequest createBookRequest(String username, BookCreate bookCreateBody) {
+        BookRequest bookRequest = new BookRequest();
+        bookRequest.setApproved(true);
+        Set<Writer> writers = new HashSet<>();
+        writers.add(_writerRepository.findOneByUsername(username));
+        bookRequest.setWriters(writers);
+        bookRequest.setSynopsis(bookCreateBody.getSynopsis());
+        bookRequest.setGenre(getGenresFromIds(bookCreateBody.getGenreIds()));
+        bookRequest.setTitle(bookCreateBody.getTitle());
+        return _bookRequestRepository.save(bookRequest);
+    }
+
+    private Set<Genre> getGenresFromIds(List<String> genreIds) {
+        Set<Genre> retGenres = new HashSet<>();
+        for (String genreId : genreIds) {
+            Optional<Genre> genreOptional = _genreRepository.findById(UUID.fromString(genreId));
+            if(genreOptional.isPresent()) {
+                retGenres.add(genreOptional.get());
+            }
+        }
+        return retGenres;
     }
 
     private BookRequest createBookRequest(List<FormSubmissionDto> submitedFields, String processInstanceId) {

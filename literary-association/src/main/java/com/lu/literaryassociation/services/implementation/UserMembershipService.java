@@ -68,9 +68,11 @@ public class UserMembershipService implements IUserMembershipService {
 
     @Override
     public UserMembershipsDTO payUserMembership(String token, String membershipIdString) {
-        UUID membershipId = UUID.fromString(membershipIdString);
+        UUID membershipId;
         if(membershipIdString.equals("empty")) {
             membershipId = _membershipRepository.findAll().get(0).getId();
+        } else {
+            membershipId = UUID.fromString(membershipIdString);
         }
         UserMembership userMembership = new UserMembership();
         userMembership.setMembership(getMembershipFromId(membershipId));

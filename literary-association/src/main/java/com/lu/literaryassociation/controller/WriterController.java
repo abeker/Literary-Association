@@ -1,8 +1,10 @@
 package com.lu.literaryassociation.controller;
 
+import com.lu.literaryassociation.dto.request.BookCreate;
 import com.lu.literaryassociation.dto.request.FormFieldsDto;
 import com.lu.literaryassociation.dto.request.FormSubmissionDto;
 import com.lu.literaryassociation.dto.response.PublishPaperForm;
+import com.lu.literaryassociation.dto.response.WriterBookCreate;
 import com.lu.literaryassociation.services.definition.IWriterService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
@@ -41,6 +43,12 @@ public class WriterController {
     public void submitPublishForm(@RequestBody List<FormSubmissionDto> submitedFields,
                                   @PathVariable("processInstanceId") String processInstanceId) {
         _writerService.submitPublishForm(submitedFields, processInstanceId);
+    }
+
+    @PostMapping(path = "/create-book", produces = "application/json")
+    public WriterBookCreate createBook(@RequestHeader("Auth-Token") String token,
+                                       @RequestBody BookCreate bookCreateBody) {
+        return _writerService.createBook(token, bookCreateBody);
     }
 
 }
