@@ -7,6 +7,7 @@ import com.lu.literaryassociation.entity.User;
 import com.lu.literaryassociation.entity.UserDetailsImpl;
 import com.lu.literaryassociation.repository.ILoginAttemptsRepository;
 import com.lu.literaryassociation.repository.IUserRepository;
+import com.lu.literaryassociation.security.SecurityEscape;
 import com.lu.literaryassociation.security.TokenUtils;
 import com.lu.literaryassociation.services.definition.IAuthService;
 import com.lu.literaryassociation.util.exceptions.GeneralException;
@@ -43,6 +44,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public UserResponse login(LoginRequest loginRequest, HttpServletRequest httpServletRequest, String luName) {
+        sanitizeInputValues(loginRequest);
         User user = _userRepository.findOneByUsername(loginRequest.getUsername());
         LoginAttempts loginAttempt = _loginAttemptsRepository.findOneByIpAddress(httpServletRequest.getRemoteAddr());
 
@@ -50,19 +52,24 @@ public class AuthService implements IAuthService {
             throw new GeneralException("You have reached your logging limit, please try again later.", HttpStatus.CONFLICT);
         }
 
-        if(!user.getLiteraryAssociation().getName().toLowerCase().equals(luName.toLowerCase())) {
-            throw new GeneralException("Incorrect Literary Association.", HttpStatus.NOT_EXTENDED);
-        }
-
         if(!isUserFound(user, loginRequest)) {
             changeLoginAttempts(loginAttempt, httpServletRequest);
-            throw new GeneralException("Bad credentials.", HttpStatus.BAD_REQUEST);
+            throw new GeneralException("Bad credentials.", HttpStatus.NOT_FOUND);
+        }
+
+        if(!user.getLiteraryAssociation().getName().toLowerCase().equals(luName.toLowerCase())) {
+            throw new GeneralException("Incorrect Literary Association.", HttpStatus.NOT_EXTENDED);
         }
 
         checkUserStatus(user);
         Authentication authentication = loginSimpleUser(loginRequest.getUsername(), loginRequest.getPassword());
         refreshUserActivityTime(user);
         return createLoginUserResponse(authentication, user);
+    }
+
+    private void sanitizeInputValues(LoginRequest request) {
+        request.setUsername(SecurityEscape.cleanIt(request.getUsername()));
+        request.setPassword(SecurityEscape.cleanIt(request.getPassword()));
     }
 
     private void refreshUserActivityTime(User user) {
