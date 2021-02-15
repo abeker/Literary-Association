@@ -8,7 +8,9 @@ import { BookComponent } from './pages/book/book.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { WelcomeComponent } from './pages/welcome/welcome.component';
 import { BookRequestsComponent } from './pages/editor/book-requests/book-requests.component';
+import { ChangesApprovedComponent } from './pages/editor/changes-approved/changes-approved.component';
 import { HandwriteUploadComponent } from './pages/handwrite-upload/handwrite-upload.component';
+import { HandwriteChangeComponent } from './pages/handwrite-change/handwrite-change.component';
 import { PlagiatsComponent } from './pages/editor/plagiats/plagiats.component';
 import { FileUploadComponent} from './pages/file-upload/file-upload.component';
 import { VoteComponent} from './pages/vote/vote.component';
@@ -28,7 +30,9 @@ const routes: Routes = [
       { path: 'welcome', component: WelcomeComponent },
       { path: 'book', component: BookComponent },
       { path: 'book-requests', component: BookRequestsComponent},
+      { path: 'changes-approved', component: ChangesApprovedComponent},
       { path: 'handwrite-upload', component: HandwriteUploadComponent},
+      { path: 'handwrite-change' , component: HandwriteChangeComponent}, 
       { path: 'plagiats', component: PlagiatsComponent},
       { path: 'vote', component: VoteComponent },
       { path: 'betaReader', component: BetaReaderListComponent},

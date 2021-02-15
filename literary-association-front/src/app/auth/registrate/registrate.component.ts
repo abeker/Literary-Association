@@ -257,4 +257,9 @@ export class RegistrateComponent implements OnInit {
   onPasswordConfirmChange(passwordInput): void {
   }
 
+  onFileChange(event){
+  }
+
+
+
 }

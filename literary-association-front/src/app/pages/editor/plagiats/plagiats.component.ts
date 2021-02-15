@@ -26,6 +26,7 @@ export class PlagiatsComponent implements OnInit {
   taskInstance = "";
   filesOption = []; //votes value
   isPlagiat: boolean = false;
+  inputValue: number;
   submitedFormDto: FieldDto[] = [];
 
   isModalVisible = false;
@@ -115,6 +116,9 @@ export class PlagiatsComponent implements OnInit {
     formFields.forEach(field => {
          let prop = field.properties;
          let temp = field;
+         if(field.type.name=="long"){
+           this.inputValue = field.defaultValue;
+         }
          if(prop.hasOwnProperty('nonEditible')){
             temp.type.name = "nonEditibleFiles";
             this.createListFiles(field.defaultValue);

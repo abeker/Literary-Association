@@ -12,4 +12,5 @@ public interface IBookRequestService {
     BookRequestDTO getBookRequestFromProcess(String processInstanceId);
     HandwriteDto getHandwriteFromProccess(String processInstanceId);
     BookRequestDTO mapBookRequestToDTO(BookRequest bookRequest);
+    boolean canChangeHandwrite(String processInstanceId);
 }

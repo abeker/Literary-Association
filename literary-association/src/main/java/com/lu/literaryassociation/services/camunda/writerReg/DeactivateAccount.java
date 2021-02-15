@@ -9,6 +9,9 @@ public class DeactivateAccount implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        System.out.println("Usla u deactivate accounta writera");
+        String writerUsername = (String) delegateExecution.getVariable("username");
+        System.out.println("Usla u deactivate accounta writera" + writerUsername);
     }
+
+
 }

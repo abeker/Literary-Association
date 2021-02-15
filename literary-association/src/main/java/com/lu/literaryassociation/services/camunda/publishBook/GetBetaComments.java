@@ -36,14 +36,20 @@ public class GetBetaComments implements JavaDelegate {
         String processId = delegateExecution.getProcessInstanceId();
         List<BetaReaderComment> betaReaderCommentList = iReaderService.getBetaReaderCommentByProcess(processId);
 
-        //kako slati komentare
+        //postavljam komentare u procesnu varijablu
+        delegateExecution.setVariable("betaReaderCommentList", betaReaderCommentList);
+        delegateExecution.setVariable("betaReaderComments", getMailFromComments(betaReaderCommentList));
+
+        //slanje komentara piscu na mejl
         _emailService.generalSendEmail(getWriterEmailFromUsername(writerUsername), "Beta Reader Comments", getMailFromComments(betaReaderCommentList));
     }
+
+
 
     private String getMailFromComments(List<BetaReaderComment> betaReaderCommentList) {
         StringBuilder finalText = new StringBuilder();
         for (BetaReaderComment betaReaderComment : betaReaderCommentList) {
-            finalText.append(betaReaderComment.getCommentText()).append("\n\n");
+            finalText.append(betaReaderComment.getCommentText()).append("\n");
         }
         return finalText.toString();
     }

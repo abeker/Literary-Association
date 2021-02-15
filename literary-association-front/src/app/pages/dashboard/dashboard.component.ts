@@ -55,12 +55,8 @@ export class DashboardComponent implements OnInit {
         this.setAllToFalse();
         this.isLector = true;
     } else if(this.user.userRole === 'COMMITTE_MEMBER'){
-        console.log("DOBRO POSTAVLJAM PATH");
         this.setAllToFalse();
         this.isCommittee = true;
-        this.router.navigateByUrl('/dashboard/vote');
-        console.log("DOBRO POSTAVLJAM PATH 2");
-
     }
   }
 
@@ -89,25 +85,34 @@ export class DashboardComponent implements OnInit {
   handwriteClick(): void {
     this.router.navigateByUrl('/dashboard/handwrite-upload');
   }
+  changeHandwriteClick(): void {
+    this.router.navigateByUrl('/dashboard/handwrite-change');
+  }
+  changedHandwrite(): void {
+    localStorage.setItem("editorAction","editsOrForward");
+    this.router.navigateByUrl('/dashboard/changes-approved');
+  }
   checkForPlagiats(): void {
     this.router.navigateByUrl('/dashboard/plagiats');
   }
-
   chooseBetaReader(): void {
-    //startujem moj proces
     this.router.navigateByUrl('/dashboard/betaReader');
-    // this.literaryService.publishBook2Start().
-    // subscribe((res) => {
-    //     console.log("start publish-2deo"+ res);
-    //     localStorage.setItem("processInstance", res);
-    // }, error => {
-    //   console.log(error);
-    // });
   }
-
   betaReaderComment(): void {
     this.router.navigateByUrl('/dashboard/betaReaderComment');
   }
+  committeeVote(): void {
+    this.router.navigateByUrl('/dashboard/vote');
+  }
+  lectorMistake(): void {
+    this.router.navigateByUrl('/dashboard/changes-approved');
+  }
+  editorApproveBook(): void {
+    localStorage.setItem("editorAction","confirmation");
+    this.router.navigateByUrl('/dashboard/changes-approved');
+  }
+
+
 
   checkIsBetaReader(username): void {
     this.readerService.isBetaReader(username).

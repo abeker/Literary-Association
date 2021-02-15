@@ -10,12 +10,22 @@
             <nz-form-control nzHasFeedback [nzSm]="12" [nzXs]="24" [nzErrorTip]="err">
 
                 <input nz-input type="text" formControlName={{field.id}} id={{field.id}} ngModel *ngIf="isString(field)">
-                <label nz-checkbox  [(ngModel)]="isBetareader" [ngModelOptions]="{standalone: true}" style="margin-left: 20px;" *ngIf="field.type.name=='boolean'"></label>
+                <label nz-checkbox  [ngModelOptions]="{standalone: true}" style="margin-left: 20px;" *ngIf="field.type.name=='boolean'"  [(ngModel)]="isBetareader"></label>
                 <input type="number" formControlName={{field.id}} id={{field.id}} ngModel  *ngIf="field.type.name=='long'">
+
+                <textarea rows="4" cols="45" *ngIf="field.type.name=='textArea'" id={{field.id}}  [ngModelOptions]="{standalone: true}" [(ngModel)]="inputValue"></textarea>
 
                  <nz-select *ngIf="field.type.name=='enum'" id={{field.id}} [[nzSize]="size" nzMode="multiple"  [ngModelOptions]="{standalone: true}" nzPlaceHolder="Please select"  [(ngModel)]="multipleValue">
                     <nz-option *ngFor="let option of field.type.values" [nzLabel]="option.label" [nzValue]="option.value"></nz-option>
                  </nz-select>
+
+                 <input
+                 id={{field.id}}
+                 type={{field.type.name}}
+                 multiple
+                 *ngIf="field.type.name=='file'"
+                 (change)="onFileChange($event)">
+
 
                  <input nz-input (ngModelChange)="onPasswordChange($event)"
                 type="password"
@@ -30,6 +40,15 @@
                 id={{field.id}}
                 formControlName={{field.id}}
                 *ngIf="field.type.name=='confirm_password'">
+
+
+                <div *ngIf="field.type.name=='nonEditibleFiles'">
+                  <div *ngFor="let file of field.type.values" >
+                    <a (click)="downloadFile(file)">
+                       {{file}}
+                    </a>
+                  </div>
+                 </div>
 
 
                 <ng-template #err let-control>
