@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class AuthService implements IAuthService {
@@ -77,20 +78,32 @@ public class AuthService implements IAuthService {
         _userRepository.save(user);
     }
 
+    ReentrantLock lockOneBank = new ReentrantLock();
     private void changeLoginAttempts(LoginAttempts loginAttempt, HttpServletRequest httpServletRequest) {
-        if(loginAttempt == null){
-            LoginAttempts newLoginAttempt = new LoginAttempts();
-            newLoginAttempt.setIpAddress(httpServletRequest.getRemoteAddr());
-            newLoginAttempt.setFirstMistakeDateTime(LocalDateTime.now());
-            newLoginAttempt.setAttempts(1);
-            _loginAttemptsRepository.save(newLoginAttempt);
-            return;
-        } else if(loginAttempt.getFirstMistakeDateTime().plusHours(12L).isBefore(LocalDateTime.now())){
+        if (loginAttempt == null) {
+            lockOneBank.lock();
+            try {
+                LoginAttempts newLoginAttempt = new LoginAttempts();
+                newLoginAttempt.setIpAddress(httpServletRequest.getRemoteAddr());
+                newLoginAttempt.setFirstMistakeDateTime(LocalDateTime.now());
+                newLoginAttempt.setAttempts(1);
+                if(!isLoginAttemptExists(newLoginAttempt)) {
+                    _loginAttemptsRepository.save(newLoginAttempt);
+                }
+                return;
+            } finally {
+                lockOneBank.unlock();
+            }
+        } else if (loginAttempt.getFirstMistakeDateTime().plusHours(12L).isBefore(LocalDateTime.now())) {
             loginAttempt.setFirstMistakeDateTime(LocalDateTime.now());
             loginAttempt.setAttempts(0);
         }
         loginAttempt.setAttempts(loginAttempt.getAttempts() + 1);
         _loginAttemptsRepository.save(loginAttempt);
+    }
+
+    private boolean isLoginAttemptExists(LoginAttempts newLoginAttempt) {
+        return _loginAttemptsRepository.findOneByIpAddress(newLoginAttempt.getIpAddress()) != null;
     }
 
     private boolean isUserLoginBlocked(LoginAttempts loginAttempt) {

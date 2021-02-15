@@ -71,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**", "/books/**", "/books", "/book-requests", "/book-requests/**",
                         "/genres/**", "/genres", "/welcome", "/welcome/**", "/committee", "/committee/**", "/editors", "/editors/**",
                         "/file", "/file/**", "/readers", "/readers/**", "/users", "/users/**", "/writers", "/writers/**",
-                        "/handwrites", "/handwrites/**", "/la").permitAll()
+                        "/handwrites", "/handwrites/**", "/la", "/admins/check-inactive-users").permitAll()
                 .anyRequest().authenticated()
 
                 .and().csrf().disable()
