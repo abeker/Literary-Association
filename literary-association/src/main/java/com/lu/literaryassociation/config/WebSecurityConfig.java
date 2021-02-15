@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -69,7 +68,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/auth/**", "/books/**", "/books", "/book-requests", "/book-requests/**",
+                        "/genres/**", "/genres", "/welcome", "/welcome/**", "/committee", "/committee/**", "/editors", "/editors/**",
+                        "/file", "/file/**", "/readers", "/readers/**", "/users", "/users/**", "/writers", "/writers/**",
+                        "/handwrites", "/handwrites/**", "/la", "/admins/check-inactive-users").permitAll()
                 .anyRequest().authenticated()
 
                 .and().csrf().disable()

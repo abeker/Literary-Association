@@ -162,7 +162,7 @@
         </camunda:formData>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0kq45ds</bpmn:incoming>
-      <bpmn:outgoing>Flow_1lrms73</bpmn:outgoing>
+      <bpmn:outgoing>Flow_18t7nvf</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="Gateway_1g6kcp2" name="Handwrite seems ok">
       <bpmn:incoming>Flow_141l9u8</bpmn:incoming>
@@ -193,13 +193,13 @@
       <bpmn:outgoing>Flow_1bslk5v</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="Gateway_1pz8pdb">
-      <bpmn:incoming>Flow_1bslk5v</bpmn:incoming>
       <bpmn:incoming>Flow_0sdk0ff</bpmn:incoming>
       <bpmn:incoming>Flow_13zik0e</bpmn:incoming>
+      <bpmn:incoming>Flow_0395zgv</bpmn:incoming>
       <bpmn:outgoing>Flow_0kq45ds</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0kq45ds" sourceRef="Gateway_1pz8pdb" targetRef="Activity_0xhaago" />
-    <bpmn:sequenceFlow id="Flow_1bslk5v" sourceRef="Activity_0w26yrm" targetRef="Gateway_1pz8pdb" />
+    <bpmn:sequenceFlow id="Flow_1bslk5v" sourceRef="Activity_0w26yrm" targetRef="Activity_0tpz40w" />
     <bpmn:sequenceFlow id="Flow_15c5rvn" name="all ok" sourceRef="Gateway_1g6kcp2" targetRef="Gateway_1u1ssh8">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isAllOk == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -264,11 +264,11 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isBookApproved == true}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:exclusiveGateway id="Gateway_1u1ssh8">
-      <bpmn:incoming>Flow_181zuzr</bpmn:incoming>
       <bpmn:incoming>Flow_15c5rvn</bpmn:incoming>
+      <bpmn:incoming>Flow_123zca7</bpmn:incoming>
       <bpmn:outgoing>Flow_0cpub0r</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_181zuzr" sourceRef="Activity_1n4zhvy" targetRef="Gateway_1u1ssh8" />
+    <bpmn:sequenceFlow id="Flow_181zuzr" sourceRef="Activity_1n4zhvy" targetRef="Activity_12b12oq" />
     <bpmn:sequenceFlow id="Flow_0cpub0r" sourceRef="Gateway_1u1ssh8" targetRef="Activity_0ru24w6" />
     <bpmn:exclusiveGateway id="Gateway_04xq6px">
       <bpmn:incoming>Flow_09pjnuq</bpmn:incoming>
@@ -606,8 +606,8 @@
         <di:waypoint x="3412" y="110" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_09pjnuq_di" bpmnElement="Flow_09pjnuq">
-        <di:waypoint x="3510" y="242" />
-        <di:waypoint x="3510" y="220" />
+        <di:waypoint x="3560" y="242" />
+        <di:waypoint x="3560" y="220" />
         <di:waypoint x="3240" y="220" />
         <di:waypoint x="3240" y="135" />
       </bpmndi:BPMNEdge>
@@ -986,6 +986,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1qtg0qj_di" bpmnElement="Event_0z83eps">
         <dc:Bounds x="1522" y="422" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_19e00be_di" bpmnElement="Event_0bhn4u5">
+        <dc:Bounds x="3542" y="242" width="36" height="36" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

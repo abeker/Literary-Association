@@ -27,6 +27,8 @@ public class Book extends BaseEntity {
 
     private boolean deleted;
 
+    private double recommendedPrice;
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Keyword> keywords;
 

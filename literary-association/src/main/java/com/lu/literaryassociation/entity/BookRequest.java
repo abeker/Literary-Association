@@ -17,7 +17,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class BookRequest extends BaseEntity {
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "book_request_writers",
+            joinColumns = @JoinColumn(name = "book_request_id"),
+            inverseJoinColumns = @JoinColumn(name = "writer_id")
+    )
     private Set<Writer> writers = new HashSet<>();
 
     private String title;

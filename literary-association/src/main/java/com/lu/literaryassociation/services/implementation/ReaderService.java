@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReaderService implements IReaderService {
@@ -57,7 +58,10 @@ public class ReaderService implements IReaderService {
         //String = "USERNAME READERA: Ime Prezime"
         List<String> returnList = new ArrayList<>();
         Genre genre = iGenreService.getGenreByName(genreName);
-        List<BetaReader> betaReaderList = iBetaReaderRepository.findByGenresId(genre.getId());
+        List<BetaReader> betaReaderList = iBetaReaderRepository.findByGenresId(genre.getId())
+                .stream()
+                .filter(betaReader -> !betaReader.getReader().isDeleted())
+                .collect(Collectors.toList());
         for(BetaReader betaReader: betaReaderList ){
              Reader r = betaReader.getReader();
              String s = r.getUsername() + ":" + r.getFirstName() +" "+ r.getLastName();
@@ -110,7 +114,7 @@ public class ReaderService implements IReaderService {
 
     private List<BetaReader> getBetaReadersForGenres(List<Genre> listOfGenres) {
         List<BetaReader> retBetaReaders = new ArrayList<>();
-        for (BetaReader betaReader : iBetaReaderRepository.findAll()) {
+        for (BetaReader betaReader : getAllBetaReaders()) {
             for (Genre genre : listOfGenres) {
                 if(betaReader.getGenres().contains(genre)) {
                     retBetaReaders.add(betaReader);
@@ -119,6 +123,13 @@ public class ReaderService implements IReaderService {
             }
         }
         return retBetaReaders;
+    }
+
+    private List<BetaReader> getAllBetaReaders() {
+        return iBetaReaderRepository.findAll()
+                .stream()
+                .filter(betaReader -> !betaReader.getReader().isDeleted())
+                .collect(Collectors.toList());
     }
 
     private List<Genre> getGenresFromString(String genreName) {

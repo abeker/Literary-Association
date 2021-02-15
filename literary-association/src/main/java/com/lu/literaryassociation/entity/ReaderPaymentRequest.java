@@ -17,6 +17,8 @@ public class ReaderPaymentRequest extends BaseEntity {
 
     private int paymentCounter;
     private String bankCode;
+
+    @Enumerated(value = EnumType.STRING)
     private PaymentRequestStatus status = PaymentRequestStatus.PENDING;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

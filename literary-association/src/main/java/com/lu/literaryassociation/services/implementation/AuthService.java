@@ -2,9 +2,12 @@ package com.lu.literaryassociation.services.implementation;
 
 import com.lu.literaryassociation.dto.request.LoginRequest;
 import com.lu.literaryassociation.dto.response.UserResponse;
+import com.lu.literaryassociation.entity.LoginAttempts;
 import com.lu.literaryassociation.entity.User;
 import com.lu.literaryassociation.entity.UserDetailsImpl;
+import com.lu.literaryassociation.repository.ILoginAttemptsRepository;
 import com.lu.literaryassociation.repository.IUserRepository;
+import com.lu.literaryassociation.security.SecurityEscape;
 import com.lu.literaryassociation.security.TokenUtils;
 import com.lu.literaryassociation.services.definition.IAuthService;
 import com.lu.literaryassociation.util.exceptions.GeneralException;
@@ -20,7 +23,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class AuthService implements IAuthService {
@@ -29,27 +33,84 @@ public class AuthService implements IAuthService {
     private final TokenUtils _tokenUtils;
     private final PasswordEncoder _passwordEncoder;
     private final IUserRepository _userRepository;
+    private final ILoginAttemptsRepository _loginAttemptsRepository;
 
-    public AuthService(AuthenticationManager authenticationManager, TokenUtils tokenUtils, PasswordEncoder passwordEncoder, IUserRepository userRepository) {
+    public AuthService(AuthenticationManager authenticationManager, TokenUtils tokenUtils, PasswordEncoder passwordEncoder, IUserRepository userRepository, ILoginAttemptsRepository loginAttemptsRepository) {
         _authenticationManager = authenticationManager;
         _tokenUtils = tokenUtils;
         _passwordEncoder = passwordEncoder;
         _userRepository = userRepository;
+        _loginAttemptsRepository = loginAttemptsRepository;
     }
 
     @Override
-    public UserResponse login(LoginRequest request, HttpServletRequest httpServletRequest) {
-        User user = _userRepository.findOneByUsername(request.getUsername());
-        if(!isUserFound(user, request)) {
-            throw new GeneralException("Bad credentials.", HttpStatus.BAD_REQUEST);
+    public UserResponse login(LoginRequest loginRequest, HttpServletRequest httpServletRequest, String luName) {
+        sanitizeInputValues(loginRequest);
+        User user = _userRepository.findOneByUsername(loginRequest.getUsername());
+        LoginAttempts loginAttempt = _loginAttemptsRepository.findOneByIpAddress(httpServletRequest.getRemoteAddr());
+
+        if(isUserLoginBlocked(loginAttempt)) {
+            throw new GeneralException("You have reached your logging limit, please try again later.", HttpStatus.CONFLICT);
+        }
+
+        if(!isUserFound(user, loginRequest)) {
+            changeLoginAttempts(loginAttempt, httpServletRequest);
+            throw new GeneralException("Bad credentials.", HttpStatus.NOT_FOUND);
+        }
+
+        if(!user.getLiteraryAssociation().getName().toLowerCase().equals(luName.toLowerCase())) {
+            throw new GeneralException("Incorrect Literary Association.", HttpStatus.NOT_EXTENDED);
         }
 
         checkUserStatus(user);
-        Authentication authentication = loginSimpleUser(request.getUsername(), request.getPassword(), httpServletRequest);
+        Authentication authentication = loginSimpleUser(loginRequest.getUsername(), loginRequest.getPassword());
+        refreshUserActivityTime(user);
         return createLoginUserResponse(authentication, user);
     }
 
-    private Authentication loginSimpleUser(String mail, String password, HttpServletRequest request) {
+    private void sanitizeInputValues(LoginRequest request) {
+        request.setUsername(SecurityEscape.cleanIt(request.getUsername()));
+        request.setPassword(SecurityEscape.cleanIt(request.getPassword()));
+    }
+
+    private void refreshUserActivityTime(User user) {
+        user.setLastTimeActive(LocalDateTime.now());
+        _userRepository.save(user);
+    }
+
+    ReentrantLock lockOneBank = new ReentrantLock();
+    private void changeLoginAttempts(LoginAttempts loginAttempt, HttpServletRequest httpServletRequest) {
+        if (loginAttempt == null) {
+            lockOneBank.lock();
+            try {
+                LoginAttempts newLoginAttempt = new LoginAttempts();
+                newLoginAttempt.setIpAddress(httpServletRequest.getRemoteAddr());
+                newLoginAttempt.setFirstMistakeDateTime(LocalDateTime.now());
+                newLoginAttempt.setAttempts(1);
+                if(!isLoginAttemptExists(newLoginAttempt)) {
+                    _loginAttemptsRepository.save(newLoginAttempt);
+                }
+                return;
+            } finally {
+                lockOneBank.unlock();
+            }
+        } else if (loginAttempt.getFirstMistakeDateTime().plusHours(12L).isBefore(LocalDateTime.now())) {
+            loginAttempt.setFirstMistakeDateTime(LocalDateTime.now());
+            loginAttempt.setAttempts(0);
+        }
+        loginAttempt.setAttempts(loginAttempt.getAttempts() + 1);
+        _loginAttemptsRepository.save(loginAttempt);
+    }
+
+    private boolean isLoginAttemptExists(LoginAttempts newLoginAttempt) {
+        return _loginAttemptsRepository.findOneByIpAddress(newLoginAttempt.getIpAddress()) != null;
+    }
+
+    private boolean isUserLoginBlocked(LoginAttempts loginAttempt) {
+        return loginAttempt != null && loginAttempt.getAttempts() > 5 && loginAttempt.getFirstMistakeDateTime().plusHours(12L).isAfter(LocalDateTime.now());
+    }
+
+    private Authentication loginSimpleUser(String mail, String password) {
         Authentication authentication = null;
         try {
             authentication = _authenticationManager
@@ -64,7 +125,6 @@ public class AuthService implements IAuthService {
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(authentication);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
     }
 

@@ -16,12 +16,14 @@ import { FileUploadComponent} from './pages/file-upload/file-upload.component';
 import { VoteComponent} from './pages/vote/vote.component';
 import { BetaReaderListComponent } from './pages/beta-reader-list/beta-reader-list.component';
 import { BetaReaderCommentComponent } from './pages/beta-reader-comment/beta-reader-comment.component';
+import { BlockUserComponent } from './pages/block-user/block-user.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/auth/login' },
   { path: 'auth/login', component: LoginComponent },
   { path: 'auth/registration', component: RegistrationComponent },
   { path: 'auth/registrate', component: RegistrateComponent },
+  { path: 'auth/block', component: BlockUserComponent },
   { path: 'register/fileUpload', component: FileUploadComponent},
   {
     path: 'dashboard', component: DashboardComponent, children: [

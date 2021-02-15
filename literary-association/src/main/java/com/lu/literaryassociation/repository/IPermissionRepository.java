@@ -8,4 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface IPermissionRepository  extends JpaRepository<Permission, UUID> {
+
+    Permission findByName(String name);
+
 }

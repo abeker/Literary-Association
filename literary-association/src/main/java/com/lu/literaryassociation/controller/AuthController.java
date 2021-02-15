@@ -6,6 +6,7 @@ import com.lu.literaryassociation.services.definition.IAuthService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
@@ -17,9 +18,11 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PutMapping("/login")
-    public UserResponse login(@RequestBody LoginRequest request, HttpServletRequest httpServletRequest) throws Exception{
-        return authService.login(request, httpServletRequest);
+    @PutMapping("/login/{luName}")
+    public UserResponse login(@Valid @RequestBody LoginRequest request,
+                              @PathVariable("luName") String luName,
+                              HttpServletRequest httpServletRequest) throws Exception{
+        return authService.login(request, httpServletRequest, luName);
     }
 
 }
